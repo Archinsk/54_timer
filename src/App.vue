@@ -1,5 +1,17 @@
 <template>
   <!--  <SchemeSettings />-->
+  <TrainingSchemes
+    :schemes="schemes"
+    :settingsMode="settingsMode"
+    @set-training-mode="setTrainingMode"
+  />
+  <div
+    class="btn btn-outline-light rounded-circle btn-settings"
+    @click="settingsMode = !settingsMode"
+  >
+    <span class="icon">A</span>
+  </div>
+
   <FitnessTimer
     :config="config"
     :actual="actual"
@@ -14,16 +26,19 @@
   <button class="btn btn-outline-light fw-bold mx-2" @click="resetTimer">
     {{ mode === "finish" ? "Повтор" : "Сброс" }}
   </button>
+  <div :class="[settingsMode ? 'active ' : '', 'trans ']"></div>
 </template>
 
 <script>
 import FitnessTimer from "./components/FitnessTimer.vue";
+import TrainingSchemes from "./components/TrainingSchemes";
 // import SchemeSettings from "./components/SchemeSettings";
 
 export default {
   name: "App",
 
   components: {
+    TrainingSchemes,
     // SchemeSettings,
     FitnessTimer,
   },
@@ -99,6 +114,8 @@ export default {
       pastTime: 0,
 
       timerId: null,
+
+      settingsMode: false,
     };
   },
 
@@ -174,13 +191,8 @@ export default {
     },
 
     setTrainingMode(scheme) {
-      this.config = scheme;
-      this.cycles = scheme.cycles;
-      this.rounds = scheme.rounds;
-      this.prepTime = scheme.prepTime;
-      this.workTime = scheme.workTime;
-      this.restTime = scheme.restTime;
-      this.clearTime = scheme.clearTime;
+      this.config = Object.assign({}, scheme);
+      this.actual = Object.assign({}, scheme);
     },
 
     resetTimer() {
@@ -204,4 +216,48 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+body {
+  background: radial-gradient(
+    circle,
+    rgba(138, 43, 226, 1) 0%,
+    rgba(86, 20, 148, 1) 100%
+  ) !important;
+  overflow: hidden;
+}
+
+.btn-settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  .icon {
+    font-family: "Anicons", sans-serif;
+    font-variation-settings: "TIME" 1;
+    transition: font-variation-settings 0.4s ease;
+  }
+  .icon:hover {
+    font-family: "Anicons", sans-serif;
+    font-variation-settings: "TIME" 100;
+  }
+}
+
+.trans {
+  z-index: -1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: darkblue;
+  width: 100%;
+  height: 100%;
+  transition: all 2s;
+
+  &.active {
+    left: 12%;
+    bottom: 5%;
+    border-radius: 2rem;
+    height: 50%;
+    width: 76%;
+  }
+}
+</style>

@@ -65,6 +65,11 @@ $font-weight-bold: 700;
   src: url(./assets/fonts/Oswald-VariableFont_wght.ttf);
 }
 
+@font-face {
+  font-family: "Anicons";
+  src: url(./assets/fonts/AniconsGX.ttf);
+}
+
 body {
   font-family: "Oswald";
   width: 100vw;

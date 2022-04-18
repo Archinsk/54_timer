@@ -29,13 +29,6 @@
         Раунд: <b>{{ currentRound }} / {{ config.rounds }}</b>
       </div>
     </div>
-
-    <!--    <div>-->
-    <!--      Анимация:-->
-    <!--      <transition name="fade"-->
-    <!--        ><b v-show="mode === 'work'">Работаем!</b>-->
-    <!--      </transition>-->
-    <!--    </div>-->
   </div>
 </template>
 
@@ -179,12 +172,4 @@ export default {
 .finish {
   background-color: blueviolet;
 }
-
-/*.fade-enter-active,*/
-/*.fade-leave-active {*/
-/*  transition: opacity 1.5s;*/
-/*}*/
-/*.fade-enter-from, .fade-leave-to !* .fade-leave-active до версии 2.1.8 *! {*/
-/*  opacity: 0;*/
-/*}*/
 </style>
