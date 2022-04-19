@@ -1,32 +1,47 @@
 <template>
-  <!--  <SchemeSettings />-->
-  <TrainingSchemes
-    :schemes="schemes"
-    :settingsMode="settingsMode"
-    @set-training-mode="setTrainingMode"
-  />
-  <div
-    class="btn btn-outline-light rounded-circle btn-settings"
-    @click="settingsMode = !settingsMode"
-  >
-    <span class="icon">A</span>
+  <div v-if="isLoading" class="loader">
+    <div class="spinner-border text-light" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <div>Загрузка приложения</div>
   </div>
+  <!--  <SchemeSettings />-->
 
-  <FitnessTimer
-    :config="config"
-    :actual="actual"
-    :mode="mode"
-    :play="play"
-    :pastTime="pastTime"
-  />
+  <div v-else class="loaded-app">
+    <TrainingSchemes
+      :schemes="schemes"
+      :settingsMode="settingsMode"
+      @set-training-mode="setTrainingMode"
+    />
+    <div
+      class="btn btn-outline-light rounded-circle btn-settings"
+      @click="settingsMode = !settingsMode"
+    >
+      <span class="icon">A</span>
+    </div>
 
-  <button class="btn btn-light fw-bold mx-2" @click="play = !play">
-    {{ play ? "Пауза" : "Старт" }}
-  </button>
-  <button class="btn btn-outline-light fw-bold mx-2" @click="resetTimer">
-    {{ mode === "finish" ? "Повтор" : "Сброс" }}
-  </button>
-  <div :class="[settingsMode ? 'active ' : '', 'trans ']"></div>
+    <FitnessTimer
+      :config="config"
+      :actual="actual"
+      :mode="mode"
+      :play="play"
+      :pastTime="pastTime"
+    />
+
+    <button class="btn btn-light fw-bold mx-2" @click="play = !play">
+      {{ play ? "Пауза" : "Старт" }}
+    </button>
+    <button class="btn btn-outline-light fw-bold mx-2" @click="resetTimer">
+      {{ mode === "finish" ? "Повтор" : "Сброс" }}
+    </button>
+    <div :class="[settingsMode ? 'active ' : '', 'trans ']"></div>
+    <div class="gr">
+      <div class="rel"></div>
+      <div class="first">6</div>
+      <div class="rel"></div>
+      <div class="second">8</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -77,7 +92,7 @@ export default {
           id: 4,
           cycles: 1,
           rounds: 5,
-          prepTime: 5,
+          prepTime: 7,
           workTime: 40,
           restTime: 15,
           clearTime: 20,
@@ -115,6 +130,7 @@ export default {
 
       timerId: null,
 
+      isLoading: true,
       settingsMode: false,
     };
   },
@@ -202,6 +218,10 @@ export default {
       this.actual = Object.assign({}, this.config);
       this.pastTime = 0;
     },
+
+    loading() {
+      this.isLoading = false;
+    },
   },
 
   watch: {
@@ -212,6 +232,10 @@ export default {
         clearInterval(this.timerId);
       }
     },
+  },
+
+  mounted() {
+    setTimeout(this.loading, 2000);
   },
 };
 </script>
@@ -258,6 +282,35 @@ body {
     border-radius: 2rem;
     height: 50%;
     width: 76%;
+  }
+}
+
+.gr {
+  position: relative;
+  display: inline-block;
+  .first {
+    position: absolute;
+    font-size: 5rem;
+    z-index: 20;
+    transform: translateY(-7.5rem);
+    transition: all 1s;
+  }
+
+  .second {
+    position: absolute;
+    font-size: 5rem;
+    z-index: 20;
+    transform: translateY(7.5rem);
+    transition: all 1s;
+  }
+
+  .rel {
+    background-color: greenyellow;
+    position: absolute;
+    height: 7.5rem;
+    width: 3rem;
+    opacity: 0.5;
+    z-index: 10;
   }
 }
 </style>

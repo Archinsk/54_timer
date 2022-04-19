@@ -9,9 +9,19 @@
       </div>
     </div>
 
-    <div :class="mode + ' main-timer fw-bold'">
-      {{ currentMinutes }} :
-      {{ currentSeconds }}
+    <div :class="mode + ' main-timer fw-bold position-relative'">
+      <span>{{ currentMinutesFirstDigit }}</span>
+      <span>{{ currentMinutesSecondDigit }}</span>
+      :
+      <span>{{ currentSecondsFirstDigit }}</span>
+      <Transition name="fade">
+        <span v-if="secondsSecondDigitTrigger" class="position-absolute">{{
+          currentSecondsSecondDigit
+        }}</span>
+        <span v-else class="position-absolute">{{
+          currentSecondsSecondDigit
+        }}</span>
+      </Transition>
     </div>
     <div>
       Время:
@@ -36,6 +46,12 @@
 export default {
   name: "FitnessTimer",
   props: ["config", "actual", "mode", "play", "pastTime"],
+  data() {
+    return {
+      secondsSecondDigitTrigger: false,
+    };
+  },
+
   computed: {
     totalTime: function () {
       return (
@@ -115,6 +131,18 @@ export default {
         return this.clearMinutes;
       }
     },
+    currentMinutesFirstDigit: function () {
+      return Math.floor(this.currentMinutes / 10);
+    },
+    currentMinutesFirstDigitNext: function () {
+      return (this.currentMinutesFirstDigit + 1) % 10;
+    },
+    currentMinutesSecondDigit: function () {
+      return Math.floor(this.currentMinutes % 10);
+    },
+    currentMinutesSecondDigitNext: function () {
+      return (this.currentMinutesSecondDigit + 1) % 10;
+    },
     currentSeconds: function () {
       if (this.mode === "prep") {
         return this.prepSeconds;
@@ -126,6 +154,28 @@ export default {
         return this.clearSeconds;
       }
     },
+    currentSecondsFirstDigit: function () {
+      return Math.floor(this.currentSeconds / 10);
+    },
+    currentSecondsFirstDigitNext: function () {
+      return (this.currentSecondsFirstDigit + 1) % 10;
+    },
+    currentSecondsSecondDigit: function () {
+      return Math.floor(this.currentSeconds % 10);
+    },
+    currentSecondsSecondDigitNext: function () {
+      return (this.currentSecondsSecondDigit + 1) % 10;
+    },
+    currentTimeArray: function () {
+      return [
+        { id: 0, value: this.currentMinutesFirstDigit },
+        { id: 1, value: this.currentMinutesSecondDigit },
+        { id: 2, value: ":" },
+        { id: 3, value: this.currentSecondsFirstDigit },
+        { id: 4, value: this.currentSecondsSecondDigit },
+      ];
+    },
+
     currentRound: function () {
       return this.config.rounds - this.actual.rounds;
     },
@@ -149,10 +199,28 @@ export default {
       return this.futureTime % 60;
     },
   },
+
+  watch: {
+    currentSecondsSecondDigit: function () {
+      this.secondsSecondDigitTrigger = !this.secondsSecondDigitTrigger;
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.test {
+  display: inline-block;
+  span {
+    display: inline-block;
+    width: 6rem;
+    height: 6rem;
+    background-color: orangered;
+    font-size: 4rem;
+    font-weight: 700;
+  }
+}
+
 .prep {
   background-color: darkviolet;
 }
@@ -171,5 +239,31 @@ export default {
 
 .finish {
   background-color: blueviolet;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-enter-from /* .list-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-4rem);
+}
+.fade-leave-to /* .list-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(4rem);
+}
+
+.time-enter-active,
+.time-leave-active {
+  transition: all 0.5s;
+}
+.time-enter-from /* .list-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(-4rem);
+}
+.time-leave-to /* .list-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(4rem);
 }
 </style>
