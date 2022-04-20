@@ -7,7 +7,10 @@
   </div>
   <!--  <SchemeSettings />-->
 
-  <div v-else class="loaded-app">
+  <div
+    v-else
+    class="loaded-app h-100 d-flex flex-column justify-content-center align-items-center"
+  >
     <TrainingSchemes
       :schemes="schemes"
       :settingsMode="settingsMode"
@@ -19,6 +22,17 @@
     >
       <span class="icon">A</span>
     </div>
+    <div class="markers d-flex justify-content-between">
+      <buttons class="btn btn-outline-light"
+        ><span class="material-icons"> self_improvement </span></buttons
+      >
+      <buttons class="btn btn-outline-light"
+        ><span class="material-icons"> play_arrow </span></buttons
+      >
+      <buttons class="btn btn-outline-light">
+        <span class="material-icons"> pedal_bike </span>
+      </buttons>
+    </div>
 
     <FitnessTimer
       :config="config"
@@ -28,19 +42,42 @@
       :pastTime="pastTime"
     />
 
-    <button class="btn btn-light fw-bold mx-2" @click="play = !play">
-      {{ play ? "Пауза" : "Старт" }}
-    </button>
-    <button class="btn btn-outline-light fw-bold mx-2" @click="resetTimer">
-      {{ mode === "finish" ? "Повтор" : "Сброс" }}
-    </button>
-    <div :class="[settingsMode ? 'active ' : '', 'trans ']"></div>
-    <div class="gr">
-      <div class="rel"></div>
-      <div class="first">6</div>
-      <div class="rel"></div>
-      <div class="second">8</div>
+    <div class="repeats d-flex justify-content-between">
+      <div>
+        <div>Повторы</div>
+        <div>2 / 3</div>
+      </div>
+      <div>
+        <div>Раунды</div>
+        <div>2 / 3</div>
+      </div>
     </div>
+
+    <div class="controls">
+      <div class="row gx-3">
+        <div class="col d-flex">
+          <button
+            class="btn btn-outline-light col fw-bold"
+            @click="play = !play"
+          >
+            {{ play ? "Пауза" : "Старт" }}
+          </button>
+        </div>
+        <div class="col d-flex">
+          <button class="btn btn-outline-light col fw-bold" @click="resetTimer">
+            {{ mode === "finish" ? "Повтор" : "Сброс" }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div :class="[settingsMode ? 'active ' : '', 'trans bg-primary']"></div>
+    <!--    <div class="gr">-->
+    <!--      <div class="rel"></div>-->
+    <!--      <div class="first">6</div>-->
+    <!--      <div class="rel"></div>-->
+    <!--      <div class="second">8</div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -93,7 +130,7 @@ export default {
           cycles: 1,
           rounds: 5,
           prepTime: 7,
-          workTime: 40,
+          workTime: 620,
           restTime: 15,
           clearTime: 20,
         },
@@ -241,28 +278,76 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  background: radial-gradient(
-    circle,
-    rgba(138, 43, 226, 1) 0%,
-    rgba(86, 20, 148, 1) 100%
-  ) !important;
-  overflow: hidden;
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url(./assets/fonts/MaterialIcons-Regular.woff2) format("woff2");
 }
 
-.btn-settings {
-  position: absolute;
-  top: 0;
-  right: 0;
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
 
-  .icon {
-    font-family: "Anicons", sans-serif;
-    font-variation-settings: "TIME" 1;
-    transition: font-variation-settings 0.4s ease;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: "liga";
+}
+
+body {
+  overflow: hidden;
+}
+#app {
+  position: relative;
+  height: 100vh;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+
+  .btn-settings {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.75rem;
+
+    .icon {
+      font-family: "Anicons", sans-serif;
+      font-variation-settings: "TIME" 1;
+      transition: font-variation-settings 0.4s ease;
+    }
+    .icon:hover {
+      font-family: "Anicons", sans-serif;
+      font-variation-settings: "TIME" 100;
+    }
   }
-  .icon:hover {
-    font-family: "Anicons", sans-serif;
-    font-variation-settings: "TIME" 100;
+
+  .markers {
+    width: 14.125rem;
+  }
+
+  .repeats {
+    width: 12.5rem;
+  }
+
+  .controls {
+    position: absolute;
+    bottom: 0.75rem;
+    width: calc(100% - 1.5rem);
   }
 }
 
@@ -271,7 +356,6 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: darkblue;
   width: 100%;
   height: 100%;
   transition: all 2s;

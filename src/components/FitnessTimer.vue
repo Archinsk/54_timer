@@ -1,43 +1,111 @@
 <template>
   <div>
-    <div class="d-flex justify-content-center">
-      <div class="mx-2">
-        Режим: <b>{{ mode }}</b>
+    <audio id="music" volume="0.5">
+      <source src="../assets/sounds/Comsat.mp3" type="audio/mpeg" />
+    </audio>
+    <div class="position-absolute">
+      <div class="d-flex justify-content-center">
+        <div class="mx-2">
+          Режим: <b>{{ mode }}</b>
+        </div>
+        <div class="mx-2">
+          Прогресс: <b>{{ play }}</b>
+        </div>
       </div>
-      <div class="mx-2">
-        Прогресс: <b>{{ play }}</b>
+
+      <div :class="mode + ' main-timer fw-bold position-relative'">
+        <div class="wrapper">
+          <Transition name="fade">
+            <span v-if="minutesFirstDigitTrigger" class="position-absolute">{{
+              currentMinutesFirstDigit
+            }}</span>
+            <span v-else class="position-absolute">{{
+              currentMinutesFirstDigit
+            }}</span>
+          </Transition>
+        </div>
+        <div class="wrapper">
+          <Transition name="fade">
+            <span v-if="minutesSecondDigitTrigger" class="position-absolute">{{
+              currentMinutesSecondDigit
+            }}</span>
+            <span v-else class="position-absolute">{{
+              currentMinutesSecondDigit
+            }}</span>
+          </Transition>
+        </div>
+        <div class="wrapper">:</div>
+        <div class="wrapper">
+          <Transition name="fade">
+            <span v-if="secondsFirstDigitTrigger" class="position-absolute">{{
+              currentSecondsFirstDigit
+            }}</span>
+            <span v-else class="position-absolute">{{
+              currentSecondsFirstDigit
+            }}</span>
+          </Transition>
+        </div>
+
+        <!--      <span>{{ currentMinutesFirstDigit }}</span>-->
+        <!--      <span>{{ currentMinutesSecondDigit }}</span>-->
+        <!--      :-->
+        <!--      <span>{{ currentSecondsFirstDigit }}</span>-->
+        <div class="wrapper"></div>
+        <Transition name="fade">
+          <span v-if="secondsSecondDigitTrigger" class="position-absolute">{{
+            currentSecondsSecondDigit
+          }}</span>
+          <span v-else class="position-absolute">{{
+            currentSecondsSecondDigit
+          }}</span>
+        </Transition>
+      </div>
+      <div>
+        Время:
+        <b>
+          {{ pastMinutes }} : {{ pastSeconds }} / {{ futureMinutes }} :
+          {{ futureSeconds }} / {{ totalTimeMinutes }} :
+          {{ totalTimeSeconds }}</b
+        >
+      </div>
+
+      <div class="d-flex justify-content-center mt-2 mb-3">
+        <div class="mx-2">
+          Цикл: <b>{{ currentCycle }} / {{ config.cycles }}</b>
+        </div>
+        <div class="mx-2">
+          Раунд: <b>{{ currentRound }} / {{ config.rounds }}</b>
+        </div>
       </div>
     </div>
 
-    <div :class="mode + ' main-timer fw-bold position-relative'">
-      <span>{{ currentMinutesFirstDigit }}</span>
-      <span>{{ currentMinutesSecondDigit }}</span>
-      :
-      <span>{{ currentSecondsFirstDigit }}</span>
-      <Transition name="fade">
-        <span v-if="secondsSecondDigitTrigger" class="position-absolute">{{
-          currentSecondsSecondDigit
-        }}</span>
-        <span v-else class="position-absolute">{{
-          currentSecondsSecondDigit
-        }}</span>
-      </Transition>
-    </div>
-    <div>
-      Время:
-      <b>
-        {{ pastMinutes }} : {{ pastSeconds }} / {{ futureMinutes }} :
-        {{ futureSeconds }} / {{ totalTimeMinutes }} : {{ totalTimeSeconds }}</b
+    <div id="cont" data-pct="100">
+      <svg
+        id="svg"
+        width="200"
+        height="200"
+        viewPort="0 0 100 100"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
       >
-    </div>
-
-    <div class="d-flex justify-content-center mt-2 mb-3">
-      <div class="mx-2">
-        Цикл: <b>{{ currentCycle }} / {{ config.cycles }}</b>
-      </div>
-      <div class="mx-2">
-        Раунд: <b>{{ currentRound }} / {{ config.rounds }}</b>
-      </div>
+        <circle
+          :r="progressBarRadius"
+          cx="100"
+          cy="100"
+          fill="transparent"
+          :stroke-dasharray="strokeLength"
+          :stroke-dashoffset="strokeOffset"
+          stroke-linecap="round"
+        ></circle>
+        <circle
+          :r="fullProgressBarRadius"
+          cx="100"
+          cy="100"
+          fill="transparent"
+          :stroke-dasharray="fullStrokeLength"
+          :stroke-dashoffset="fullStrokeOffset"
+        ></circle>
+      </svg>
     </div>
   </div>
 </template>
@@ -48,11 +116,46 @@ export default {
   props: ["config", "actual", "mode", "play", "pastTime"],
   data() {
     return {
+      minutesFirstDigitTrigger: false,
+      minutesSecondDigitTrigger: false,
+      secondsFirstDigitTrigger: false,
       secondsSecondDigitTrigger: false,
+
+      progressBarRadius: 60,
+      fullProgressBarRadius: 90,
     };
   },
 
   computed: {
+    progress: function () {
+      return (
+        ((this.actualModeTime - this.actualModeActualTime) /
+          this.actualModeTime) *
+        100
+      );
+    },
+    fullProgress: function () {
+      return (this.pastTime / this.totalTime) * 100;
+    },
+    strokeLength: function () {
+      return 2 * Math.PI * this.progressBarRadius;
+    },
+    strokeOffset: function () {
+      return (
+        (2 * Math.PI * this.progressBarRadius * (100 - this.progress)) / 100
+      );
+    },
+    fullStrokeLength: function () {
+      return 2 * Math.PI * this.fullProgressBarRadius;
+    },
+    fullStrokeOffset: function () {
+      return (
+        (2 * Math.PI * this.fullProgressBarRadius * (100 - this.fullProgress)) /
+        100
+      );
+    },
+
+    // Общее время (в секундах)
     totalTime: function () {
       return (
         this.config.prepTime +
@@ -70,6 +173,7 @@ export default {
       return this.totalTime % 60;
     },
 
+    // Время в минутах секундах по каждому режиму работы таймера
     configPrepMinutes: function () {
       return Math.floor(this.config.prepTime / 60);
     },
@@ -95,6 +199,31 @@ export default {
       return this.config.clearTime % 60;
     },
 
+    // Общее время текущего режима
+    actualModeTime: function () {
+      if (this.mode === "prep") {
+        return this.config.prepTime;
+      } else if (this.mode === "work") {
+        return this.config.workTime;
+      } else if (this.mode === "rest") {
+        return this.config.restTime;
+      } else {
+        return this.config.clearTime;
+      }
+    },
+    actualModeActualTime: function () {
+      if (this.mode === "prep") {
+        return this.actual.prepTime;
+      } else if (this.mode === "work") {
+        return this.actual.workTime;
+      } else if (this.mode === "rest") {
+        return this.actual.restTime;
+      } else {
+        return this.actual.clearTime;
+      }
+    },
+
+    // Текущие значения таймера в минутах и секундах по каждому режиму работы таймера
     prepMinutes: function () {
       return Math.floor(this.actual.prepTime / 60);
     },
@@ -120,6 +249,7 @@ export default {
       return this.actual.clearTime % 60;
     },
 
+    // Текущие значения в минутах и секундах для вывода на главный таймер с учетом текущего режима
     currentMinutes: function () {
       if (this.mode === "prep") {
         return this.prepMinutes;
@@ -131,6 +261,19 @@ export default {
         return this.clearMinutes;
       }
     },
+    currentSeconds: function () {
+      if (this.mode === "prep") {
+        return this.prepSeconds;
+      } else if (this.mode === "work") {
+        return this.workSeconds;
+      } else if (this.mode === "rest") {
+        return this.restSeconds;
+      } else {
+        return this.clearSeconds;
+      }
+    },
+
+    // Первый и второй знак для минутного и секундного значения главного таймера
     currentMinutesFirstDigit: function () {
       return Math.floor(this.currentMinutes / 10);
     },
@@ -142,17 +285,6 @@ export default {
     },
     currentMinutesSecondDigitNext: function () {
       return (this.currentMinutesSecondDigit + 1) % 10;
-    },
-    currentSeconds: function () {
-      if (this.mode === "prep") {
-        return this.prepSeconds;
-      } else if (this.mode === "work") {
-        return this.workSeconds;
-      } else if (this.mode === "rest") {
-        return this.restSeconds;
-      } else {
-        return this.clearSeconds;
-      }
     },
     currentSecondsFirstDigit: function () {
       return Math.floor(this.currentSeconds / 10);
@@ -201,8 +333,25 @@ export default {
   },
 
   watch: {
+    currentMinutesFirstDigit: function () {
+      this.minutesFirstDigitTrigger = !this.minutesFirstDigitTrigger;
+    },
+    currentMinutesSecondDigit: function () {
+      this.minutesSecondDigitTrigger = !this.minutesSecondDigitTrigger;
+    },
+    currentSecondsFirstDigit: function () {
+      this.secondsFirstDigitTrigger = !this.secondsFirstDigitTrigger;
+    },
     currentSecondsSecondDigit: function () {
       this.secondsSecondDigitTrigger = !this.secondsSecondDigitTrigger;
+    },
+    play: function () {
+      let music = document.getElementById("music");
+      if (this.play) {
+        music.play();
+      } else {
+        music.pause();
+      }
     },
   },
 };
@@ -241,6 +390,14 @@ export default {
   background-color: blueviolet;
 }
 
+.main-timer {
+  .wrapper {
+    display: inline-block;
+    width: 2.5rem;
+    height: 6rem;
+  }
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.5s;
@@ -266,4 +423,41 @@ export default {
   opacity: 0;
   transform: translateY(4rem);
 }
+
+#svg circle {
+  transition: stroke-dashoffset 1s linear;
+  stroke: fuchsia;
+  stroke-width: 1rem;
+}
+/*#svg #bar {*/
+/*  stroke: #ff9f1e;*/
+/*}*/
+/*#cont {*/
+/*  display: block;*/
+/*  height: 200px;*/
+/*  width: 200px;*/
+/*  margin: 2em auto;*/
+/*  box-shadow: 0 0 1em black;*/
+/*  border-radius: 100%;*/
+/*  position: relative;*/
+/*}*/
 </style>
+
+<!--stroke - заливка контура-->
+
+<!--пример применения градиента к контуру:-->
+<!--<defs>-->
+<!--  <linearGradient id="myGradient">-->
+<!--    <stop offset="0%"   stop-color="green" />-->
+<!--    <stop offset="100%" stop-color="white" />-->
+<!--  </linearGradient>-->
+<!--</defs>-->
+
+<!--<circle cx="15" cy="5" r="4" fill="none"-->
+<!--        stroke="url(#myGradient)" />-->
+
+<!--stroke-dasharray="4 1 2 3" -длина штрихов в формате "штрих пробел штрих пробел"-->
+<!--stroke-dashoffset="1" - начало первого штриха на "1" раньше-->
+<!--stroke-linecap="round" - закругленное окончание линии-->
+<!--stroke-opacity="50%" - прозрачность контура-->
+<!--stroke-width="3" - ширина контура-->
