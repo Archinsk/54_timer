@@ -3,10 +3,12 @@
 
 // 2. Include any default variable overrides here
 $primary: blueviolet;
-$secondary: #561B8D;
+$secondary: #561b8d;
 $color-contrast-dark: blueviolet;
-$body-bg: #561B8D;
+$body-bg: #561b8d;
+$text-muted: #bc86ef;
 $body-color: white;
+
 $body-text-align: center;
 $link-color: white;
 $link-decoration: none;
@@ -77,9 +79,4 @@ body {
   height: 100vh;
   display: flex;
   align-items: center;
-
-  .main-timer {
-    font-size: 4rem;
-  }
 }
-

@@ -17,22 +17,42 @@
       @set-training-mode="setTrainingMode"
     />
     <div
-      class="btn btn-outline-light rounded-circle btn-settings"
-      @click="settingsMode = !settingsMode"
+      class="btn btn-outline-light rounded-circle btn-settings btn-icon-square"
+      @click="settingsToggle"
     >
-      <span class="icon">A</span>
+      <span class="icon-anicons">A</span>
     </div>
-    <div class="markers d-flex justify-content-between">
-      <buttons class="btn btn-outline-light"
-        ><span class="material-icons"> self_improvement </span></buttons
+
+    <Transition name="fade-up">
+      <div
+        v-if="!settingsMode"
+        class="markers d-flex justify-content-between mb-4"
       >
-      <buttons class="btn btn-outline-light"
-        ><span class="material-icons"> play_arrow </span></buttons
-      >
-      <buttons class="btn btn-outline-light">
-        <span class="material-icons"> pedal_bike </span>
-      </buttons>
-    </div>
+        <div
+          :class="[
+            'border border-light btn btn-outline-light btn-icon-square rounded-circle',
+            mode === 'work' ? 'disabled' : 'active',
+          ]"
+        >
+          <span class="material-icons"> self_improvement </span>
+        </div>
+        <button class="btn btn-outline-light btn-icon-square rounded-circle">
+          <span
+            :class="['icon-anicons btn-play', play ? 'playing' : '']"
+            @click="play = !play"
+            >{{ mode === "finish" ? "d" : "H" }}</span
+          >
+        </button>
+        <div
+          :class="[
+            'border border-light btn btn-outline-light btn-icon-square rounded-circle',
+            mode === 'work' ? 'active' : 'disabled',
+          ]"
+        >
+          <span class="material-icons"> directions_bike </span>
+        </div>
+      </div>
+    </Transition>
 
     <FitnessTimer
       :config="config"
@@ -42,42 +62,45 @@
       :pastTime="pastTime"
     />
 
-    <div class="repeats d-flex justify-content-between">
-      <div>
-        <div>Повторы</div>
-        <div>2 / 3</div>
-      </div>
-      <div>
-        <div>Раунды</div>
-        <div>2 / 3</div>
-      </div>
-    </div>
-
-    <div class="controls">
-      <div class="row gx-3">
-        <div class="col d-flex">
-          <button
-            class="btn btn-outline-light col fw-bold"
-            @click="play = !play"
-          >
-            {{ play ? "Пауза" : "Старт" }}
-          </button>
+    <Transition name="fade-down">
+      <div
+        v-if="!settingsMode"
+        class="repeats d-flex justify-content-between mt-4"
+      >
+        <div>
+          <div>Повторы</div>
+          <div>{{ currentRound }} / {{ config.rounds }}</div>
         </div>
-        <div class="col d-flex">
-          <button class="btn btn-outline-light col fw-bold" @click="resetTimer">
-            {{ mode === "finish" ? "Повтор" : "Сброс" }}
-          </button>
+        <div>
+          <div>Раунды</div>
+          <div>{{ currentCycle }} / {{ config.cycles }}</div>
         </div>
       </div>
-    </div>
+    </Transition>
 
+    <Transition name="fade">
+      <div v-if="!settingsMode" class="controls">
+        <div class="row gx-3">
+          <div class="col d-flex">
+            <button
+              class="btn btn-outline-light col fw-bold"
+              @click="play = !play"
+            >
+              {{ play ? "Пауза" : "Старт" }}
+            </button>
+          </div>
+          <div class="col d-flex">
+            <button
+              class="btn btn-outline-light col fw-bold"
+              @click="resetTimer"
+            >
+              {{ mode === "finish" ? "Повтор" : "Сброс" }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Transition>
     <div :class="[settingsMode ? 'active ' : '', 'trans bg-primary']"></div>
-    <!--    <div class="gr">-->
-    <!--      <div class="rel"></div>-->
-    <!--      <div class="first">6</div>-->
-    <!--      <div class="rel"></div>-->
-    <!--      <div class="second">8</div>-->
-    <!--    </div>-->
   </div>
 </template>
 
@@ -172,6 +195,15 @@ export default {
     };
   },
 
+  computed: {
+    currentRound: function () {
+      return this.config.rounds - this.actual.rounds;
+    },
+    currentCycle: function () {
+      return this.config.cycles - this.actual.cycles;
+    },
+  },
+
   methods: {
     countdown() {
       if (this.mode === "prep") {
@@ -259,6 +291,13 @@ export default {
     loading() {
       this.isLoading = false;
     },
+
+    settingsToggle() {
+      this.settingsMode = !this.settingsMode;
+      if (this.settingsMode) {
+        this.play = false;
+      }
+    },
   },
 
   watch: {
@@ -284,30 +323,58 @@ export default {
   font-weight: 400;
   src: url(./assets/fonts/MaterialIcons-Regular.woff2) format("woff2");
 }
+#app {
+  .material-icons {
+    font-family: "Material Icons";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
 
-.material-icons {
-  font-family: "Material Icons";
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px; /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
 
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
 
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
+    /* Support for IE. */
+    font-feature-settings: "liga";
+  }
 
-  /* Support for IE. */
-  font-feature-settings: "liga";
+  .icon-anicons {
+    font-family: "Anicons", sans-serif;
+    font-size: 24px;
+    line-height: 1;
+    font-variation-settings: "TIME" 1;
+    transition: font-variation-settings 0.4s ease;
+
+    &:hover {
+      font-family: "Anicons", sans-serif;
+      font-variation-settings: "TIME" 100;
+    }
+
+    &.btn-play {
+      font-variation-settings: "TIME" 1;
+
+      &.playing {
+        font-variation-settings: "TIME" 100;
+      }
+    }
+  }
+
+  .btn-icon-square {
+    line-height: 0.75;
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
 }
 
 body {
@@ -324,16 +391,6 @@ body {
     top: 0;
     right: 0;
     margin: 0.75rem;
-
-    .icon {
-      font-family: "Anicons", sans-serif;
-      font-variation-settings: "TIME" 1;
-      transition: font-variation-settings 0.4s ease;
-    }
-    .icon:hover {
-      font-family: "Anicons", sans-serif;
-      font-variation-settings: "TIME" 100;
-    }
   }
 
   .markers {
@@ -369,32 +426,32 @@ body {
   }
 }
 
-.gr {
-  position: relative;
-  display: inline-block;
-  .first {
-    position: absolute;
-    font-size: 5rem;
-    z-index: 20;
-    transform: translateY(-7.5rem);
-    transition: all 1s;
-  }
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
-  .second {
-    position: absolute;
-    font-size: 5rem;
-    z-index: 20;
-    transform: translateY(7.5rem);
-    transition: all 1s;
-  }
+.fade-up-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-up-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(4rem);
+}
 
-  .rel {
-    background-color: greenyellow;
-    position: absolute;
-    height: 7.5rem;
-    width: 3rem;
-    opacity: 0.5;
-    z-index: 10;
-  }
+.fade-down-enter-active,
+.fade-leave-active {
+  transition: all 0.5s;
+}
+.fade-down-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4rem);
 }
 </style>

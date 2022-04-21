@@ -1,80 +1,80 @@
 <template>
-  <div>
+  <div class="position-relative">
     <audio id="music" volume="0.5">
       <source src="../assets/sounds/Comsat.mp3" type="audio/mpeg" />
     </audio>
-    <div class="position-absolute">
-      <div class="d-flex justify-content-center">
-        <div class="mx-2">
-          Режим: <b>{{ mode }}</b>
-        </div>
-        <div class="mx-2">
-          Прогресс: <b>{{ play }}</b>
-        </div>
-      </div>
-
-      <div :class="mode + ' main-timer fw-bold position-relative'">
-        <div class="wrapper">
-          <Transition name="fade">
-            <span v-if="minutesFirstDigitTrigger" class="position-absolute">{{
-              currentMinutesFirstDigit
-            }}</span>
-            <span v-else class="position-absolute">{{
-              currentMinutesFirstDigit
-            }}</span>
-          </Transition>
-        </div>
-        <div class="wrapper">
-          <Transition name="fade">
-            <span v-if="minutesSecondDigitTrigger" class="position-absolute">{{
-              currentMinutesSecondDigit
-            }}</span>
-            <span v-else class="position-absolute">{{
-              currentMinutesSecondDigit
-            }}</span>
-          </Transition>
-        </div>
-        <div class="wrapper">:</div>
-        <div class="wrapper">
-          <Transition name="fade">
-            <span v-if="secondsFirstDigitTrigger" class="position-absolute">{{
-              currentSecondsFirstDigit
-            }}</span>
-            <span v-else class="position-absolute">{{
-              currentSecondsFirstDigit
-            }}</span>
-          </Transition>
+    <div class="position-absolute w-100 h-100">
+      <div
+        class="d-flex flex-column align-items-center justify-content-center w-100 h-100"
+      >
+        <div>
+          <div class="fs-1 text-muted">
+            {{ String(futureMinutes).padStart(2, "0") }} :
+            {{ String(futureSeconds).padStart(2, "0") }}
+          </div>
         </div>
 
-        <!--      <span>{{ currentMinutesFirstDigit }}</span>-->
-        <!--      <span>{{ currentMinutesSecondDigit }}</span>-->
-        <!--      :-->
-        <!--      <span>{{ currentSecondsFirstDigit }}</span>-->
-        <div class="wrapper"></div>
-        <Transition name="fade">
-          <span v-if="secondsSecondDigitTrigger" class="position-absolute">{{
-            currentSecondsSecondDigit
-          }}</span>
-          <span v-else class="position-absolute">{{
-            currentSecondsSecondDigit
-          }}</span>
-        </Transition>
-      </div>
-      <div>
-        Время:
-        <b>
-          {{ pastMinutes }} : {{ pastSeconds }} / {{ futureMinutes }} :
-          {{ futureSeconds }} / {{ totalTimeMinutes }} :
-          {{ totalTimeSeconds }}</b
-        >
-      </div>
-
-      <div class="d-flex justify-content-center mt-2 mb-3">
-        <div class="mx-2">
-          Цикл: <b>{{ currentCycle }} / {{ config.cycles }}</b>
+        <div class="main-timer fw-bold">
+          <div class="wrapper">
+            <Transition name="fade-down">
+              <div
+                v-if="minutesFirstDigitTrigger"
+                class="position-absolute main-digit"
+              >
+                {{ currentMinutesFirstDigit }}
+              </div>
+              <div v-else class="position-absolute main-digit">
+                {{ currentMinutesFirstDigit }}
+              </div>
+            </Transition>
+          </div>
+          <div class="wrapper">
+            <Transition name="fade-down">
+              <div
+                v-if="minutesSecondDigitTrigger"
+                class="position-absolute main-digit"
+              >
+                {{ currentMinutesSecondDigit }}
+              </div>
+              <div v-else class="position-absolute main-digit">
+                {{ currentMinutesSecondDigit }}
+              </div>
+            </Transition>
+          </div>
+          <div class="wrapper">
+            <div class="position-absolute main-digit-divider">:</div>
+          </div>
+          <div class="wrapper">
+            <Transition name="fade-down">
+              <div
+                v-if="secondsFirstDigitTrigger"
+                class="position-absolute main-digit"
+              >
+                {{ currentSecondsFirstDigit }}
+              </div>
+              <div v-else class="position-absolute main-digit">
+                {{ currentSecondsFirstDigit }}
+              </div>
+            </Transition>
+          </div>
+          <div class="wrapper">
+            <Transition name="fade-down">
+              <div
+                v-if="secondsSecondDigitTrigger"
+                class="position-absolute main-digit"
+              >
+                {{ currentSecondsSecondDigit }}
+              </div>
+              <div v-else class="position-absolute main-digit">
+                {{ currentSecondsSecondDigit }}
+              </div>
+            </Transition>
+          </div>
         </div>
-        <div class="mx-2">
-          Раунд: <b>{{ currentRound }} / {{ config.rounds }}</b>
+
+        <div class="fs-1 text-muted">
+          {{ String(totalTimeMinutes).padStart(2, "0") }} :
+          {{ String(totalTimeSeconds).padStart(2, "0") }}
         </div>
       </div>
     </div>
@@ -82,28 +82,48 @@
     <div id="cont" data-pct="100">
       <svg
         id="svg"
-        width="200"
-        height="200"
-        viewPort="0 0 100 100"
+        viewPort="0 0 17rem 17rem"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
       >
         <circle
-          :r="progressBarRadius"
-          cx="100"
-          cy="100"
+          :r="progressBarRadius + 'rem'"
+          cx="8.5rem"
+          cy="8.5rem"
           fill="transparent"
-          :stroke-dasharray="strokeLength"
-          :stroke-dashoffset="strokeOffset"
-          stroke-linecap="round"
+          stroke="#bc86ef"
+          stroke-width="0.5rem"
+          :stroke-dasharray="strokeLength + 'rem'"
         ></circle>
         <circle
-          :r="fullProgressBarRadius"
-          cx="100"
-          cy="100"
+          :r="progressBarRadius + 'rem'"
+          cx="8.5rem"
+          cy="8.5rem"
           fill="transparent"
-          :stroke-dasharray="fullStrokeLength"
-          :stroke-dashoffset="fullStrokeOffset"
+          stroke="var(--bs-light)"
+          stroke-width="0.5rem"
+          :stroke-dasharray="strokeLength + 'rem'"
+          :stroke-dashoffset="strokeOffset + 'rem'"
+        ></circle>
+
+        <circle
+          :r="fullProgressBarRadius + 'rem'"
+          cx="8.5rem"
+          cy="8.5rem"
+          fill="transparent"
+          stroke="#bc86ef"
+          stroke-width="0.5rem"
+          :stroke-dasharray="fullStrokeLength + 'rem'"
+        ></circle>
+        <circle
+          :r="fullProgressBarRadius + 'rem'"
+          cx="8.5rem"
+          cy="8.5rem"
+          fill="transparent"
+          stroke="var(--bs-light)"
+          stroke-width="0.5rem"
+          :stroke-dasharray="fullStrokeLength + 'rem'"
+          :stroke-dashoffset="fullStrokeOffset + 'rem'"
         ></circle>
       </svg>
     </div>
@@ -121,8 +141,8 @@ export default {
       secondsFirstDigitTrigger: false,
       secondsSecondDigitTrigger: false,
 
-      progressBarRadius: 60,
-      fullProgressBarRadius: 90,
+      progressBarRadius: "7.25",
+      fullProgressBarRadius: "8.25",
     };
   },
 
@@ -358,11 +378,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.main-timer {
+  font-size: 4rem;
+  height: 6rem;
+  .wrapper {
+    display: inline-block;
+    position: relative;
+    width: 2.07rem;
+    height: 6rem;
+
+    .main-digit {
+    }
+
+    .main-digit-divider {
+      left: 0.64rem;
+    }
+  }
+}
+
+#svg {
+  width: 17rem;
+  height: 17rem;
+}
+
 .test {
   display: inline-block;
   span {
     display: inline-block;
-    width: 6rem;
+    width: 2.07rem;
     height: 6rem;
     background-color: orangered;
     font-size: 4rem;
@@ -370,43 +413,15 @@ export default {
   }
 }
 
-.prep {
-  background-color: darkviolet;
-}
-
-.work {
-  background-color: mediumorchid;
-}
-
-.rest {
-  background-color: rebeccapurple;
-}
-
-.clear {
-  background-color: indigo;
-}
-
-.finish {
-  background-color: blueviolet;
-}
-
-.main-timer {
-  .wrapper {
-    display: inline-block;
-    width: 2.5rem;
-    height: 6rem;
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
+.fade-down-enter-active,
+.fade-down-leave-active {
   transition: all 0.5s;
 }
-.fade-enter-from /* .list-leave-active до версии 2.1.8 */ {
+.fade-down-enter-from /* .list-leave-active до версии 2.1.8 */ {
   opacity: 0;
   transform: translateY(-4rem);
 }
-.fade-leave-to /* .list-leave-active до версии 2.1.8 */ {
+.fade-down-leave-to /* .list-leave-active до версии 2.1.8 */ {
   opacity: 0;
   transform: translateY(4rem);
 }
@@ -426,8 +441,6 @@ export default {
 
 #svg circle {
   transition: stroke-dashoffset 1s linear;
-  stroke: fuchsia;
-  stroke-width: 1rem;
 }
 /*#svg #bar {*/
 /*  stroke: #ff9f1e;*/
