@@ -1,17 +1,19 @@
 <template>
-  <div class="d-flex flex-column align-items-end gap-2">
-    <TransitionGroup name="list">
-      <button
-        v-for="scheme of renderedSchemes"
-        :key="scheme.id"
-        class="btn btn-outline-light"
-        @click="$emit('set-training-mode', scheme)"
-      >
-        {{ scheme.prepTime }} + ( ({{ scheme.workTime }} /
-        {{ scheme.restTime }}) x {{ scheme.rounds }} + {{ scheme.clearTime }} )
-        x {{ scheme.cycles }}
-      </button>
-    </TransitionGroup>
+  <div class="position-absolute">
+    <div class="d-flex flex-column align-items-end gap-2">
+      <TransitionGroup name="list">
+        <button
+          v-for="scheme of renderedSchemes"
+          :key="scheme.id"
+          class="btn btn-outline-light"
+          @click="$emit('set-training-mode', scheme)"
+        >
+          {{ scheme.prepTime }} + ( ({{ scheme.workTime }} /
+          {{ scheme.restTime }}) x {{ scheme.rounds }} +
+          {{ scheme.clearTime }} ) x {{ scheme.cycles }}
+        </button>
+      </TransitionGroup>
+    </div>
   </div>
 </template>
 

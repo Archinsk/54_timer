@@ -7,14 +7,11 @@
       <div
         class="d-flex flex-column align-items-center justify-content-center w-100 h-100"
       >
-        <div>
-          <div class="fs-1 text-muted">
-            {{ String(futureMinutes).padStart(2, "0") }} :
-            {{ String(futureSeconds).padStart(2, "0") }}
-          </div>
+        <div class="secondary-timer text-muted">
+          {{ String(futureMinutes).padStart(2, "0") }} :
+          {{ String(futureSeconds).padStart(2, "0") }}
         </div>
-
-        <div class="main-timer fw-bold">
+        <div class="primary-timer fw-bold">
           <div class="wrapper">
             <Transition name="fade-down">
               <div
@@ -71,59 +68,42 @@
             </Transition>
           </div>
         </div>
-
-        <div class="fs-1 text-muted">
+        <div class="secondary-timer text-muted">
           {{ String(totalTimeMinutes).padStart(2, "0") }} :
           {{ String(totalTimeSeconds).padStart(2, "0") }}
         </div>
       </div>
     </div>
 
-    <div id="cont" data-pct="100">
+    <div id="cont">
       <svg
         id="svg"
-        viewPort="0 0 17rem 17rem"
+        viewBox="0 0 272 272"
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
       >
         <circle
-          :r="progressBarRadius + 'rem'"
-          cx="8.5rem"
-          cy="8.5rem"
-          fill="transparent"
-          stroke="#bc86ef"
-          stroke-width="0.5rem"
-          :stroke-dasharray="strokeLength + 'rem'"
+          id="progress-track-external"
+          :r="fullProgressBarRadius + 'rem'"
+          :stroke-dasharray="fullStrokeLength + 'rem'"
         ></circle>
         <circle
-          :r="progressBarRadius + 'rem'"
-          cx="8.5rem"
-          cy="8.5rem"
-          fill="transparent"
-          stroke="var(--bs-light)"
-          stroke-width="0.5rem"
-          :stroke-dasharray="strokeLength + 'rem'"
-          :stroke-dashoffset="strokeOffset + 'rem'"
+          id="progress-bar-external"
+          :r="fullProgressBarRadius + 'rem'"
+          :stroke-dasharray="fullStrokeLength + 'rem'"
+          :stroke-dashoffset="fullStrokeOffset + 'rem'"
         ></circle>
 
         <circle
-          :r="fullProgressBarRadius + 'rem'"
-          cx="8.5rem"
-          cy="8.5rem"
-          fill="transparent"
-          stroke="#bc86ef"
-          stroke-width="0.5rem"
-          :stroke-dasharray="fullStrokeLength + 'rem'"
+          id="progress-track-internal"
+          :r="progressBarRadius + 'rem'"
+          :stroke-dasharray="strokeLength + 'rem'"
         ></circle>
         <circle
-          :r="fullProgressBarRadius + 'rem'"
-          cx="8.5rem"
-          cy="8.5rem"
-          fill="transparent"
-          stroke="var(--bs-light)"
-          stroke-width="0.5rem"
-          :stroke-dasharray="fullStrokeLength + 'rem'"
-          :stroke-dashoffset="fullStrokeOffset + 'rem'"
+          id="progress-bar-internal"
+          :r="progressBarRadius + 'rem'"
+          :stroke-dasharray="strokeLength + 'rem'"
+          :stroke-dashoffset="strokeOffset + 'rem'"
         ></circle>
       </svg>
     </div>
@@ -378,29 +358,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-timer {
-  font-size: 4rem;
-  height: 6rem;
-  .wrapper {
-    display: inline-block;
-    position: relative;
-    width: 2.07rem;
-    height: 6rem;
-
-    .main-digit {
-    }
-
-    .main-digit-divider {
-      left: 0.64rem;
-    }
-  }
-}
-
-#svg {
-  width: 17rem;
-  height: 17rem;
-}
-
 .test {
   display: inline-block;
   span {

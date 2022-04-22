@@ -1,106 +1,116 @@
 <template>
-  <div v-if="isLoading" class="loader">
-    <div class="spinner-border text-light" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <div>Загрузка приложения</div>
-  </div>
-  <!--  <SchemeSettings />-->
-
   <div
-    v-else
-    class="loaded-app h-100 d-flex flex-column justify-content-center align-items-center"
-  >
-    <TrainingSchemes
-      :schemes="schemes"
-      :settingsMode="settingsMode"
-      @set-training-mode="setTrainingMode"
-    />
-    <div
-      class="btn btn-outline-light rounded-circle btn-settings btn-icon-square"
-      @click="settingsToggle"
-    >
-      <span class="icon-anicons">A</span>
+    :class="['timer-background bg-primary', settingsMode ? 'active ' : '']"
+  ></div>
+  <div id="app-container" class="container">
+    <div v-if="isLoading" class="loader">
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div>Загрузка приложения</div>
     </div>
+    <!--  <SchemeSettings />-->
 
-    <Transition name="fade-up">
+    <div
+      v-else
+      class="loaded-app h-100 d-flex flex-column justify-content-center align-items-center"
+    >
+      <TrainingSchemes
+        :schemes="schemes"
+        :settingsMode="settingsMode"
+        @set-training-mode="setTrainingMode"
+      />
       <div
-        v-if="!settingsMode"
-        class="markers d-flex justify-content-between mb-4"
+        class="btn btn-outline-light rounded-circle btn-settings btn-icon-square"
+        @click="settingsToggle"
       >
+        <span class="icon-anicons">A</span>
+      </div>
+
+      <Transition name="fade-up">
         <div
-          :class="[
-            'border border-light btn btn-outline-light btn-icon-square rounded-circle',
-            mode === 'work' ? 'disabled' : 'active',
-          ]"
+          v-if="!settingsMode"
+          class="markers d-flex justify-content-between mb-4"
         >
-          <span class="material-icons"> self_improvement </span>
-        </div>
-        <button class="btn btn-outline-light btn-icon-square rounded-circle">
-          <span
-            :class="['icon-anicons btn-play', play ? 'playing' : '']"
-            @click="play = !play"
-            >{{ mode === "finish" ? "d" : "H" }}</span
+          <div
+            :class="[
+              'border border-light btn btn-outline-light btn-icon-square rounded-circle',
+              mode === 'work' ? 'disabled' : 'active',
+            ]"
           >
-        </button>
-        <div
-          :class="[
-            'border border-light btn btn-outline-light btn-icon-square rounded-circle',
-            mode === 'work' ? 'active' : 'disabled',
-          ]"
-        >
-          <span class="material-icons"> directions_bike </span>
-        </div>
-      </div>
-    </Transition>
-
-    <FitnessTimer
-      :config="config"
-      :actual="actual"
-      :mode="mode"
-      :play="play"
-      :pastTime="pastTime"
-    />
-
-    <Transition name="fade-down">
-      <div
-        v-if="!settingsMode"
-        class="repeats d-flex justify-content-between mt-4"
-      >
-        <div>
-          <div>Повторы</div>
-          <div>{{ currentRound }} / {{ config.rounds }}</div>
-        </div>
-        <div>
-          <div>Раунды</div>
-          <div>{{ currentCycle }} / {{ config.cycles }}</div>
-        </div>
-      </div>
-    </Transition>
-
-    <Transition name="fade">
-      <div v-if="!settingsMode" class="controls">
-        <div class="row gx-3">
-          <div class="col d-flex">
-            <button
-              class="btn btn-outline-light col fw-bold"
+            <span class="material-icons"> self_improvement </span>
+          </div>
+          <button class="btn btn-outline-light btn-icon-square rounded-circle">
+            <span
+              :class="['icon-anicons btn-play', play ? 'playing' : '']"
               @click="play = !play"
+              >{{ mode === "finish" ? "d" : "H" }}</span
             >
-              {{ play ? "Пауза" : "Старт" }}
-            </button>
+          </button>
+          <div
+            :class="[
+              'border border-light btn btn-outline-light btn-icon-square rounded-circle',
+              mode === 'work' ? 'active' : 'disabled',
+            ]"
+          >
+            <span class="material-icons"> directions_bike </span>
           </div>
-          <div class="col d-flex">
-            <button
-              class="btn btn-outline-light col fw-bold"
-              @click="resetTimer"
-            >
-              {{ mode === "finish" ? "Повтор" : "Сброс" }}
-            </button>
+        </div>
+      </Transition>
+
+      <div
+        :class="[
+          'timer-screen d-flex flex-column align-items-center',
+          { 'settings-mode': settingsMode },
+        ]"
+      >
+        <FitnessTimer
+          :config="config"
+          :actual="actual"
+          :mode="mode"
+          :play="play"
+          :pastTime="pastTime"
+        />
+
+        <div class="repeats d-flex justify-content-between">
+          <div>
+            <div class="repeats-title text-muted">ПОВТОРЫ</div>
+            <div class="repeats-value">
+              {{ currentRound }} / {{ config.rounds }}
+            </div>
+          </div>
+          <div>
+            <div class="repeats-title text-muted">РАУНДЫ</div>
+            <div class="repeats-value">
+              {{ currentCycle }} / {{ config.cycles }}
+            </div>
           </div>
         </div>
       </div>
-    </Transition>
-    <div :class="[settingsMode ? 'active ' : '', 'trans bg-primary']"></div>
+
+      <Transition name="fade-up">
+        <div v-if="!settingsMode" class="controls">
+          <div class="row gx-3">
+            <div class="col d-flex">
+              <button
+                class="btn btn-outline-light col fw-bold"
+                @click="play = !play"
+              >
+                {{ play ? "Пауза" : "Старт" }}
+              </button>
+            </div>
+            <div class="col d-flex">
+              <button
+                class="btn btn-outline-light col fw-bold"
+                @click="resetTimer"
+              >
+                {{ mode === "finish" ? "Повтор" : "Сброс" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
@@ -323,7 +333,7 @@ export default {
   font-weight: 400;
   src: url(./assets/fonts/MaterialIcons-Regular.woff2) format("woff2");
 }
-#app {
+#app-container {
   .material-icons {
     font-family: "Material Icons";
     font-weight: normal;
@@ -380,7 +390,7 @@ export default {
 body {
   overflow: hidden;
 }
-#app {
+#app-container {
   position: relative;
   height: 100vh;
   padding-top: 0.75rem;
@@ -397,8 +407,127 @@ body {
     width: 14.125rem;
   }
 
-  .repeats {
-    width: 12.5rem;
+  .timer-screen {
+    height: 21.875rem;
+    transition: margin 1s;
+
+    .primary-timer {
+      font-size: 4rem;
+      height: 6rem;
+      transition: all 1s;
+
+      .wrapper {
+        display: inline-block;
+        position: relative;
+        width: 2.07rem;
+        height: 6rem;
+        transition: width 1s, height 1s;
+
+        .main-digit-divider {
+          left: 0.64rem;
+          transition: left 1s;
+        }
+      }
+    }
+
+    .secondary-timer {
+      font-size: 1.8rem;
+      transition: all 1s;
+    }
+
+    #svg {
+      width: 17rem;
+      height: 17rem;
+      transition: all 1s;
+
+      circle {
+        fill: transparent;
+        cx: 8.5rem;
+        cy: 8.5rem;
+        stroke-width: 0.5rem;
+      }
+
+      #progress-track-external {
+        stroke: #bc86ef;
+        r: 8.25rem;
+      }
+
+      #progress-bar-external {
+        stroke: var(--bs-light);
+        r: 8.25rem;
+      }
+
+      #progress-track-internal {
+        stroke: #bc86ef;
+        r: 7.25rem;
+      }
+
+      #progress-bar-internal {
+        stroke: var(--bs-light);
+        r: 7.25rem;
+      }
+    }
+
+    .repeats {
+      width: 12.5rem;
+      margin-top: 1.5rem;
+
+      .repeats-title {
+        font-size: 1rem;
+        transition: all 1s;
+      }
+
+      .repeats-value {
+        font-size: 1.25rem;
+        transition: all 1s;
+      }
+    }
+
+    &.settings-mode {
+      height: 16.40625rem;
+      margin-top: calc(
+        100vh - 1.5rem - 16.40625rem - 50vh + 0.75rem + 16.40625rem
+      );
+
+      .primary-timer {
+        font-size: 3rem;
+        height: 4.5rem;
+
+        .wrapper {
+          display: inline-block;
+          position: relative;
+          width: 1.5525rem;
+          height: 4.5rem;
+
+          .main-digit-divider {
+            left: 0.48rem;
+          }
+        }
+      }
+
+      .secondary-timer {
+        font-size: 1.35rem;
+      }
+
+      #svg {
+        width: 12.75rem;
+        height: 12.75rem;
+      }
+
+      .repeats {
+        transition: all 1s;
+        width: 9.375rem;
+        margin-top: 1.125rem;
+
+        .repeats-title {
+          font-size: 0.75rem;
+        }
+
+        .repeats-value {
+          font-size: 0.9375rem;
+        }
+      }
+    }
   }
 
   .controls {
@@ -408,21 +537,21 @@ body {
   }
 }
 
-.trans {
+.timer-background {
   z-index: -1;
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  transition: all 2s;
+  height: 100vh;
+  width: 100vw;
+  transition: all 1s;
 
   &.active {
-    left: 12%;
-    bottom: 5%;
-    border-radius: 2rem;
-    height: 50%;
-    width: 76%;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    border-radius: 1rem;
+    height: calc(50vh - 0.75rem);
+    width: calc(100vw - 1.5rem);
   }
 }
 
@@ -436,21 +565,21 @@ body {
 }
 
 .fade-up-enter-active,
-.fade-leave-active {
+.fade-up-leave-active {
   transition: all 0.5s;
 }
 .fade-up-enter-from,
-.fade-leave-to {
+.fade-up-leave-to {
   opacity: 0;
   transform: translateY(4rem);
 }
 
 .fade-down-enter-active,
-.fade-leave-active {
+.fade-down-leave-active {
   transition: all 0.5s;
 }
 .fade-down-enter-from,
-.fade-leave-to {
+.fade-down-leave-to {
   opacity: 0;
   transform: translateY(-4rem);
 }
