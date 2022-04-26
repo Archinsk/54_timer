@@ -20,14 +20,16 @@
         :settingsMode="settingsMode"
         @set-training-mode="setTrainingMode"
       />
-      <div
-        class="btn btn-outline-light rounded-circle btn-settings btn-icon-square"
+      <button
+        class="btn border border-light btn-settings btn-icon-square rounded-circle"
         @click="settingsToggle"
       >
-        <span class="icon-anicons">A</span>
-      </div>
+        <span :class="['anicons-icons', { 'settings-mode': settingsMode }]"
+          >A</span
+        >
+      </button>
 
-      <Transition name="fade-up">
+      <Transition name="fade-down">
         <div
           v-if="!settingsMode"
           class="markers d-flex justify-content-between mb-4"
@@ -40,9 +42,11 @@
           >
             <span class="material-icons"> self_improvement </span>
           </div>
-          <button class="btn btn-outline-light btn-icon-square rounded-circle">
+          <button
+            class="btn border border-light btn-play btn-icon-square rounded-circle"
+          >
             <span
-              :class="['icon-anicons btn-play', play ? 'playing' : '']"
+              :class="['anicons-icons', play ? 'playing' : '']"
               @click="play = !play"
               >{{ mode === "finish" ? "d" : "H" }}</span
             >
@@ -333,57 +337,53 @@ export default {
   font-weight: 400;
   src: url(./assets/fonts/MaterialIcons-Regular.woff2) format("woff2");
 }
+
+.abc {
+  display: inline;
+}
+
 #app-container {
-  .material-icons {
-    font-family: "Material Icons";
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px; /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+  .btn-icon-square {
+    line-height: 0.75;
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
 
-    /* Support for all WebKit browsers. */
-    -webkit-font-smoothing: antialiased;
-    /* Support for Safari and Chrome. */
-    text-rendering: optimizeLegibility;
-
-    /* Support for Firefox. */
-    -moz-osx-font-smoothing: grayscale;
-
-    /* Support for IE. */
-    font-feature-settings: "liga";
-  }
-
-  .icon-anicons {
-    font-family: "Anicons", sans-serif;
-    font-size: 24px;
-    line-height: 1;
-    font-variation-settings: "TIME" 1;
-    transition: font-variation-settings 0.4s ease;
-
-    &:hover {
-      font-family: "Anicons", sans-serif;
-      font-variation-settings: "TIME" 100;
+    .material-icons {
+      font-family: "Material Icons";
+      font-size: 24px;
+      display: inline-block;
+      line-height: 1;
     }
 
-    &.btn-play {
+    .anicons-icons {
+      font-family: "Anicons";
+      font-size: 24px;
+      display: inline-block;
+      line-height: 0.75;
+      padding-top: 0.0625rem;
+      padding-bottom: 0.3125rem;
+      transition: font-variation-settings 0.4s ease;
+    }
+  }
+
+  .btn-settings {
+    .anicons-icons {
+      font-variation-settings: "TIME" 1;
+
+      &.settings-mode {
+        font-variation-settings: "TIME" 100;
+      }
+    }
+  }
+
+  .btn-play {
+    .anicons-icons {
       font-variation-settings: "TIME" 1;
 
       &.playing {
         font-variation-settings: "TIME" 100;
       }
     }
-  }
-
-  .btn-icon-square {
-    line-height: 0.75;
-    padding-left: 0.375rem;
-    padding-right: 0.375rem;
   }
 }
 
