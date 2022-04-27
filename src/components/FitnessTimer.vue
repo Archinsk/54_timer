@@ -1,112 +1,93 @@
 <template>
-  <div class="position-relative">
-    <audio id="music" volume="0.5">
-      <source src="../assets/sounds/Comsat.mp3" type="audio/mpeg" />
-    </audio>
-    <div class="position-absolute w-100 h-100">
-      <div
-        class="d-flex flex-column align-items-center justify-content-center w-100 h-100"
-      >
-        <div class="secondary-timer text-muted">
-          {{ String(futureMinutes).padStart(2, "0") }} :
-          {{ String(futureSeconds).padStart(2, "0") }}
+  <div id="timers-with-progress-bars">
+    <svg
+      id="progress"
+      viewBox="0 0 272 272"
+      version="1.1"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        id="progress-track-external"
+        :stroke-dasharray="fullStrokeLength + 'rem'"
+      ></circle>
+      <circle
+        id="progress-bar-external"
+        :stroke-dasharray="fullStrokeLength + 'rem'"
+        :stroke-dashoffset="fullStrokeOffset + 'rem'"
+      ></circle>
+
+      <circle
+        id="progress-track-internal"
+        :stroke-dasharray="strokeLength + 'rem'"
+      ></circle>
+      <circle
+        id="progress-bar-internal"
+        :stroke-dasharray="strokeLength + 'rem'"
+        :stroke-dashoffset="strokeOffset + 'rem'"
+      ></circle>
+    </svg>
+
+    <div id="timers">
+      <div id="total-timer">
+        {{ String(futureMinutes).padStart(2, "0") }} :
+        {{ String(futureSeconds).padStart(2, "0") }}
+      </div>
+
+      <div id="current-timer">
+        <div class="current-timer-digit-wrapper">
+          <Transition name="fade-down">
+            <div v-if="minutesFirstDigitTrigger" class="current-timer-digit">
+              {{ currentMinutesFirstDigit }}
+            </div>
+            <div v-else class="current-timer-digit">
+              {{ currentMinutesFirstDigit }}
+            </div>
+          </Transition>
         </div>
-        <div class="primary-timer fw-bold">
-          <div class="wrapper">
-            <Transition name="fade-down">
-              <div
-                v-if="minutesFirstDigitTrigger"
-                class="position-absolute main-digit"
-              >
-                {{ currentMinutesFirstDigit }}
-              </div>
-              <div v-else class="position-absolute main-digit">
-                {{ currentMinutesFirstDigit }}
-              </div>
-            </Transition>
-          </div>
-          <div class="wrapper">
-            <Transition name="fade-down">
-              <div
-                v-if="minutesSecondDigitTrigger"
-                class="position-absolute main-digit"
-              >
-                {{ currentMinutesSecondDigit }}
-              </div>
-              <div v-else class="position-absolute main-digit">
-                {{ currentMinutesSecondDigit }}
-              </div>
-            </Transition>
-          </div>
-          <div class="wrapper">
-            <div class="position-absolute main-digit-divider">:</div>
-          </div>
-          <div class="wrapper">
-            <Transition name="fade-down">
-              <div
-                v-if="secondsFirstDigitTrigger"
-                class="position-absolute main-digit"
-              >
-                {{ currentSecondsFirstDigit }}
-              </div>
-              <div v-else class="position-absolute main-digit">
-                {{ currentSecondsFirstDigit }}
-              </div>
-            </Transition>
-          </div>
-          <div class="wrapper">
-            <Transition name="fade-down">
-              <div
-                v-if="secondsSecondDigitTrigger"
-                class="position-absolute main-digit"
-              >
-                {{ currentSecondsSecondDigit }}
-              </div>
-              <div v-else class="position-absolute main-digit">
-                {{ currentSecondsSecondDigit }}
-              </div>
-            </Transition>
-          </div>
+        <div class="current-timer-digit-wrapper">
+          <Transition name="fade-down">
+            <div v-if="minutesSecondDigitTrigger" class="current-timer-digit">
+              {{ currentMinutesSecondDigit }}
+            </div>
+            <div v-else class="current-timer-digit">
+              {{ currentMinutesSecondDigit }}
+            </div>
+          </Transition>
         </div>
-        <div class="secondary-timer text-muted">
-          {{ String(totalTimeMinutes).padStart(2, "0") }} :
-          {{ String(totalTimeSeconds).padStart(2, "0") }}
+        <div class="current-timer-digit-wrapper">
+          <div class="current-timer-digit main-digit-divider">:</div>
         </div>
+        <div class="current-timer-digit-wrapper">
+          <Transition name="fade-down">
+            <div v-if="secondsFirstDigitTrigger" class="current-timer-digit">
+              {{ currentSecondsFirstDigit }}
+            </div>
+            <div v-else class="current-timer-digit">
+              {{ currentSecondsFirstDigit }}
+            </div>
+          </Transition>
+        </div>
+        <div class="current-timer-digit-wrapper">
+          <Transition name="fade-down">
+            <div v-if="secondsSecondDigitTrigger" class="current-timer-digit">
+              {{ currentSecondsSecondDigit }}
+            </div>
+            <div v-else class="current-timer-digit">
+              {{ currentSecondsSecondDigit }}
+            </div>
+          </Transition>
+        </div>
+      </div>
+
+      <div id="total-time-info">
+        {{ String(totalTimeMinutes).padStart(2, "0") }} :
+        {{ String(totalTimeSeconds).padStart(2, "0") }}
       </div>
     </div>
 
-    <div id="cont">
-      <svg
-        id="svg"
-        viewBox="0 0 272 272"
-        version="1.1"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          id="progress-track-external"
-          :r="fullProgressBarRadius + 'rem'"
-          :stroke-dasharray="fullStrokeLength + 'rem'"
-        ></circle>
-        <circle
-          id="progress-bar-external"
-          :r="fullProgressBarRadius + 'rem'"
-          :stroke-dasharray="fullStrokeLength + 'rem'"
-          :stroke-dashoffset="fullStrokeOffset + 'rem'"
-        ></circle>
-
-        <circle
-          id="progress-track-internal"
-          :r="progressBarRadius + 'rem'"
-          :stroke-dasharray="strokeLength + 'rem'"
-        ></circle>
-        <circle
-          id="progress-bar-internal"
-          :r="progressBarRadius + 'rem'"
-          :stroke-dasharray="strokeLength + 'rem'"
-          :stroke-dashoffset="strokeOffset + 'rem'"
-        ></circle>
-      </svg>
-    </div>
+    <audio id="music" volume="0.5">
+      <source src="../assets/sounds/Comsat.mp3" type="audio/mpeg" />
+    </audio>
   </div>
 </template>
 
@@ -356,62 +337,6 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.test {
-  display: inline-block;
-  span {
-    display: inline-block;
-    width: 2.07rem;
-    height: 6rem;
-    background-color: orangered;
-    font-size: 4rem;
-    font-weight: 700;
-  }
-}
-
-.fade-down-enter-active,
-.fade-down-leave-active {
-  transition: all 0.5s;
-}
-.fade-down-enter-from /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(-4rem);
-}
-.fade-down-leave-to /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(4rem);
-}
-
-.time-enter-active,
-.time-leave-active {
-  transition: all 0.5s;
-}
-.time-enter-from /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(-4rem);
-}
-.time-leave-to /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateY(4rem);
-}
-
-#svg circle {
-  transition: stroke-dashoffset 1s linear;
-}
-/*#svg #bar {*/
-/*  stroke: #ff9f1e;*/
-/*}*/
-/*#cont {*/
-/*  display: block;*/
-/*  height: 200px;*/
-/*  width: 200px;*/
-/*  margin: 2em auto;*/
-/*  box-shadow: 0 0 1em black;*/
-/*  border-radius: 100%;*/
-/*  position: relative;*/
-/*}*/
-</style>
 
 <!--stroke - заливка контура-->
 

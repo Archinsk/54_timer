@@ -1,20 +1,24 @@
 <template>
-  <div class="position-absolute">
-    <div class="d-flex flex-column align-items-end gap-2">
-      <TransitionGroup name="list">
-        <button
-          v-for="scheme of renderedSchemes"
-          :key="scheme.id"
-          class="btn btn-outline-light"
-          @click="$emit('set-training-mode', scheme)"
-        >
-          {{ scheme.prepTime }} + ( ({{ scheme.workTime }} /
-          {{ scheme.restTime }}) x {{ scheme.rounds }} +
-          {{ scheme.clearTime }} ) x {{ scheme.cycles }}
-        </button>
-      </TransitionGroup>
+  <!--  <div class="position-absolute">-->
+  <div id="settings-screen" class="row gx-3">
+    <div class="col text-muted">
+      Зарегистрированным пользователям доступно изменение и сохранение режимов
+      таймера, выбор звуков, память последнего режима
+    </div>
+    <div class="col">
+      <!--      <TransitionGroup name="list">-->
+      <button
+        v-for="scheme of renderedSchemes"
+        :key="scheme.id"
+        class="btn btn-outline-light btn-training-mode"
+        @click="$emit('set-training-mode', scheme)"
+      >
+        {{ scheme.name }}
+      </button>
+      <!--      </TransitionGroup>-->
     </div>
   </div>
+  <!--  </div>-->
 </template>
 
 <script>
@@ -24,7 +28,7 @@ export default {
 
   data() {
     return {
-      renderedSchemes: [],
+      renderedSchemes: this.schemes,
     };
   },
 
@@ -52,14 +56,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.list-enter-active,
-.list-leave-active {
-  transition: all 2s;
-}
-.list-enter-from, .list-leave-to /* .list-leave-active до версии 2.1.8 */ {
-  opacity: 0;
-  transform: translateX(100%);
-}
-</style>
