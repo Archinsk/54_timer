@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div
-      :class="['timer-background bg-primary', settingsMode ? 'active ' : '']"
-    ></div>
+    <!--    <div-->
+    <!--      :class="['timer-background bg-primary', settingsMode ? 'active ' : '']"-->
+    <!--    ></div>-->
 
     <button
       id="btn-settings"
@@ -13,6 +13,12 @@
         >A</span
       >
     </button>
+
+    <SettingsNavbar />
+
+    <AudioSettings />
+
+    <InterfaceSettings />
 
     <SchemeSettings />
 
@@ -105,11 +111,17 @@ import FitnessTimer from "./components/FitnessTimer.vue";
 import RepeatsBar from "./components/RepeatsBar";
 import SignInForm from "./components/SignInForm";
 import SignUpForm from "./components/SignUpForm";
+import InterfaceSettings from "./components/InterfaceSettings";
+import AudioSettings from "./components/AudioSettings";
+import SettingsNavbar from "./components/SettingsNavbar";
 
 export default {
   name: "App",
 
   components: {
+    SettingsNavbar,
+    AudioSettings,
+    InterfaceSettings,
     SchemeSettings,
     SignUpForm,
     SignInForm,

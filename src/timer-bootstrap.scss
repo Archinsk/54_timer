@@ -113,6 +113,50 @@ body {
     }
   }
 
+  #settings-navbar {
+    position: relative;
+
+    .settings-navbar-item {
+      color: $text-muted;
+
+      .btn-check {
+        &:checked + label {
+          color: $light;
+          background-color: $primary;
+        }
+      }
+
+      label {
+        color: $info;
+      }
+    }
+
+    //https://codepen.io/mikq/pen/ExvzdMw?editors=1100
+    #settings-navbar-indicator {
+      position: absolute;
+      height: 2.375rem;
+      width: 25%;
+      background-color: orangered;
+      z-index: 1;
+    }
+
+    input[id="settings-navbar-1"]:checked ~ #settings-navbar-indicator {
+      transform: translateX(0);
+    }
+
+    input[id="settings-navbar-2"]:checked ~ #settings-navbar-indicator {
+      transform: translateX(100%);
+    }
+
+    input[id="settings-navbar-3"]:checked ~ #settings-navbar-indicator {
+      transform: translateX(200%);
+    }
+
+    input[id="settings-navbar-4"]:checked ~ #settings-navbar-indicator {
+      transform: translateX(300%);
+    }
+  }
+
   #training-mode-settings {
     .period-setting {
       &:not(:last-child) {
