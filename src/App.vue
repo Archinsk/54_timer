@@ -4,27 +4,6 @@
     <!--      :class="['timer-background bg-primary', settingsMode ? 'active ' : '']"-->
     <!--    ></div>-->
 
-    <button
-      id="btn-settings"
-      class="btn border border-light btn-icon-square rounded-circle"
-      @click="settingsToggle"
-    >
-      <span :class="['anicons-icons', { 'settings-mode': settingsMode }]"
-        >A</span
-      >
-    </button>
-
-    <SettingsNavbar />
-
-    <AudioSettings />
-
-    <InterfaceSettings />
-
-    <SchemeSettings />
-
-    <SignInForm />
-
-    <SignUpForm />
     <!--  <div id="app-container" class="container">-->
     <!--    <div v-if="isLoading" class="loader">-->
     <!--      <div class="spinner-border text-light" role="status">-->
@@ -37,11 +16,89 @@
     <!--      v-else-->
     <!--      class="loaded-app h-100 d-flex flex-column justify-content-center align-items-center"-->
     <!--    >-->
-    <TrainingSchemes
-      :schemes="schemes"
-      :settingsMode="settingsMode"
-      @set-training-mode="setTrainingMode"
+
+    <MenuButon
+      :settings-mode="settingsMode"
+      :mode="
+        !authUser && selectedSetting === 'profile' ? 'arrowMode' : 'burgerMode'
+      "
+      @settings-toggle="settingsToggle"
+      @open-training="this.selectedSetting = 'training'"
     />
+
+    <div v-show="settingsMode">
+      <SettingsNavbar
+        v-if="authUser"
+        @setting-select="selectedSetting = $event"
+      />
+
+      <AudioSettings v-if="selectedSetting === 'sound'" />
+
+      <InterfaceSettings
+        v-if="selectedSetting === 'interface'"
+        :config="config.interface"
+        @full-timer-display-toggle="
+          config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
+        "
+        @color-display-toggle="
+          config.interface.colorsDisplay = !config.interface.colorsDisplay
+        "
+        @timer-clickability-toggle="
+          config.interface.timerClickability =
+            !config.interface.timerClickability
+        "
+        @controls-display-toggle="
+          config.interface.controlsDisplay = !config.interface.controlsDisplay
+        "
+      />
+
+      <SignInForm
+        v-if="
+          !authUser && selectedSetting === 'profile' && signMode === 'signin'
+        "
+        @sign-mode-toggle="signMode = 'signup'"
+      />
+
+      <SignUpForm
+        v-if="
+          !authUser && selectedSetting === 'profile' && signMode === 'signup'
+        "
+        @sign-mode-toggle="signMode = 'signin'"
+      />
+
+      <SignOutForm v-if="authUser && selectedSetting === 'profile'" />
+
+      <div id="settings-screen" class="row gx-3">
+        <div
+          v-if="!authUser && selectedSetting === 'training'"
+          class="col text-muted"
+        >
+          Зарегистрированным пользователям доступно изменение и сохранение
+          режимов таймера, выбор звуков, память последнего режима <br />
+          <a @click.prevent="openProfile('signin')" href="#">Войти</a>
+          или
+          <a @click.prevent="openProfile('signup')" href="#"
+            >Зарегистрироваться</a
+          >
+        </div>
+
+        <div class="col">
+          <SchemeSettings
+            v-if="authUser && selectedSetting === 'training'"
+            :edit-mode="schemesEditMode"
+          />
+        </div>
+
+        <div class="col">
+          <TrainingSchemes
+            v-if="selectedSetting === 'training'"
+            :schemes="schemes"
+            :settingsMode="settingsMode"
+            @set-training-mode="setTrainingMode"
+          />
+        </div>
+      </div>
+    </div>
 
     <div id="timer-full">
       <StatusBar
@@ -77,7 +134,7 @@
     <!--      <Transition name="fade-up">-->
 
     <!--    v-if="!settingsMode"-->
-    <div id="controls" class="row gx-3">
+    <div v-if="config.interface.controlsDisplay" id="controls" class="row gx-3">
       <div class="col">
         <button class="btn btn-outline-light btn-control" @click="play = !play">
           {{ play ? "ПАУЗА" : "СТАРТ" }}
@@ -114,11 +171,15 @@ import SignUpForm from "./components/SignUpForm";
 import InterfaceSettings from "./components/InterfaceSettings";
 import AudioSettings from "./components/AudioSettings";
 import SettingsNavbar from "./components/SettingsNavbar";
+import MenuButon from "./components/MenuButon";
+import SignOutForm from "./components/SignOutForm";
 
 export default {
   name: "App",
 
   components: {
+    SignOutForm,
+    MenuButon,
     SettingsNavbar,
     AudioSettings,
     InterfaceSettings,
@@ -192,6 +253,12 @@ export default {
         workTime: 10,
         restTime: 10,
         clearTime: 20,
+        interface: {
+          fullTimerDisplay: true,
+          colorsDisplay: false,
+          timerClickability: false,
+          controlsDisplay: true,
+        },
       },
       actual: {
         cycles: 2,
@@ -209,7 +276,11 @@ export default {
       timerId: null,
 
       isLoading: true,
-      settingsMode: true,
+      settingsMode: false,
+      authUser: true,
+      selectedSetting: "training",
+      signMode: "signin",
+      schemesEditMode: true,
     };
   },
 
@@ -315,6 +386,11 @@ export default {
       if (this.settingsMode) {
         this.play = false;
       }
+    },
+
+    openProfile(signMode) {
+      this.selectedSetting = "profile";
+      this.signMode = signMode;
     },
   },
 

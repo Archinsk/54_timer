@@ -23,7 +23,10 @@
         />
         <div class="form-text sign-error">Текст ошибки</div>
       </div>
-      <div class="mb-3">У меня есть аккаунт. <a href="#">Войти</a></div>
+      <div class="mb-3">
+        У меня есть аккаунт.
+        <a @click.prevent="$emit('sign-mode-toggle')" href="#">Войти</a>
+      </div>
       <div class="row gx-3">
         <div class="col">
           <button type="button" class="btn btn-primary btn-block">

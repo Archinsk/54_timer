@@ -28,7 +28,7 @@
     </svg>
 
     <div id="timers">
-      <div id="total-timer">
+      <div v-if="config.interface.fullTimerDisplay" id="total-timer">
         {{ String(futureMinutes).padStart(2, "0") }} :
         {{ String(futureSeconds).padStart(2, "0") }}
       </div>
@@ -79,14 +79,14 @@
         </div>
       </div>
 
-      <div id="total-time-info">
+      <div v-if="config.interface.fullTimerDisplay" id="total-time-info">
         {{ String(totalTimeMinutes).padStart(2, "0") }} :
         {{ String(totalTimeSeconds).padStart(2, "0") }}
       </div>
     </div>
 
     <audio id="music" volume="0.5">
-      <source src="../assets/sounds/Comsat.mp3" type="audio/mpeg" />
+      <source src="/sounds/8.mp3" type="audio/mpeg" />
     </audio>
   </div>
 </template>

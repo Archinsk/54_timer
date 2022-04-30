@@ -89,7 +89,6 @@ body {
   .btn-block {
     width: 100%;
   }
-
   .btn-icon-square {
     line-height: 0.75;
     padding-left: 0.375rem;
@@ -117,27 +116,21 @@ body {
     position: relative;
 
     .settings-navbar-item {
-      color: $text-muted;
-
-      .btn-check {
-        &:checked + label {
-          color: $light;
-          background-color: $primary;
-        }
-      }
-
-      label {
-        color: $info;
-      }
+      color: $info;
+      z-index: 2;
+      transition: color 0.15s ease-in;
     }
 
-    //https://codepen.io/mikq/pen/ExvzdMw?editors=1100
+    .btn-check:checked + label {
+      color: $light;
+    }
+
     #settings-navbar-indicator {
       position: absolute;
       height: 2.375rem;
       width: 25%;
-      background-color: orangered;
-      z-index: 1;
+      background-color: $primary;
+      transition: 0.25s ease-out;
     }
 
     input[id="settings-navbar-1"]:checked ~ #settings-navbar-indicator {
@@ -190,6 +183,11 @@ body {
       &.settings-mode {
         font-variation-settings: "TIME" 100;
       }
+
+      &.arrow-mode {
+        font-variation-settings: "TIME" 100;
+        transform: rotate(180deg);
+      }
     }
   }
 
@@ -202,6 +200,63 @@ body {
 
     .btn-training-mode:not(:last-child) {
       margin-bottom: 0.5rem;
+    }
+  }
+
+  #sounds-settings {
+    .sound-item {
+      color: $info;
+      transition: color 0.15s ease-in;
+    }
+
+    .btn-check:checked + label {
+      color: $light;
+    }
+
+    .audio-control {
+      display: none;
+
+      .anicons-icons {
+        font-variation-settings: "TIME" 1;
+
+        &.playing {
+          font-variation-settings: "TIME" 100;
+        }
+      }
+    }
+
+    .btn-check:checked ~ .audio-control {
+      display: inline-block;
+    }
+
+    #sounds-navbar {
+      position: relative;
+
+      .sounds-navbar-item {
+        color: $info;
+        z-index: 2;
+        transition: color 0.15s ease-in;
+      }
+
+      .btn-check:checked + label {
+        color: $light;
+      }
+
+      #sounds-navbar-indicator {
+        position: absolute;
+        height: 2.375rem;
+        width: 50%;
+        background-color: $primary;
+        transition: 0.25s ease-out;
+      }
+
+      input[id="sounds-navbar-1"]:checked ~ #sounds-navbar-indicator {
+        transform: translateX(0);
+      }
+
+      input[id="sounds-navbar-2"]:checked ~ #sounds-navbar-indicator {
+        transform: translateX(100%);
+      }
     }
   }
 

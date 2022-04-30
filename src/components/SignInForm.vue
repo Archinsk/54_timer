@@ -13,7 +13,10 @@
         <div class="form-text sign-error">Текст ошибки</div>
       </div>
       <div class="mb-3">
-        У меня еще нет аккаунта. <a href="#">Зарегистрироваться</a>
+        У меня еще нет аккаунта.
+        <a @click.prevent="$emit('sign-mode-toggle')" href="#"
+          >Зарегистрироваться</a
+        >
       </div>
       <div class="row gx-3">
         <div class="col">
