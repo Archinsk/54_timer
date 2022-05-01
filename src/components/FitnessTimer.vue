@@ -139,12 +139,14 @@ export default {
     // Общее время (в секундах)
     totalTime: function () {
       return (
-        this.config.prepTime +
-        ((this.config.workTime + this.config.restTime) * this.config.rounds -
-          this.config.restTime +
-          this.config.clearTime) *
-          this.config.cycles -
-        this.config.clearTime
+        this.config.selectedTrainingScheme.prepTime +
+        ((this.config.selectedTrainingScheme.workTime +
+          this.config.selectedTrainingScheme.restTime) *
+          this.config.selectedTrainingScheme.rounds -
+          this.config.selectedTrainingScheme.restTime +
+          this.config.selectedTrainingScheme.clearTime) *
+          this.config.selectedTrainingScheme.cycles -
+        this.config.selectedTrainingScheme.clearTime
       );
     },
     totalTimeMinutes: function () {
@@ -156,40 +158,40 @@ export default {
 
     // Время в минутах секундах по каждому режиму работы таймера
     configPrepMinutes: function () {
-      return Math.floor(this.config.prepTime / 60);
+      return Math.floor(this.config.selectedTrainingScheme.prepTime / 60);
     },
     configPrepSeconds: function () {
-      return this.config.prepTime % 60;
+      return this.config.selectedTrainingScheme.prepTime % 60;
     },
     configWorkMinutes: function () {
-      return Math.floor(this.config.workTime / 60);
+      return Math.floor(this.config.selectedTrainingScheme.workTime / 60);
     },
     configWorkSeconds: function () {
-      return this.config.workTime % 60;
+      return this.config.selectedTrainingScheme.workTime % 60;
     },
     configRestMinutes: function () {
-      return Math.floor(this.config.restTime / 60);
+      return Math.floor(this.config.selectedTrainingScheme.restTime / 60);
     },
     configRestSeconds: function () {
-      return this.config.restTime % 60;
+      return this.config.selectedTrainingScheme.restTime % 60;
     },
     configClearMinutes: function () {
-      return Math.floor(this.config.clearTime / 60);
+      return Math.floor(this.config.selectedTrainingScheme.clearTime / 60);
     },
     configClearSeconds: function () {
-      return this.config.clearTime % 60;
+      return this.config.selectedTrainingScheme.clearTime % 60;
     },
 
     // Общее время текущего режима
     actualModeTime: function () {
       if (this.mode === "prep") {
-        return this.config.prepTime;
+        return this.config.selectedTrainingScheme.prepTime;
       } else if (this.mode === "work") {
-        return this.config.workTime;
+        return this.config.selectedTrainingScheme.workTime;
       } else if (this.mode === "rest") {
-        return this.config.restTime;
+        return this.config.selectedTrainingScheme.restTime;
       } else {
-        return this.config.clearTime;
+        return this.config.selectedTrainingScheme.clearTime;
       }
     },
     actualModeActualTime: function () {
@@ -290,10 +292,10 @@ export default {
     },
 
     currentRound: function () {
-      return this.config.rounds - this.actual.rounds;
+      return this.config.selectedTrainingScheme.rounds - this.actual.rounds;
     },
     currentCycle: function () {
-      return this.config.cycles - this.actual.cycles;
+      return this.config.selectedTrainingScheme.cycles - this.actual.cycles;
     },
 
     pastMinutes: function () {

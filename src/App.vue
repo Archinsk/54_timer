@@ -86,6 +86,7 @@
           <SchemeSettings
             v-if="authUser && selectedSetting === 'training'"
             :edit-mode="schemesEditMode"
+            :selected-scheme="config.selectedTrainingScheme"
           />
         </div>
 
@@ -93,8 +94,9 @@
           <TrainingSchemes
             v-if="selectedSetting === 'training'"
             :schemes="schemes"
+            :selected-scheme-id="config.selectedTrainingScheme.id"
             :settingsMode="settingsMode"
-            @set-training-mode="setTrainingMode"
+            @select-training-scheme="selectTrainingScheme($event)"
           />
         </div>
       </div>
@@ -124,9 +126,9 @@
 
       <RepeatsBar
         :current-repeat="currentRound"
-        :total-repeats="config.rounds"
-        :currentRound="currentCycle"
-        :totalRounds="config.cycles"
+        :total-repeats="config.selectedTrainingScheme.rounds"
+        :current-round="currentCycle"
+        :total-rounds="config.selectedTrainingScheme.cycles"
       />
     </div>
     <!--      </div>-->
@@ -197,7 +199,7 @@ export default {
       schemes: [
         {
           id: 1,
-          name: "ЛЁГКИЙ",
+          name: "Лёгкий",
           cycles: 1,
           rounds: 5,
           prepTime: 5,
@@ -207,7 +209,7 @@ export default {
         },
         {
           id: 2,
-          name: "ОБЛЕГЧЁННЫЙ",
+          name: "Облегчённый",
           cycles: 2,
           rounds: 3,
           prepTime: 0,
@@ -217,7 +219,7 @@ export default {
         },
         {
           id: 3,
-          name: "НОРМАЛЬНЫЙ",
+          name: "Нормальный",
           cycles: 1,
           rounds: 3,
           prepTime: 5,
@@ -227,7 +229,7 @@ export default {
         },
         {
           id: 4,
-          name: "УТЯЖЕЛЕННЫЙ",
+          name: "Утяжелённый",
           cycles: 1,
           rounds: 5,
           prepTime: 7,
@@ -237,7 +239,7 @@ export default {
         },
         {
           id: 5,
-          name: "ТЯЖЕЛЫЙ",
+          name: "Тяжёлый",
           cycles: 2,
           rounds: 10,
           prepTime: 10,
@@ -253,11 +255,22 @@ export default {
         workTime: 10,
         restTime: 10,
         clearTime: 20,
+
         interface: {
           fullTimerDisplay: true,
           colorsDisplay: false,
           timerClickability: false,
           controlsDisplay: true,
+        },
+        selectedTrainingScheme: {
+          id: 4,
+          name: "Утяжелённый",
+          cycles: 1,
+          rounds: 5,
+          prepTime: 7,
+          workTime: 620,
+          restTime: 15,
+          clearTime: 20,
         },
       },
       actual: {
@@ -280,7 +293,7 @@ export default {
       authUser: true,
       selectedSetting: "training",
       signMode: "signin",
-      schemesEditMode: true,
+      schemesEditMode: false,
     };
   },
 
@@ -364,9 +377,10 @@ export default {
       }
     },
 
-    setTrainingMode(scheme) {
-      this.config = Object.assign({}, scheme);
+    selectTrainingScheme(scheme) {
+      // this.config = Object.assign({}, scheme);
       this.actual = Object.assign({}, scheme);
+      this.config.selectedTrainingScheme = Object.assign({}, scheme);
     },
 
     resetTimer() {
