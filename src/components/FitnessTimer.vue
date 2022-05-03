@@ -29,8 +29,8 @@
 
     <div id="timers">
       <div v-if="config.interface.fullTimerDisplay" id="total-timer">
-        {{ String(futureMinutes).padStart(2, "0") }} :
-        {{ String(futureSeconds).padStart(2, "0") }}
+        {{ futureMinutes }} :
+        {{ futureSeconds }}
       </div>
 
       <div id="current-timer">
@@ -80,14 +80,17 @@
       </div>
 
       <div v-if="config.interface.fullTimerDisplay" id="total-time-info">
-        {{ String(totalTimeMinutes).padStart(2, "0") }} :
-        {{ String(totalTimeSeconds).padStart(2, "0") }}
+        {{ totalTimeMinutes }} :
+        {{ totalTimeSeconds }}
       </div>
     </div>
 
-    <audio id="music" volume="0.5">
-      <source src="/sounds/8.mp3" type="audio/mpeg" />
-    </audio>
+    <audio
+      id="music"
+      volume="0.5"
+      :src="'/sounds/' + config.sounds.restMode + '.mp3'"
+      type="audio/mpeg"
+    ></audio>
   </div>
 </template>
 
@@ -108,10 +111,73 @@ export default {
   },
 
   computed: {
+    // Статический таймер общего времени
+    totalTime: function () {
+      return (
+        this.config.selectedTrainingScheme.prepTime +
+        ((this.config.selectedTrainingScheme.workTime +
+          this.config.selectedTrainingScheme.restTime) *
+          this.config.selectedTrainingScheme.rounds -
+          this.config.selectedTrainingScheme.restTime +
+          this.config.selectedTrainingScheme.clearTime) *
+          this.config.selectedTrainingScheme.cycles -
+        this.config.selectedTrainingScheme.clearTime
+      );
+    },
+    totalTimeMinutes: function () {
+      return this.timeToPeriod(this.totalTime, "min");
+    },
+    totalTimeSeconds: function () {
+      return this.timeToPeriod(this.totalTime, "sec");
+    },
+
+    // Динамический таймер общего оставшегося времени
+    futureTime: function () {
+      return this.totalTime - this.pastTime;
+    },
+    futureMinutes: function () {
+      return this.timeToPeriod(this.futureTime, "min");
+    },
+    futureSeconds: function () {
+      return this.timeToPeriod(this.futureTime, "sec");
+    },
+
+    // Первый и второй знак для минутного и секундного значения главного таймера
+    currentMinutesFirstDigit: function () {
+      if (this.mode === "finish") {
+        return "0";
+      } else {
+        return this.timeToPeriod(this.actual[this.mode + "Time"], "min")[0];
+      }
+    },
+    currentMinutesSecondDigit: function () {
+      if (this.mode === "finish") {
+        return "0";
+      } else {
+        return this.timeToPeriod(this.actual[this.mode + "Time"], "min")[1];
+      }
+    },
+    currentSecondsFirstDigit: function () {
+      if (this.mode === "finish") {
+        return "0";
+      } else {
+        return this.timeToPeriod(this.actual[this.mode + "Time"], "sec")[0];
+      }
+    },
+    currentSecondsSecondDigit: function () {
+      if (this.mode === "finish") {
+        return "0";
+      } else {
+        return this.timeToPeriod(this.actual[this.mode + "Time"], "sec")[1];
+      }
+    },
+
+    // Круговая шкала таймера
     progress: function () {
       return (
-        ((this.actualModeTime - this.actualModeActualTime) /
-          this.actualModeTime) *
+        ((this.config.selectedTrainingScheme[this.mode + "Time"] -
+          this.actual[this.mode + "Time"]) /
+          this.config.selectedTrainingScheme[this.mode + "Time"]) *
         100
       );
     },
@@ -135,187 +201,22 @@ export default {
         100
       );
     },
+  },
 
-    // Общее время (в секундах)
-    totalTime: function () {
-      return (
-        this.config.selectedTrainingScheme.prepTime +
-        ((this.config.selectedTrainingScheme.workTime +
-          this.config.selectedTrainingScheme.restTime) *
-          this.config.selectedTrainingScheme.rounds -
-          this.config.selectedTrainingScheme.restTime +
-          this.config.selectedTrainingScheme.clearTime) *
-          this.config.selectedTrainingScheme.cycles -
-        this.config.selectedTrainingScheme.clearTime
-      );
-    },
-    totalTimeMinutes: function () {
-      return Math.floor(this.totalTime / 60);
-    },
-    totalTimeSeconds: function () {
-      return this.totalTime % 60;
-    },
-
-    // Время в минутах секундах по каждому режиму работы таймера
-    configPrepMinutes: function () {
-      return Math.floor(this.config.selectedTrainingScheme.prepTime / 60);
-    },
-    configPrepSeconds: function () {
-      return this.config.selectedTrainingScheme.prepTime % 60;
-    },
-    configWorkMinutes: function () {
-      return Math.floor(this.config.selectedTrainingScheme.workTime / 60);
-    },
-    configWorkSeconds: function () {
-      return this.config.selectedTrainingScheme.workTime % 60;
-    },
-    configRestMinutes: function () {
-      return Math.floor(this.config.selectedTrainingScheme.restTime / 60);
-    },
-    configRestSeconds: function () {
-      return this.config.selectedTrainingScheme.restTime % 60;
-    },
-    configClearMinutes: function () {
-      return Math.floor(this.config.selectedTrainingScheme.clearTime / 60);
-    },
-    configClearSeconds: function () {
-      return this.config.selectedTrainingScheme.clearTime % 60;
-    },
-
-    // Общее время текущего режима
-    actualModeTime: function () {
-      if (this.mode === "prep") {
-        return this.config.selectedTrainingScheme.prepTime;
-      } else if (this.mode === "work") {
-        return this.config.selectedTrainingScheme.workTime;
-      } else if (this.mode === "rest") {
-        return this.config.selectedTrainingScheme.restTime;
-      } else {
-        return this.config.selectedTrainingScheme.clearTime;
+  methods: {
+    timeToPeriod(timeInSec, period) {
+      if (period === "min") {
+        return String(Math.floor(timeInSec / 60)).padStart(2, "0");
       }
-    },
-    actualModeActualTime: function () {
-      if (this.mode === "prep") {
-        return this.actual.prepTime;
-      } else if (this.mode === "work") {
-        return this.actual.workTime;
-      } else if (this.mode === "rest") {
-        return this.actual.restTime;
-      } else {
-        return this.actual.clearTime;
+      if (period === "sec") {
+        return String(timeInSec % 60).padStart(2, "0");
       }
-    },
-
-    // Текущие значения таймера в минутах и секундах по каждому режиму работы таймера
-    prepMinutes: function () {
-      return Math.floor(this.actual.prepTime / 60);
-    },
-    prepSeconds: function () {
-      return this.actual.prepTime % 60;
-    },
-    workMinutes: function () {
-      return Math.floor(this.actual.workTime / 60);
-    },
-    workSeconds: function () {
-      return this.actual.workTime % 60;
-    },
-    restMinutes: function () {
-      return Math.floor(this.actual.restTime / 60);
-    },
-    restSeconds: function () {
-      return this.actual.restTime % 60;
-    },
-    clearMinutes: function () {
-      return Math.floor(this.actual.clearTime / 60);
-    },
-    clearSeconds: function () {
-      return this.actual.clearTime % 60;
-    },
-
-    // Текущие значения в минутах и секундах для вывода на главный таймер с учетом текущего режима
-    currentMinutes: function () {
-      if (this.mode === "prep") {
-        return this.prepMinutes;
-      } else if (this.mode === "work") {
-        return this.workMinutes;
-      } else if (this.mode === "rest") {
-        return this.restMinutes;
-      } else {
-        return this.clearMinutes;
-      }
-    },
-    currentSeconds: function () {
-      if (this.mode === "prep") {
-        return this.prepSeconds;
-      } else if (this.mode === "work") {
-        return this.workSeconds;
-      } else if (this.mode === "rest") {
-        return this.restSeconds;
-      } else {
-        return this.clearSeconds;
-      }
-    },
-
-    // Первый и второй знак для минутного и секундного значения главного таймера
-    currentMinutesFirstDigit: function () {
-      return Math.floor(this.currentMinutes / 10);
-    },
-    currentMinutesFirstDigitNext: function () {
-      return (this.currentMinutesFirstDigit + 1) % 10;
-    },
-    currentMinutesSecondDigit: function () {
-      return Math.floor(this.currentMinutes % 10);
-    },
-    currentMinutesSecondDigitNext: function () {
-      return (this.currentMinutesSecondDigit + 1) % 10;
-    },
-    currentSecondsFirstDigit: function () {
-      return Math.floor(this.currentSeconds / 10);
-    },
-    currentSecondsFirstDigitNext: function () {
-      return (this.currentSecondsFirstDigit + 1) % 10;
-    },
-    currentSecondsSecondDigit: function () {
-      return Math.floor(this.currentSeconds % 10);
-    },
-    currentSecondsSecondDigitNext: function () {
-      return (this.currentSecondsSecondDigit + 1) % 10;
-    },
-    currentTimeArray: function () {
-      return [
-        { id: 0, value: this.currentMinutesFirstDigit },
-        { id: 1, value: this.currentMinutesSecondDigit },
-        { id: 2, value: ":" },
-        { id: 3, value: this.currentSecondsFirstDigit },
-        { id: 4, value: this.currentSecondsSecondDigit },
-      ];
-    },
-
-    currentRound: function () {
-      return this.config.selectedTrainingScheme.rounds - this.actual.rounds;
-    },
-    currentCycle: function () {
-      return this.config.selectedTrainingScheme.cycles - this.actual.cycles;
-    },
-
-    pastMinutes: function () {
-      return Math.floor(this.pastTime / 60);
-    },
-    pastSeconds: function () {
-      return this.pastTime % 60;
-    },
-    futureTime: function () {
-      return this.totalTime - this.pastTime;
-    },
-    futureMinutes: function () {
-      return Math.floor(this.futureTime / 60);
-    },
-    futureSeconds: function () {
-      return this.futureTime % 60;
+      return null;
     },
   },
 
   watch: {
+    // Смена знаков главного таймера
     currentMinutesFirstDigit: function () {
       this.minutesFirstDigitTrigger = !this.minutesFirstDigitTrigger;
     },
@@ -332,6 +233,20 @@ export default {
       let music = document.getElementById("music");
       if (this.play) {
         music.play();
+      } else {
+        music.pause();
+      }
+    },
+    mode: function () {
+      let music = document.getElementById("music");
+      if (this.play) {
+        if (this.mode === "work") {
+          music.src = "/sounds/" + this.config.sounds.workMode + ".mp3";
+          music.play();
+        } else {
+          music.src = "/sounds/" + this.config.sounds.restMode + ".mp3";
+          music.play();
+        }
       } else {
         music.pause();
       }

@@ -194,6 +194,7 @@ import SoundsNavbar from "./SoundsNavbar";
 export default {
   name: "AudioSettings",
   components: { SoundsNavbar },
+  props: ["config"],
 
   data() {
     return {
@@ -228,15 +229,22 @@ export default {
 
     selectedSoundWork: function () {
       this.play = false;
+      this.$emit("set-work-mode-sound", this.selectedSoundWork);
     },
 
     selectedSoundRest: function () {
       this.play = false;
+      this.$emit("set-rest-mode-sound", this.selectedSoundRest);
     },
 
     soundMode: function () {
       this.play = false;
     },
+  },
+
+  beforeMount() {
+    this.selectedSoundWork = this.config.workMode;
+    this.selectedSoundRest = this.config.restMode;
   },
 };
 </script>

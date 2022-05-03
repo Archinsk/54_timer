@@ -32,7 +32,12 @@
         @setting-select="selectedSetting = $event"
       />
 
-      <AudioSettings v-if="selectedSetting === 'sound'" />
+      <AudioSettings
+        v-if="selectedSetting === 'sound'"
+        :config="config.sounds"
+        @set-work-mode-sound="config.sounds.workMode = $event"
+        @set-rest-mode-sound="config.sounds.restMode = $event"
+      />
 
       <InterfaceSettings
         v-if="selectedSetting === 'interface'"
@@ -221,10 +226,10 @@ export default {
           id: 3,
           name: "Нормальный",
           cycles: 1,
-          rounds: 3,
+          rounds: 8,
           prepTime: 5,
-          workTime: 10,
-          restTime: 0,
+          workTime: 20,
+          restTime: 10,
           clearTime: 0,
         },
         {
@@ -242,7 +247,7 @@ export default {
           name: "Тяжёлый",
           cycles: 2,
           rounds: 10,
-          prepTime: 10,
+          prepTime: 676,
           workTime: 15,
           restTime: 0,
           clearTime: 30,
@@ -262,24 +267,30 @@ export default {
           timerClickability: false,
           controlsDisplay: true,
         },
+        sounds: {
+          workMode: 3,
+          restMode: 8,
+        },
         selectedTrainingScheme: {
-          id: 4,
-          name: "Утяжелённый",
+          id: 3,
+          name: "Нормальный",
           cycles: 1,
-          rounds: 5,
-          prepTime: 7,
-          workTime: 620,
-          restTime: 15,
-          clearTime: 20,
+          rounds: 8,
+          prepTime: 5,
+          workTime: 20,
+          restTime: 10,
+          clearTime: 0,
         },
       },
       actual: {
-        cycles: 2,
-        rounds: 3,
+        id: 3,
+        name: "Нормальный",
+        cycles: 1,
+        rounds: 8,
         prepTime: 5,
-        workTime: 10,
+        workTime: 20,
         restTime: 10,
-        clearTime: 20,
+        clearTime: 0,
       },
 
       mode: "prep",
@@ -299,10 +310,10 @@ export default {
 
   computed: {
     currentRound: function () {
-      return this.config.rounds - this.actual.rounds;
+      return this.config.selectedTrainingScheme.rounds - this.actual.rounds;
     },
     currentCycle: function () {
-      return this.config.cycles - this.actual.cycles;
+      return this.config.selectedTrainingScheme.cycles - this.actual.cycles;
     },
   },
 
@@ -333,24 +344,26 @@ export default {
               this.play = false;
             } else {
               // Циклы продолжаются
-              if (this.config.clearTime) {
+              if (this.config.selectedTrainingScheme.clearTime) {
                 // Установлен перерыв между циклами
                 this.mode = "clear";
               } else {
                 // Без перерыва между циклами
-                this.actual.rounds = this.config.rounds - 1;
+                this.actual.rounds =
+                  this.config.selectedTrainingScheme.rounds - 1;
                 this.actual.cycles--;
               }
-              this.actual.workTime = this.config.workTime;
+              this.actual.workTime =
+                this.config.selectedTrainingScheme.workTime;
             }
           } else {
             // Раунды продолжаются
-            if (this.config.restTime) {
+            if (this.config.selectedTrainingScheme.restTime) {
               this.mode = "rest";
             } else {
               this.actual.rounds--;
             }
-            this.actual.workTime = this.config.workTime;
+            this.actual.workTime = this.config.selectedTrainingScheme.workTime;
           }
         }
       } else if (this.mode === "rest") {
@@ -361,7 +374,7 @@ export default {
           // Таймер отдыха дошел до нуля
           this.actual.rounds--;
           this.mode = "work";
-          this.actual.restTime = this.config.restTime;
+          this.actual.restTime = this.config.selectedTrainingScheme.restTime;
         }
       } else if (this.mode === "clear") {
         // Таймер перерыва в штатном режиме
@@ -369,25 +382,24 @@ export default {
         this.pastTime++;
         if (!this.actual.clearTime) {
           // Таймер перерыва дошел до нуля
+          this.actual.rounds = this.config.selectedTrainingScheme.rounds - 1;
           this.actual.cycles--;
-          this.actual.rounds = this.config.rounds - 1;
           this.mode = "work";
-          this.actual.clearTime = this.config.clearTime;
+          this.actual.clearTime = this.config.selectedTrainingScheme.clearTime;
         }
       }
     },
 
     selectTrainingScheme(scheme) {
-      // this.config = Object.assign({}, scheme);
-      this.actual = Object.assign({}, scheme);
       this.config.selectedTrainingScheme = Object.assign({}, scheme);
+      this.actual = Object.assign({}, scheme);
     },
 
     resetTimer() {
       this.play = false;
       clearInterval(this.timerId);
       this.mode = "prep";
-      this.actual = Object.assign({}, this.config);
+      this.actual = Object.assign({}, this.config.selectedTrainingScheme);
       this.pastTime = 0;
     },
 
