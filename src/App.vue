@@ -1,22 +1,6 @@
 <template>
   <div class="container">
-    <!--    <div-->
-    <!--      :class="['timer-background bg-primary', settingsMode ? 'active ' : '']"-->
-    <!--    ></div>-->
-
-    <!--  <div id="app-container" class="container">-->
-    <!--    <div v-if="isLoading" class="loader">-->
-    <!--      <div class="spinner-border text-light" role="status">-->
-    <!--        <span class="visually-hidden">Loading...</span>-->
-    <!--      </div>-->
-    <!--      <div>Загрузка приложения</div>-->
-    <!--    </div>-->
-
-    <!--    <div-->
-    <!--      v-else-->
-    <!--      class="loaded-app h-100 d-flex flex-column justify-content-center align-items-center"-->
-    <!--    >-->
-
+    <AppLoader v-if="isLoading" />
     <MenuButon
       :settings-mode="settingsMode"
       :mode="
@@ -25,234 +9,71 @@
       @settings-toggle="settingsToggle"
       @open-training="this.selectedSetting = 'training'"
     />
-
-    <div v-show="settingsMode">
-      <SettingsNavbar
-        v-if="authUser"
-        @setting-select="selectedSetting = $event"
-      />
-
-      <AudioSettings
-        v-if="selectedSetting === 'sound'"
-        :config="config.sounds"
-        @set-work-mode-sound="config.sounds.workMode = $event"
-        @set-rest-mode-sound="config.sounds.restMode = $event"
-      />
-
-      <InterfaceSettings
-        v-if="selectedSetting === 'interface'"
-        :config="config.interface"
-        @full-timer-display-toggle="
-          config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
-        "
-        @color-display-toggle="
-          config.interface.colorsDisplay = !config.interface.colorsDisplay
-        "
-        @timer-clickability-toggle="
-          config.interface.timerClickability =
-            !config.interface.timerClickability
-        "
-        @controls-display-toggle="
-          config.interface.controlsDisplay = !config.interface.controlsDisplay
-        "
-      />
-
-      <SignInForm
-        v-if="
-          !authUser && selectedSetting === 'profile' && signMode === 'signin'
-        "
-        @sign-mode-toggle="signMode = 'signup'"
-      />
-
-      <SignUpForm
-        v-if="
-          !authUser && selectedSetting === 'profile' && signMode === 'signup'
-        "
-        @sign-mode-toggle="signMode = 'signin'"
-      />
-
-      <SignOutForm v-if="authUser && selectedSetting === 'profile'" />
-
-      <div id="settings-screen" class="row gx-3">
-        <div
-          v-if="!authUser && selectedSetting === 'training'"
-          class="col text-muted"
-        >
-          Зарегистрированным пользователям доступно изменение и сохранение
-          режимов таймера, выбор звуков, память последнего режима <br />
-          <a @click.prevent="openProfile('signin')" href="#">Войти</a>
-          или
-          <a @click.prevent="openProfile('signup')" href="#"
-            >Зарегистрироваться</a
-          >
-        </div>
-
-        <div class="col">
-          <SchemeSettings
-            v-if="authUser && selectedSetting === 'training'"
-            :edit-mode="schemesEditMode"
-            :selected-scheme="config.selectedTrainingScheme"
-          />
-        </div>
-
-        <div class="col">
-          <TrainingSchemes
-            v-if="selectedSetting === 'training'"
-            :schemes="schemes"
-            :selected-scheme-id="config.selectedTrainingScheme.id"
-            :settingsMode="settingsMode"
-            @select-training-scheme="selectTrainingScheme($event)"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div id="timer-full">
-      <StatusBar
-        :mode="mode"
-        :play="play"
-        :settings-mode="settingsMode"
-        @play-toggle="play = !play"
-      />
-
-      <!--        <div-->
-      <!--          :class="[-->
-      <!--            'timer-screen d-flex flex-column align-items-center',-->
-      <!--            { 'settings-mode': settingsMode },-->
-      <!--          ]"-->
-      <!--        >-->
-      <FitnessTimer
-        :config="config"
-        :actual="actual"
-        :mode="mode"
-        :play="play"
-        :pastTime="pastTime"
-      />
-
-      <RepeatsBar
-        :current-repeat="currentRound"
-        :total-repeats="config.selectedTrainingScheme.rounds"
-        :current-round="currentCycle"
-        :total-rounds="config.selectedTrainingScheme.cycles"
-      />
-    </div>
-    <!--      </div>-->
-
-    <!--      <Transition name="fade-up">-->
-
-    <!--    v-if="!settingsMode"-->
-    <div v-if="config.interface.controlsDisplay" id="controls" class="row gx-3">
-      <div class="col">
-        <button class="btn btn-outline-light btn-control" @click="play = !play">
-          {{ play ? "ПАУЗА" : "СТАРТ" }}
-        </button>
-      </div>
-      <div class="col">
-        <button class="btn btn-outline-light btn-control" @click="resetTimer">
-          {{ mode === "finish" ? "ПОВТОР" : "СБРОС" }}
-        </button>
-      </div>
-    </div>
-
-    <!--    <div class="container">-->
-    <!--      <div class="row row-cols-2 gx-2">-->
-    <!--        <button class="btn btn-primary col" type="button">Кнопка</button>-->
-    <!--        <button class="btn btn-primary col" type="button">Кнопка</button>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
-    <!--      </Transition>-->
-    <!--    </div>-->
-    <!--  </div>-->
+    <AppSettings
+      v-if="settingsMode"
+      :url="url"
+      :auth-user="authUser"
+      :config="config"
+      @full-timer-display-toggle="
+        config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
+      "
+      @color-display-toggle="
+        config.interface.colorsDisplay = !config.interface.colorsDisplay
+      "
+      @timer-clickability-toggle="
+        config.interface.timerClickability = !config.interface.timerClickability
+      "
+      @controls-display-toggle="
+        config.interface.controlsDisplay = !config.interface.controlsDisplay
+      "
+      @set-work-mode-sound="config.sounds.workMode = $event"
+      @set-rest-mode-sound="config.sounds.restMode = $event"
+      @select-training-scheme="selectTrainingScheme($event)"
+      @sign-in="signIn"
+      @sign-out="signOut"
+    />
+    <AppTimer
+      :mode="mode"
+      :play="play"
+      :settings-mode="settingsMode"
+      :config="config"
+      :actual="actual"
+      :past-time="pastTime"
+      :current-repeat="currentRound"
+      :current-round="currentCycle"
+      @play-toggle="play = !play"
+    />
+    <AppControls
+      v-if="config.interface.controlsDisplay"
+      :play="play"
+      :mode="mode"
+      @play-toggle="play = !play"
+      @reset-timer="resetTimer"
+    />
   </div>
 </template>
 
 <script>
-import SchemeSettings from "./components/SchemeSettings";
-import TrainingSchemes from "./components/TrainingSchemes";
-import StatusBar from "./components/StatusBar";
-import FitnessTimer from "./components/FitnessTimer.vue";
-import RepeatsBar from "./components/RepeatsBar";
-import SignInForm from "./components/SignInForm";
-import SignUpForm from "./components/SignUpForm";
-import InterfaceSettings from "./components/InterfaceSettings";
-import AudioSettings from "./components/AudioSettings";
-import SettingsNavbar from "./components/SettingsNavbar";
 import MenuButon from "./components/MenuButon";
-import SignOutForm from "./components/SignOutForm";
+import AppLoader from "./components/AppLoader";
+import AppSettings from "./components/AppSettings";
+import AppControls from "./components/AppControls";
+import AppTimer from "./components/AppTimer";
 
 export default {
   name: "App",
 
   components: {
-    SignOutForm,
+    AppTimer,
+    AppControls,
+    AppSettings,
+    AppLoader,
     MenuButon,
-    SettingsNavbar,
-    AudioSettings,
-    InterfaceSettings,
-    SchemeSettings,
-    SignUpForm,
-    SignInForm,
-    TrainingSchemes,
-    StatusBar,
-    FitnessTimer,
-    RepeatsBar,
   },
 
   data() {
     return {
-      schemes: [
-        {
-          id: 1,
-          name: "Лёгкий",
-          cycles: 1,
-          rounds: 5,
-          prepTime: 5,
-          workTime: 20,
-          restTime: 10,
-          clearTime: 30,
-        },
-        {
-          id: 2,
-          name: "Облегчённый",
-          cycles: 2,
-          rounds: 3,
-          prepTime: 0,
-          workTime: 20,
-          restTime: 10,
-          clearTime: 30,
-        },
-        {
-          id: 3,
-          name: "Нормальный",
-          cycles: 1,
-          rounds: 8,
-          prepTime: 5,
-          workTime: 20,
-          restTime: 10,
-          clearTime: 0,
-        },
-        {
-          id: 4,
-          name: "Утяжелённый",
-          cycles: 1,
-          rounds: 5,
-          prepTime: 7,
-          workTime: 620,
-          restTime: 15,
-          clearTime: 20,
-        },
-        {
-          id: 5,
-          name: "Тяжёлый",
-          cycles: 2,
-          rounds: 10,
-          prepTime: 676,
-          workTime: 15,
-          restTime: 0,
-          clearTime: 30,
-        },
-      ],
+      url: "https://www.d-skills.ru/54_timer/php/",
       config: {
         cycles: 2,
         rounds: 3,
@@ -261,16 +82,58 @@ export default {
         restTime: 10,
         clearTime: 20,
 
-        interface: {
-          fullTimerDisplay: true,
-          colorsDisplay: false,
-          timerClickability: false,
-          controlsDisplay: true,
-        },
-        sounds: {
-          workMode: 3,
-          restMode: 8,
-        },
+        schemes: [
+          {
+            id: 1,
+            name: "Лёгкий",
+            cycles: 1,
+            rounds: 5,
+            prepTime: 5,
+            workTime: 20,
+            restTime: 10,
+            clearTime: 30,
+          },
+          {
+            id: 2,
+            name: "Облегчённый",
+            cycles: 2,
+            rounds: 3,
+            prepTime: 0,
+            workTime: 20,
+            restTime: 10,
+            clearTime: 30,
+          },
+          {
+            id: 3,
+            name: "Нормальный",
+            cycles: 1,
+            rounds: 8,
+            prepTime: 5,
+            workTime: 20,
+            restTime: 10,
+            clearTime: 0,
+          },
+          {
+            id: 4,
+            name: "Утяжелённый",
+            cycles: 1,
+            rounds: 5,
+            prepTime: 7,
+            workTime: 620,
+            restTime: 15,
+            clearTime: 20,
+          },
+          {
+            id: 5,
+            name: "Тяжёлый",
+            cycles: 2,
+            rounds: 10,
+            prepTime: 676,
+            workTime: 15,
+            restTime: 0,
+            clearTime: 30,
+          },
+        ],
         selectedTrainingScheme: {
           id: 3,
           name: "Нормальный",
@@ -280,6 +143,16 @@ export default {
           workTime: 20,
           restTime: 10,
           clearTime: 0,
+        },
+        interface: {
+          fullTimerDisplay: true,
+          colorsDisplay: false,
+          timerClickability: false,
+          controlsDisplay: true,
+        },
+        sounds: {
+          workMode: 3,
+          restMode: 8,
         },
       },
       actual: {
@@ -301,7 +174,7 @@ export default {
 
       isLoading: true,
       settingsMode: false,
-      authUser: true,
+      authUser: false,
       selectedSetting: "training",
       signMode: "signin",
       schemesEditMode: false,
@@ -417,6 +290,16 @@ export default {
     openProfile(signMode) {
       this.selectedSetting = "profile";
       this.signMode = signMode;
+    },
+
+    signIn() {
+      this.authUser = true;
+      this.settingsMode = false;
+    },
+
+    signOut() {
+      this.authUser = false;
+      this.settingsMode = false;
     },
   },
 

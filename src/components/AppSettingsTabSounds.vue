@@ -191,8 +191,9 @@
 
 <script>
 import SoundsNavbar from "./SoundsNavbar";
+
 export default {
-  name: "AudioSettings",
+  name: "AppSettingsTabSounds",
   components: { SoundsNavbar },
   props: ["config"],
 

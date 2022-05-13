@@ -35,7 +35,7 @@
 <script>
 export default {
   name: "TrainingSchemes",
-  props: ["schemes", "settingsMode", "selectedSchemeId"],
+  props: ["schemes", "selectedSchemeId"],
 
   data() {
     return {
