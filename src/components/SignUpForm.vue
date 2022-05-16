@@ -9,11 +9,14 @@
           class="form-control"
           id="sign-up-login"
           placeholder="Введите логин"
+          autocomplete="off"
           v-model.trim="user.login"
           @blur="signUpLoginValidation(user.login)"
           @input="signUpLoginValidation(user.login)"
         />
-        <div class="form-text sign-error">Текст ошибки</div>
+        <div v-if="errors.login.errorText" class="form-text sign-error">
+          {{ errors.login.errorText }}
+        </div>
       </div>
       <div class="mb-2">
         <label for="sign-up-password" class="form-label">Пароль</label>
@@ -23,6 +26,7 @@
             class="form-control"
             id="sign-up-password"
             placeholder="Введите пароль"
+            autocomplete="off"
             v-model.trim="user.password"
             @blur="signUpPasswordValidation(user.password, user.passwordRepeat)"
             @input="
@@ -39,7 +43,9 @@
             </span>
           </button>
         </div>
-        <div class="form-text sign-error">Текст ошибки</div>
+        <div v-if="errors.password.errorText" class="form-text sign-error">
+          {{ errors.password.errorText }}
+        </div>
       </div>
       <div class="mb-2">
         <label for="sign-up-password-repeat" class="form-label"
@@ -51,6 +57,7 @@
             class="form-control"
             id="sign-up-password-repeat"
             placeholder="Пароль ещё раз"
+            autocomplete="off"
             v-model.trim="user.passwordRepeat"
             @blur="
               signUpPasswordRepeatValidation(user.password, user.passwordRepeat)
@@ -69,7 +76,12 @@
             </span>
           </button>
         </div>
-        <div class="form-text sign-error">Текст ошибки</div>
+        <div
+          v-if="errors.passwordRepeat.errorText"
+          class="form-text sign-error"
+        >
+          {{ errors.passwordRepeat.errorText }}
+        </div>
       </div>
       <div class="mb-3">
         У меня есть аккаунт.
@@ -82,7 +94,10 @@
           </button>
         </div>
         <div class="col">
-          <button type="submit" class="btn btn-primary btn-block">
+          <button
+            type="submit"
+            :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
+          >
             Зарегистрироваться
           </button>
         </div>
@@ -107,9 +122,24 @@ export default {
       passwordHidden: true,
       passwordRepeatHidden: true,
       errors: {
-        login: {},
-        password: {},
-        passwordRepeat: {},
+        login: {
+          id: "",
+          type: "",
+          errorText: "",
+        },
+        password: {
+          id: "",
+          type: "",
+          errorText: "",
+        },
+        passwordRepeat: {
+          id: "",
+          type: "",
+          errorText: "",
+        },
+      },
+      serverErrors: {
+        login: [],
       },
     };
   },
@@ -117,25 +147,13 @@ export default {
   computed: {
     isValidForm() {
       return (
-        !this.signUpLoginError &&
-        this.user.login &&
-        !this.signUpPasswordError &&
-        this.user.password &&
-        !this.signUpPasswordRepeatError &&
-        this.user.passwordRepeat
+        !this.errors.login.errorText &&
+        !!this.user.login &&
+        !this.errors.password.errorText &&
+        !!this.user.password &&
+        !this.errors.passwordRepeat.errorText &&
+        !!this.user.passwordRepeat
       );
-    },
-  },
-
-  watch: {
-    isAuthUser() {
-      if (this.isAuthUser) {
-        this.user = {
-          login: "",
-          password: "",
-          passwordRepeat: "",
-        };
-      }
     },
   },
 
@@ -143,9 +161,93 @@ export default {
     togglePasswordVisibility() {
       this.passwordHidden = !this.passwordHidden;
     },
+
     togglePasswordRepeatVisibility() {
       this.passwordRepeatHidden = !this.passwordRepeatHidden;
     },
+
+    signUpLoginValidation(login) {
+      if (!login) {
+        this.errors.login = {
+          id: "6",
+          type: "login",
+          errorText: "Введите логин",
+        };
+      } else {
+        if (this.serverErrors.login.length > 0) {
+          if (this.serverErrors.login.indexOf(login) >= 0) {
+            console.log("Совпадение найдено");
+            this.errors.login = {
+              id: "3",
+              type: "login",
+              errorText: "Логин уже занят",
+            };
+          } else {
+            this.errors.login = {
+              id: "",
+              type: "",
+              errorText: "",
+            };
+          }
+        } else if (this.errors.login.errorText) {
+          this.errors.login = {
+            id: "",
+            type: "",
+            errorText: "",
+          };
+        }
+      }
+    },
+
+    signUpPasswordValidation(password, passwordRepeat) {
+      if (!password) {
+        this.errors.password = {
+          id: "7",
+          type: "password",
+          errorText: "Введите пароль",
+        };
+      } else {
+        if (this.errors.password.errorText) {
+          this.errors.password = {
+            id: "",
+            type: "",
+            errorText: "",
+          };
+        }
+        if (this.errors.passwordRepeat.errorText || passwordRepeat) {
+          this.signUpPasswordRepeatValidation(password, passwordRepeat);
+        }
+      }
+    },
+
+    signUpPasswordRepeatValidation(password, passwordRepeat) {
+      if (!passwordRepeat) {
+        this.errors.passwordRepeat = {
+          id: "8",
+          type: "passwordRepeat",
+          errorText: "Введите пароль ещё раз",
+        };
+      } else {
+        if (!password) {
+          this.signUpPasswordValidation(password, passwordRepeat);
+        } else {
+          if (passwordRepeat !== password) {
+            this.errors.passwordRepeat = {
+              id: "9",
+              type: "passwordRepeat",
+              errorText: "Повтор не совпадает с паролем",
+            };
+          } else if (this.errors.passwordRepeat.errorText) {
+            this.errors.passwordRepeat = {
+              id: "",
+              type: "",
+              errorText: "",
+            };
+          }
+        }
+      }
+    },
+
     signUp(user) {
       axios
         .post(this.url + "signup.php", JSON.stringify(user))
@@ -157,8 +259,7 @@ export default {
     signUpResponseParsing(response, user) {
       if (response.error) {
         this.signUpErrorRecord(response.error);
-        console.log(user);
-        // this.serverErrors.signUp.login.push(user.login);
+        this.serverErrors.login.push(user.login);
       }
       if (response.user) {
         this.authUser();
@@ -167,9 +268,8 @@ export default {
 
     signUpErrorRecord(error) {
       if (error.type === "login") {
-        this.errors.signUp.login = error;
+        this.errors.login = error;
       }
-      this.logGroup("Записана ошибка", error);
     },
 
     authUser() {
@@ -180,8 +280,8 @@ export default {
     errorsReset() {
       this.errors.login = {};
       this.errors.password = {};
-      // this.serverErrors.signIn.login = [];
-      // this.serverErrors.signIn.password = [];
+      this.errors.passwordRepeat = {};
+      this.serverErrors.login = [];
     },
   },
 };
