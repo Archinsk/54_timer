@@ -1,19 +1,29 @@
 <template>
-  <SignInForm
-    v-if="!authUser && signMode === 'signin'"
-    :url="url"
-    @sign-in="$emit('sign-in')"
-    @sign-mode-toggle="$emit('open-auth-tab', 'signup')"
-  />
+  <div id="auth-settings" class="row">
+    <div class="col-10 col-sm-7">
+      <template v-if="!authUser">
+        <transition name="fade-in-right" mode="out-in">
+          <SignInForm
+            v-if="signMode === 'signin'"
+            :url="url"
+            @sign-in="$emit('sign-in')"
+            @change-auth-form="$emit('change-auth-form', 'signup')"
+            @select-settings-tab="$emit('select-settings-tab', $event)"
+          />
 
-  <SignUpForm
-    v-if="!authUser && signMode === 'signup'"
-    :url="url"
-    @sign-in="$emit('sign-in')"
-    @sign-mode-toggle="$emit('open-auth-tab', 'signin')"
-  />
+          <SignUpForm
+            v-else
+            :url="url"
+            @sign-in="$emit('sign-in')"
+            @change-auth-form="$emit('change-auth-form', 'signin')"
+            @select-settings-tab="$emit('select-settings-tab', $event)"
+          />
+        </transition>
+      </template>
 
-  <SignOutForm v-if="authUser" :url="url" @sign-out="$emit('sign-out')" />
+      <SignOutForm v-else :url="url" @sign-out="$emit('sign-out')" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -29,9 +39,5 @@ export default {
     SignInForm,
   },
   props: ["authUser", "url", "signMode"],
-
-  data() {
-    return {};
-  },
 };
 </script>

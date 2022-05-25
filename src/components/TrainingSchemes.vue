@@ -1,35 +1,24 @@
 <template>
-  <!--  <div class="position-absolute">-->
-  <!--      <TransitionGroup name="list">-->
-  <!--  <button-->
-  <!--    v-for="scheme of renderedSchemes"-->
-  <!--    :key="scheme.id"-->
-  <!--    class="btn btn-outline-light btn-training-mode"-->
-  <!--    @click="$emit('set-training-scheme', scheme)"-->
-  <!--  >-->
-  <!--    {{ scheme.name }}-->
-  <!--  </button>-->
-  <div v-for="scheme of schemes" :key="scheme.id">
-    <input
-      class="btn-check"
-      type="radio"
-      name="scheme-buttons"
-      :id="'scheme-button-' + scheme.id"
-    />
-    <label
-      :class="[
-        'col settings-navbar-item btn btn-block rounded-pill',
-        scheme.id === selectedSchemeId ? 'btn-primary' : '',
-      ]"
-      :for="'scheme-button-' + scheme.id"
-      @click="$emit('select-training-scheme', scheme)"
-    >
-      {{ scheme.name }}
-    </label>
+  <div id="training-schemes-navbar">
+    <div v-for="scheme of schemes" :key="scheme.id">
+      <input
+        class="btn-check"
+        type="radio"
+        name="scheme-buttons"
+        :id="'scheme-button-' + scheme.id"
+      />
+      <label
+        :class="[
+          'col settings-navbar-item btn btn-block rounded-pill',
+          scheme.id === selectedSchemeId ? 'btn-primary' : '',
+        ]"
+        :for="'scheme-button-' + scheme.id"
+        @click="$emit('select-training-scheme', scheme)"
+      >
+        {{ scheme.name }}
+      </label>
+    </div>
   </div>
-  <!--      </TransitionGroup>-->
-
-  <!--  </div>-->
 </template>
 
 <script>

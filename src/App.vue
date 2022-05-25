@@ -1,37 +1,45 @@
 <template>
   <div class="container">
     <AppLoader v-if="isLoading" />
-    <MenuButon
-      :settings-mode="settingsMode"
-      :mode="
-        !authUser && selectedSetting === 'profile' ? 'arrowMode' : 'burgerMode'
-      "
-      @settings-toggle="settingsToggle"
-      @open-training="this.selectedSetting = 'training'"
-    />
-    <AppSettings
-      v-if="settingsMode"
-      :url="url"
-      :auth-user="authUser"
-      :config="config"
-      @full-timer-display-toggle="
-        config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
-      "
-      @color-display-toggle="
-        config.interface.colorsDisplay = !config.interface.colorsDisplay
-      "
-      @timer-clickability-toggle="
-        config.interface.timerClickability = !config.interface.timerClickability
-      "
-      @controls-display-toggle="
-        config.interface.controlsDisplay = !config.interface.controlsDisplay
-      "
-      @set-work-mode-sound="config.sounds.workMode = $event"
-      @set-rest-mode-sound="config.sounds.restMode = $event"
-      @select-training-scheme="selectTrainingScheme($event)"
-      @sign-in="signIn"
-      @sign-out="signOut"
-    />
+
+    <div>
+      <AppSettingsNavbar
+        :settings-mode="settingsMode"
+        :selectedTab="selectedSettingsTab"
+        @settings-toggle="settingsToggle"
+        @select-settings-tab="selectedSettingsTab = $event"
+      />
+
+      <transition name="fade-in-up">
+        <AppSettings
+          v-if="settingsMode"
+          :url="url"
+          :auth-user="authUser"
+          :config="config"
+          :selectedTab="selectedSettingsTab"
+          @select-settings-tab="selectedSettingsTab = $event"
+          @full-timer-display-toggle="
+            config.interface.fullTimerDisplay =
+              !config.interface.fullTimerDisplay
+          "
+          @color-display-toggle="
+            config.interface.colorsDisplay = !config.interface.colorsDisplay
+          "
+          @timer-clickability-toggle="
+            config.interface.timerClickability =
+              !config.interface.timerClickability
+          "
+          @controls-display-toggle="
+            config.interface.controlsDisplay = !config.interface.controlsDisplay
+          "
+          @set-work-mode-sound="config.sounds.workMode = $event"
+          @set-rest-mode-sound="config.sounds.restMode = $event"
+          @select-training-scheme="selectTrainingScheme($event)"
+          @sign-in="signIn"
+          @sign-out="signOut"
+        />
+      </transition>
+    </div>
     <AppTimer
       :mode="mode"
       :play="play"
@@ -54,21 +62,21 @@
 </template>
 
 <script>
-import MenuButon from "./components/MenuButon";
 import AppLoader from "./components/AppLoader";
 import AppSettings from "./components/AppSettings";
 import AppControls from "./components/AppControls";
 import AppTimer from "./components/AppTimer";
+import AppSettingsNavbar from "./components/AppSettingsNavbar";
 
 export default {
   name: "App",
 
   components: {
+    AppSettingsNavbar,
     AppTimer,
     AppControls,
     AppSettings,
     AppLoader,
-    MenuButon,
   },
 
   data() {
@@ -85,7 +93,7 @@ export default {
         schemes: [
           {
             id: 1,
-            name: "Лёгкий",
+            name: "Легко",
             cycles: 1,
             rounds: 5,
             prepTime: 5,
@@ -95,17 +103,7 @@ export default {
           },
           {
             id: 2,
-            name: "Облегчённый",
-            cycles: 2,
-            rounds: 3,
-            prepTime: 0,
-            workTime: 20,
-            restTime: 10,
-            clearTime: 30,
-          },
-          {
-            id: 3,
-            name: "Нормальный",
+            name: "Норма",
             cycles: 1,
             rounds: 8,
             prepTime: 5,
@@ -114,18 +112,8 @@ export default {
             clearTime: 0,
           },
           {
-            id: 4,
-            name: "Утяжелённый",
-            cycles: 1,
-            rounds: 5,
-            prepTime: 7,
-            workTime: 620,
-            restTime: 15,
-            clearTime: 20,
-          },
-          {
-            id: 5,
-            name: "Тяжёлый",
+            id: 3,
+            name: "Тяжело",
             cycles: 2,
             rounds: 10,
             prepTime: 676,
@@ -135,8 +123,8 @@ export default {
           },
         ],
         selectedTrainingScheme: {
-          id: 3,
-          name: "Нормальный",
+          id: 2,
+          name: "Норма",
           cycles: 1,
           rounds: 8,
           prepTime: 5,
@@ -178,6 +166,7 @@ export default {
       selectedSetting: "training",
       signMode: "signin",
       schemesEditMode: false,
+      selectedSettingsTab: "trainings",
     };
   },
 

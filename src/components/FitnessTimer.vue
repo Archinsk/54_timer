@@ -1,5 +1,5 @@
 <template>
-  <div id="timers-with-progress-bars">
+  <div id="timers-with-progress-bars" @click="timerClick">
     <svg
       id="progress"
       viewBox="0 0 272 272"
@@ -24,6 +24,7 @@
         id="progress-bar-internal"
         :stroke-dasharray="strokeLength + 'rem'"
         :stroke-dashoffset="strokeOffset + 'rem'"
+        :class="modeColor"
       ></circle>
     </svg>
 
@@ -201,6 +202,27 @@ export default {
         100
       );
     },
+
+    // Цвет шкалы
+    modeColor() {
+      if (this.config.interface.colorsDisplay) {
+        if (this.mode === "prep") {
+          return "prep-mode";
+        } else if (this.mode === "work") {
+          return "work-mode";
+        } else if (this.mode === "rest") {
+          return "rest-mode";
+        } else if (this.mode === "clear") {
+          return "clear-mode";
+        } else if (this.mode === "finish") {
+          return "finish-mode";
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
   },
 
   methods: {
@@ -212,6 +234,12 @@ export default {
         return String(timeInSec % 60).padStart(2, "0");
       }
       return null;
+    },
+
+    timerClick() {
+      if (this.config.interface.timerClickability) {
+        this.$emit("play-toggle");
+      }
     },
   },
 

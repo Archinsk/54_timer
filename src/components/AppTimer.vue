@@ -13,6 +13,7 @@
       :mode="mode"
       :play="play"
       :pastTime="pastTime"
+      @play-toggle="$emit('play-toggle')"
     />
 
     <RepeatsBar

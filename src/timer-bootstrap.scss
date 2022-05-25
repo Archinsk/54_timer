@@ -32,7 +32,7 @@ $font-weight-bold: 700;
 @import "../node_modules/bootstrap/scss/reboot";
 @import "../node_modules/bootstrap/scss/type";
 @import "../node_modules/bootstrap/scss/images";
-@import "../node_modules/bootstrap/scss/containers";
+//@import "../node_modules/bootstrap/scss/containers";
 @import "../node_modules/bootstrap/scss/grid";
 @import "../node_modules/bootstrap/scss/tables";
 @import "../node_modules/bootstrap/scss/forms";
@@ -66,10 +66,14 @@ $font-weight-bold: 700;
 
 // 6. Add additional custom code here
 
-//Fonts
+//Шрифты
 @font-face {
   font-family: "Oswald";
   src: url(./assets/fonts/Oswald-VariableFont_wght.ttf);
+}
+@font-face {
+  font-family: "Roboto";
+  src: url(./assets/fonts/RobotoFlex.ttf);
 }
 @font-face {
   font-family: "Material Icons";
@@ -79,9 +83,22 @@ $font-weight-bold: 700;
   font-family: "Anicons";
   src: url(./assets/fonts/AniconsGX.ttf);
 }
-
 body {
-  font-family: "Oswald";
+  font-family: "Roboto";
+  font-variation-settings: "wdth" 50;
+
+  #timer-full {
+    font-family: "Oswald";
+
+    .repeats-title {
+      font-family: "Roboto";
+      font-variation-settings: "wdth" 50;
+    }
+  }
+}
+
+//Основные стили приложения
+body {
   //width: 100vw;
   //height: 100vh;
 
@@ -93,6 +110,7 @@ body {
     line-height: 0.75;
     padding-left: 0.375rem;
     padding-right: 0.375rem;
+    max-width: 2.375rem;
 
     .material-icons {
       font-family: "Material Icons";
@@ -112,41 +130,253 @@ body {
     }
   }
 
+  //Замена Bootstrap-контейнера
+  .container {
+    width: 100%;
+    padding: var(--bs-gutter-x, 0.75rem);
+    margin-right: auto;
+    margin-left: auto;
+
+    min-width: 360px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    @media (min-width: 576px) {
+      max-width: 540px;
+    }
+  }
+
   #settings-navbar {
     position: relative;
 
     .settings-navbar-item {
       color: $info;
       z-index: 2;
-      transition: color 0.15s ease-in;
+      margin-left: 0.75rem;
+
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0);
+      transition: color 0.3s, opacity 0.3s, visibility 0.3s, transform 0.3s;
+
+      &.open {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+      }
+
+      &:nth-of-type(1) {
+        transition-delay: 0s;
+      }
+
+      &:nth-of-type(2) {
+        transition-delay: 0.2s;
+      }
+
+      &:nth-of-type(3) {
+        transition-delay: 0.4s;
+      }
+
+      &:nth-of-type(4) {
+        transition-delay: 0.6s;
+      }
+
+      &:not(.open) {
+        transition-delay: 0s !important;
+      }
     }
 
     .btn-check:checked + label {
       color: $light;
     }
 
-    #settings-navbar-indicator {
-      position: absolute;
-      height: 2.375rem;
-      width: 25%;
-      background-color: $primary;
-      transition: 0.25s ease-out;
+    //#settings-navbar-indicator {
+    //  position: absolute;
+    //  height: 2.375rem;
+    //  width: 25%;
+    //  background-color: $primary;
+    //  transition: 0.25s ease-out;
+    //}
+    //
+    //input[id="settings-navbar-1"]:checked ~ #settings-navbar-indicator {
+    //  transform: translateX(0);
+    //}
+    //
+    //input[id="settings-navbar-2"]:checked ~ #settings-navbar-indicator {
+    //  transform: translateX(100%);
+    //}
+    //
+    //input[id="settings-navbar-3"]:checked ~ #settings-navbar-indicator {
+    //  transform: translateX(200%);
+    //}
+    //
+    //input[id="settings-navbar-4"]:checked ~ #settings-navbar-indicator {
+    //  transform: translateX(300%);
+    //}
+  }
+
+  .settings {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    min-height: 16.0625rem;
+
+    #auth-settings {
+      justify-content: center;
+
+      form {
+        text-align: start;
+        color: var(--bs-info);
+
+        .form-label {
+          display: none;
+        }
+
+        .form-control {
+          border-color: var(--bs-info);
+
+          &::placeholder {
+            color: var(--bs-info);
+          }
+        }
+
+        .input-group {
+          margin-top: 0.5rem;
+
+          .form-control {
+            border-right-color: transparent;
+          }
+
+          .btn-password-visibility {
+            border-color: var(--bs-info);
+            border-left-color: transparent;
+          }
+        }
+
+        .sign-error {
+          font-size: 0.875em;
+          color: var(--bs-light);
+          margin-top: 0.125rem;
+        }
+
+        .sign-comment {
+          margin-top: 0.5rem;
+        }
+
+        .sign-buttons {
+          margin-top: 0.5rem;
+        }
+      }
     }
 
-    input[id="settings-navbar-1"]:checked ~ #settings-navbar-indicator {
-      transform: translateX(0);
-    }
+    #sounds-settings {
+      position: relative;
 
-    input[id="settings-navbar-2"]:checked ~ #settings-navbar-indicator {
-      transform: translateX(100%);
-    }
+      .sound-mode-title {
+        display: inline-block;
+        background-color: navy;
+        border-radius: 0.25rem;
+        padding: 0.4375rem 0.625rem;
+      }
 
-    input[id="settings-navbar-3"]:checked ~ #settings-navbar-indicator {
-      transform: translateX(200%);
-    }
+      .sound-item {
+        color: $info;
+        padding-top: 0.4375rem;
+        padding-bottom: 0.4375rem;
+        transition: color 0.15s ease-in;
+      }
 
-    input[id="settings-navbar-4"]:checked ~ #settings-navbar-indicator {
-      transform: translateX(300%);
+      .btn-check:checked + label {
+        color: $light;
+      }
+
+      #sounds-navbar {
+        position: relative;
+
+        .sounds-navbar-item {
+          color: $info;
+          z-index: 2;
+          transition: color 0.15s ease-in;
+        }
+
+        .btn-check:checked + label {
+          color: $light;
+        }
+
+        #sounds-navbar-indicator {
+          position: absolute;
+          height: 2.375rem;
+          width: 50%;
+          background-color: $primary;
+          transition: 0.25s ease-out;
+        }
+
+        input[id="sounds-navbar-1"]:checked ~ #sounds-navbar-indicator {
+          transform: translateX(0);
+        }
+
+        input[id="sounds-navbar-2"]:checked ~ #sounds-navbar-indicator {
+          transform: translateX(100%);
+        }
+      }
+
+      .form-check {
+        padding-left: 0;
+        margin-bottom: 0;
+      }
+
+      #sound-work {
+        text-align: end;
+      }
+
+      #sound-play {
+        visibility: hidden;
+
+        &.active {
+          visibility: visible;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          .audio-control {
+            //display: none;
+
+            .anicons-icons {
+              font-variation-settings: "TIME" 1;
+
+              &.playing {
+                font-variation-settings: "TIME" 100;
+              }
+            }
+          }
+        }
+      }
+
+      #sound-rest {
+        text-align: start;
+      }
+
+      //Анимированный фон выбора режима
+      #sound-mode-selector {
+        display: none;
+        position: absolute;
+        background-color: midnightblue;
+        height: 11.875rem;
+        width: 58.33%;
+        border-radius: 0.25rem;
+        z-index: -1;
+        transition: 0.25s ease-out;
+      }
+      #sound-work.active ~ #sound-mode-selector {
+        display: block;
+        transform: translateX(0);
+      }
+      #sound-rest.active ~ #sound-mode-selector {
+        display: block;
+        transform: translateX(75%);
+      }
     }
   }
 
@@ -177,6 +407,8 @@ body {
   }
 
   #btn-settings {
+    align-self: start;
+
     .anicons-icons {
       font-variation-settings: "TIME" 1;
 
@@ -194,69 +426,17 @@ body {
   #settings-screen {
     margin-bottom: 1.5rem;
 
+    #training-schemes-navbar {
+      display: flex;
+      justify-content: space-around;
+    }
+
     .btn-training-mode {
       width: 100%;
     }
 
     .btn-training-mode:not(:last-child) {
       margin-bottom: 0.5rem;
-    }
-  }
-
-  #sounds-settings {
-    .sound-item {
-      color: $info;
-      transition: color 0.15s ease-in;
-    }
-
-    .btn-check:checked + label {
-      color: $light;
-    }
-
-    .audio-control {
-      display: none;
-
-      .anicons-icons {
-        font-variation-settings: "TIME" 1;
-
-        &.playing {
-          font-variation-settings: "TIME" 100;
-        }
-      }
-    }
-
-    .btn-check:checked ~ .audio-control {
-      display: inline-block;
-    }
-
-    #sounds-navbar {
-      position: relative;
-
-      .sounds-navbar-item {
-        color: $info;
-        z-index: 2;
-        transition: color 0.15s ease-in;
-      }
-
-      .btn-check:checked + label {
-        color: $light;
-      }
-
-      #sounds-navbar-indicator {
-        position: absolute;
-        height: 2.375rem;
-        width: 50%;
-        background-color: $primary;
-        transition: 0.25s ease-out;
-      }
-
-      input[id="sounds-navbar-1"]:checked ~ #sounds-navbar-indicator {
-        transform: translateX(0);
-      }
-
-      input[id="sounds-navbar-2"]:checked ~ #sounds-navbar-indicator {
-        transform: translateX(100%);
-      }
     }
   }
 
@@ -315,6 +495,26 @@ body {
         #progress-bar-internal {
           stroke: $light;
           r: 7.25rem;
+
+          &.prep-mode {
+            stroke: greenyellow;
+          }
+
+          &.work-mode {
+            stroke: crimson;
+          }
+
+          &.rest-mode {
+            stroke: green;
+          }
+
+          &.clear-mode {
+            stroke: lightskyblue;
+          }
+
+          &.finish-mode {
+            stroke: blue;
+          }
         }
       }
 
@@ -385,6 +585,34 @@ body {
       width: 100%;
     }
   }
+}
+
+//Анимация смены форм регистрации и авторизации
+.fade-in-right-enter-active,
+.fade-in-right-leave-active {
+  transition: all 0.3s;
+}
+.fade-in-right-enter-from {
+  opacity: 0;
+  transform: translateX(120%);
+}
+.fade-in-right-leave-to {
+  opacity: 0;
+  transform: translateX(-120%);
+}
+
+//Анимация развертывания меню настроек
+.fade-in-up-enter-active,
+.fade-in-up-leave-active {
+  transition: all 0.5s;
+}
+.fade-in-up-enter-from {
+  opacity: 0;
+  transform: translateY(-120%);
+}
+.fade-in-up-leave-to {
+  opacity: 0;
+  transform: translateY(-120%);
 }
 
 //Current-timer-animation
@@ -540,4 +768,38 @@ body {
 .list-enter-from, .list-leave-to /* .list-leave-active до версии 2.1.8 */ {
   opacity: 0;
   transform: translateX(100%);
+}
+
+//Эксперименты с всплывающим меню
+.social-link {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0);
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  &:nth-child(2) {
+    transition-delay: 0s;
+  }
+
+  &:nth-child(3) {
+    transition-delay: 0.2s;
+  }
+
+  &:nth-child(4) {
+    transition-delay: 0.4s;
+  }
+
+  &:nth-child(5) {
+    transition-delay: 0.6s;
+  }
+
+  &:not(.open) {
+    transition-delay: 0s !important;
+  }
 }

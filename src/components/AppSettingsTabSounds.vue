@@ -1,19 +1,63 @@
 <template>
   <div id="sounds-settings">
-    <SoundsNavbar @sound-select="soundMode = $event" />
-
-    <div v-if="soundMode === 'work'" id="sound-selector-work">
-      <div class="form-check">
-        <input
-          v-model="selectedSoundWork"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-work"
-          id="melody-1"
-          value="1"
-          checked
-        />
-        <label class="sound-item" for="melody-1"> Мелодия №1 </label>
+    <div class="row gx-2">
+      <div id="sound-work" :class="['col-5', { active: soundMode === 'work' }]">
+        <div class="sound-mode-title">Работа</div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundWork"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-work"
+            id="melody-1"
+            value="1"
+            checked
+          />
+          <label class="sound-item" for="melody-1" @click="soundMode = 'work'">
+            Jazzsteppa
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundWork"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-work"
+            id="melody-2"
+            value="2"
+          />
+          <label class="sound-item" for="melody-2" @click="soundMode = 'work'">
+            Prodigy
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundWork"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-work"
+            id="melody-3"
+            value="3"
+          />
+          <label class="sound-item" for="melody-3" @click="soundMode = 'work'">
+            Laibach
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundWork"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-work"
+            id="melody-4"
+            value="4"
+          />
+          <label class="sound-item" for="melody-4" @click="soundMode = 'work'">
+            Ministry
+          </label>
+        </div>
+      </div>
+      <div id="sound-play" :class="['col-2', { active: !!soundMode }]">
         <button
           class="audio-control btn btn-primary btn-icon-square rounded-circle"
           @click="play = !play"
@@ -21,163 +65,63 @@
           <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
         </button>
       </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundWork"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-work"
-          id="melody-2"
-          value="2"
-        />
-        <label class="sound-item" for="melody-2"> Мелодия №2 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
+      <div id="sound-rest" :class="['col-5', { active: soundMode === 'rest' }]">
+        <div class="sound-mode-title">Отдых</div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundRest"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-rest"
+            id="melody-5"
+            value="5"
+            checked
+          />
+          <label class="sound-item" for="melody-5" @click="soundMode = 'rest'">
+            Bohren & Club
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundRest"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-rest"
+            id="melody-6"
+            value="6"
+          />
+          <label class="sound-item" for="melody-6" @click="soundMode = 'rest'">
+            Burzum
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundRest"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-rest"
+            id="melody-7"
+            value="7"
+          />
+          <label class="sound-item" for="melody-7" @click="soundMode = 'rest'">
+            Carbon Based
+          </label>
+        </div>
+        <div class="form-check">
+          <input
+            v-model="selectedSoundRest"
+            class="btn-check"
+            type="radio"
+            name="melody-selector-rest"
+            id="melody-8"
+            value="8"
+          />
+          <label class="sound-item" for="melody-8" @click="soundMode = 'rest'">
+            Max Richter
+          </label>
+        </div>
       </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundWork"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-work"
-          id="melody-3"
-          value="3"
-        />
-        <label class="sound-item" for="melody-3"> Мелодия №3 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundWork"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-work"
-          id="melody-4"
-          value="4"
-        />
-        <label class="sound-item" for="melody-4"> Мелодия №4 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundWork"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-work"
-          id="melody-5"
-          value="5"
-        />
-        <label class="sound-item" for="melody-5"> Мелодия №5 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-    </div>
-
-    <div v-if="soundMode === 'rest'" id="sound-selector-rest">
-      <div class="form-check">
-        <input
-          v-model="selectedSoundRest"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-rest"
-          id="melody-6"
-          value="6"
-          checked
-        />
-        <label class="sound-item" for="melody-6"> Мелодия №6 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundRest"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-rest"
-          id="melody-7"
-          value="7"
-        />
-        <label class="sound-item" for="melody-7"> Мелодия №7 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundRest"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-rest"
-          id="melody-8"
-          value="8"
-        />
-        <label class="sound-item" for="melody-8"> Мелодия №8 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundRest"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-rest"
-          id="melody-9"
-          value="9"
-        />
-        <label class="sound-item" for="melody-9"> Мелодия №9 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
-      <div class="form-check">
-        <input
-          v-model="selectedSoundRest"
-          class="btn-check"
-          type="radio"
-          name="melody-selector-rest"
-          id="melody-10"
-          value="10"
-        />
-        <label class="sound-item" for="melody-10"> Мелодия №10 </label>
-        <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
-          @click="play = !play"
-        >
-          <span :class="['anicons-icons', play ? 'playing' : '']">H</span>
-        </button>
-      </div>
+      <div id="sound-mode-selector"></div>
     </div>
 
     <audio
@@ -190,16 +134,13 @@
 </template>
 
 <script>
-import SoundsNavbar from "./SoundsNavbar";
-
 export default {
   name: "AppSettingsTabSounds",
-  components: { SoundsNavbar },
   props: ["config"],
 
   data() {
     return {
-      soundMode: "work",
+      soundMode: "",
       play: false,
       selectedSoundWork: "3",
       selectedSoundRest: "8",

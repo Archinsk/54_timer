@@ -1,5 +1,8 @@
 <template>
-  <div class="text-muted">Вы действительно хотите выйти из учетной записи?</div>
+  <div class="text-muted">
+    Вы действительно хотите <br />
+    выйти из учетной записи?
+  </div>
   <div class="btn btn-primary" @click="signOut">Выйти</div>
 </template>
 
