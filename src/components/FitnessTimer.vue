@@ -87,9 +87,15 @@
     </div>
 
     <audio
-      id="music"
+      id="workMusic"
       volume="0.5"
-      :src="'/sounds/' + config.sounds.restMode + '.mp3'"
+      :src="'./sounds/' + config.sounds.workMode + '.mp3'"
+      type="audio/mpeg"
+    ></audio>
+    <audio
+      id="restMusic"
+      volume="0.5"
+      :src="'./sounds/' + config.sounds.restMode + '.mp3'"
       type="audio/mpeg"
     ></audio>
   </div>
@@ -266,17 +272,19 @@ export default {
       }
     },
     mode: function () {
-      let music = document.getElementById("music");
+      let workMusic = document.getElementById("workMusic");
+      let restMusic = document.getElementById("restMusic");
       if (this.play) {
         if (this.mode === "work") {
-          music.src = "/sounds/" + this.config.sounds.workMode + ".mp3";
-          music.play();
+          restMusic.pause();
+          workMusic.play();
         } else {
-          music.src = "/sounds/" + this.config.sounds.restMode + ".mp3";
-          music.play();
+          workMusic.pause();
+          restMusic.play();
         }
       } else {
-        music.pause();
+        restMusic.pause();
+        workMusic.pause();
       }
     },
   },

@@ -23,7 +23,7 @@
       <!--      Работало при v-show-->
       <AppSettingsTabSounds
         v-else-if="selectedTab === 'sounds'"
-        :config="config.interface"
+        :config="config.sounds"
         @set-work-mode-sound="$emit('set-work-mode-sound', $event)"
         @set-rest-mode-sound="$emit('set-rest-mode-sound', $event)"
       />

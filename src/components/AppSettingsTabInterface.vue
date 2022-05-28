@@ -1,7 +1,7 @@
 <template>
-  <div id="media-settings">
-    <div class="row">
-      <div class="col">
+  <div id="interface-settings">
+    <div class="row justify-content-center">
+      <div class="col-9">
         <div class="form-check form-switch">
           <input
             class="form-check-input"
@@ -15,9 +15,7 @@
             >Минималистичный интерфейс</label
           >
         </div>
-      </div>
 
-      <div class="col-6">
         <div class="form-check form-switch">
           <input
             class="form-check-input"
@@ -44,9 +42,7 @@
           />
           <label class="form-check-label" for="colors-display">Цвет</label>
         </div>
-      </div>
 
-      <div class="col-6">
         <div class="form-check form-switch">
           <input
             class="form-check-input"

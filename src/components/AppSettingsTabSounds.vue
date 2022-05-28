@@ -1,6 +1,6 @@
 <template>
   <div id="sounds-settings">
-    <div class="row gx-2">
+    <div class="row gx-0">
       <div id="sound-work" :class="['col-5', { active: soundMode === 'work' }]">
         <div class="sound-mode-title">Работа</div>
         <div class="form-check">
@@ -57,7 +57,14 @@
           </label>
         </div>
       </div>
-      <div id="sound-play" :class="['col-2', { active: !!soundMode }]">
+      <div
+        id="sound-play"
+        :class="[
+          'col-2',
+          { active: !!soundMode },
+          soundTrackSelectorPositionClass,
+        ]"
+      >
         <button
           class="audio-control btn btn-primary btn-icon-square rounded-circle"
           @click="play = !play"
@@ -121,7 +128,14 @@
           </label>
         </div>
       </div>
-      <div id="sound-mode-selector"></div>
+      <div id="sound-mode-selector">
+        <div>
+          <div class="additional-back"></div>
+          <div
+            :class="['sound-track-selector', soundTrackSelectorPositionClass]"
+          ></div>
+        </div>
+      </div>
     </div>
 
     <audio
@@ -142,8 +156,8 @@ export default {
     return {
       soundMode: "",
       play: false,
-      selectedSoundWork: "3",
-      selectedSoundRest: "8",
+      selectedSoundWork: "",
+      selectedSoundRest: "",
     };
   },
 
@@ -153,6 +167,27 @@ export default {
         return "./sounds/" + this.selectedSoundWork + ".mp3";
       } else {
         return "./sounds/" + this.selectedSoundRest + ".mp3";
+      }
+    },
+
+    soundTrackSelectorPositionClass: function () {
+      if (
+        (this.selectedSoundWork === "1" && this.soundMode === "work") ||
+        (this.selectedSoundRest === "5" && this.soundMode === "rest")
+      ) {
+        return "position-1";
+      } else if (
+        (this.selectedSoundWork === "2" && this.soundMode === "work") ||
+        (this.selectedSoundRest === "6" && this.soundMode === "rest")
+      ) {
+        return "position-2";
+      } else if (
+        (this.selectedSoundWork === "3" && this.soundMode === "work") ||
+        (this.selectedSoundRest === "7" && this.soundMode === "rest")
+      ) {
+        return "position-3";
+      } else {
+        return "position-4";
       }
     },
   },
