@@ -8,12 +8,11 @@
             v-model="selectedSoundWork"
             class="btn-check"
             type="radio"
-            name="melody-selector-work"
-            id="melody-1"
+            name="sound-selector-work"
+            id="sound-1"
             value="1"
-            checked
           />
-          <label class="sound-item" for="melody-1" @click="soundMode = 'work'">
+          <label class="sound-item" for="sound-1" @click="soundMode = 'work'">
             Jazzsteppa
           </label>
         </div>
@@ -22,11 +21,11 @@
             v-model="selectedSoundWork"
             class="btn-check"
             type="radio"
-            name="melody-selector-work"
-            id="melody-2"
+            name="sound-selector-work"
+            id="sound-2"
             value="2"
           />
-          <label class="sound-item" for="melody-2" @click="soundMode = 'work'">
+          <label class="sound-item" for="sound-2" @click="soundMode = 'work'">
             Prodigy
           </label>
         </div>
@@ -35,11 +34,11 @@
             v-model="selectedSoundWork"
             class="btn-check"
             type="radio"
-            name="melody-selector-work"
-            id="melody-3"
+            name="sound-selector-work"
+            id="sound-3"
             value="3"
           />
-          <label class="sound-item" for="melody-3" @click="soundMode = 'work'">
+          <label class="sound-item" for="sound-3" @click="soundMode = 'work'">
             Laibach
           </label>
         </div>
@@ -48,11 +47,11 @@
             v-model="selectedSoundWork"
             class="btn-check"
             type="radio"
-            name="melody-selector-work"
-            id="melody-4"
+            name="sound-selector-work"
+            id="sound-4"
             value="4"
           />
-          <label class="sound-item" for="melody-4" @click="soundMode = 'work'">
+          <label class="sound-item" for="sound-4" @click="soundMode = 'work'">
             Ministry
           </label>
         </div>
@@ -79,12 +78,11 @@
             v-model="selectedSoundRest"
             class="btn-check"
             type="radio"
-            name="melody-selector-rest"
-            id="melody-5"
+            name="sound-selector-rest"
+            id="sound-5"
             value="5"
-            checked
           />
-          <label class="sound-item" for="melody-5" @click="soundMode = 'rest'">
+          <label class="sound-item" for="sound-5" @click="soundMode = 'rest'">
             Bohren & Club
           </label>
         </div>
@@ -93,11 +91,11 @@
             v-model="selectedSoundRest"
             class="btn-check"
             type="radio"
-            name="melody-selector-rest"
-            id="melody-6"
+            name="sound-selector-rest"
+            id="sound-6"
             value="6"
           />
-          <label class="sound-item" for="melody-6" @click="soundMode = 'rest'">
+          <label class="sound-item" for="sound-6" @click="soundMode = 'rest'">
             Burzum
           </label>
         </div>
@@ -106,11 +104,11 @@
             v-model="selectedSoundRest"
             class="btn-check"
             type="radio"
-            name="melody-selector-rest"
-            id="melody-7"
+            name="sound-selector-rest"
+            id="sound-7"
             value="7"
           />
-          <label class="sound-item" for="melody-7" @click="soundMode = 'rest'">
+          <label class="sound-item" for="sound-7" @click="soundMode = 'rest'">
             Carbon Based
           </label>
         </div>
@@ -119,22 +117,20 @@
             v-model="selectedSoundRest"
             class="btn-check"
             type="radio"
-            name="melody-selector-rest"
-            id="melody-8"
+            name="sound-selector-rest"
+            id="sound-8"
             value="8"
           />
-          <label class="sound-item" for="melody-8" @click="soundMode = 'rest'">
+          <label class="sound-item" for="sound-8" @click="soundMode = 'rest'">
             Max Richter
           </label>
         </div>
       </div>
       <div id="sound-mode-selector">
-        <div>
-          <div class="additional-back"></div>
-          <div
-            :class="['sound-track-selector', soundTrackSelectorPositionClass]"
-          ></div>
-        </div>
+        <div class="additional-back"></div>
+        <div
+          :class="['sound-track-selector', soundTrackSelectorPositionClass]"
+        ></div>
       </div>
     </div>
 
@@ -156,8 +152,8 @@ export default {
     return {
       soundMode: "",
       play: false,
-      selectedSoundWork: "",
-      selectedSoundRest: "",
+      selectedSoundWork: this.config.workMode,
+      selectedSoundRest: this.config.restMode,
     };
   },
 
@@ -197,10 +193,8 @@ export default {
       let musicTest = document.getElementById("testmusic");
       if (this.play) {
         musicTest.play();
-        console.log("play");
       } else {
         musicTest.pause();
-        console.log("pause");
       }
     },
 
@@ -213,15 +207,6 @@ export default {
       this.play = false;
       this.$emit("set-rest-mode-sound", this.selectedSoundRest);
     },
-
-    soundMode: function () {
-      this.play = false;
-    },
-  },
-
-  beforeMount() {
-    this.selectedSoundWork = this.config.workMode;
-    this.selectedSoundRest = this.config.restMode;
   },
 };
 </script>

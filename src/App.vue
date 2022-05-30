@@ -139,8 +139,8 @@ export default {
           controlsDisplay: true,
         },
         sounds: {
-          workMode: 1,
-          restMode: 7,
+          workMode: 2,
+          restMode: 8,
         },
       },
       actual: {

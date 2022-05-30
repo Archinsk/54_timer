@@ -1,119 +1,118 @@
 <template>
-  <div>
-    <form @submit.prevent="signUp(user)">
-      <label for="sign-up-login" class="form-label">Логин</label>
+  <form @submit.prevent="signUp(user)">
+    <label for="sign-up-login" class="form-label">Логин</label>
+    <input
+      type="text"
+      class="form-control"
+      id="sign-up-login"
+      placeholder="Введите логин"
+      autocomplete="off"
+      v-model.trim="user.login"
+      @blur="signUpLoginValidation(user.login)"
+      @input="signUpLoginValidation(user.login)"
+    />
+    <div v-if="errors.login.errorText" class="sign-error">
+      {{ errors.login.errorText }}
+    </div>
+
+    <label for="sign-up-password" class="form-label">Пароль</label>
+    <div class="input-group">
       <input
-        type="text"
+        :type="passwordHidden ? 'password' : 'text'"
         class="form-control"
-        id="sign-up-login"
-        placeholder="Введите логин"
+        id="sign-up-password"
+        placeholder="Введите пароль"
         autocomplete="off"
-        v-model.trim="user.login"
-        @blur="signUpLoginValidation(user.login)"
-        @input="signUpLoginValidation(user.login)"
+        v-model.trim="user.password"
+        @blur="signUpPasswordValidation(user.password, user.passwordRepeat)"
+        @input="signUpPasswordValidation(user.password, user.passwordRepeat)"
       />
-      <div v-if="errors.login.errorText" class="sign-error">
-        {{ errors.login.errorText }}
-      </div>
-
-      <label for="sign-up-password" class="form-label">Пароль</label>
-      <div class="input-group">
-        <input
-          :type="passwordHidden ? 'password' : 'text'"
-          class="form-control"
-          id="sign-up-password"
-          placeholder="Введите пароль"
-          autocomplete="off"
-          v-model.trim="user.password"
-          @blur="signUpPasswordValidation(user.password, user.passwordRepeat)"
-          @input="signUpPasswordValidation(user.password, user.passwordRepeat)"
-        />
-        <button
-          class="btn btn-icon-square btn-password-visibility"
-          type="button"
-          @click="togglePasswordVisibility"
-        >
-          <span class="material-icons">
-            {{ passwordHidden ? "visibility_off" : "visibility" }}
-          </span>
-        </button>
-      </div>
-      <div
-        v-if="errors.password.errorText && !errors.login.errorText"
-        class="sign-error"
+      <button
+        class="btn btn-icon-square btn-password-visibility"
+        type="button"
+        @click="this.passwordHidden = !this.passwordHidden"
       >
-        {{ errors.password.errorText }}
-      </div>
+        <span class="material-icons">
+          {{ passwordHidden ? "visibility_off" : "visibility" }}
+        </span>
+      </button>
+    </div>
+    <div
+      v-if="errors.password.errorText && !errors.login.errorText"
+      class="sign-error"
+    >
+      {{ errors.password.errorText }}
+    </div>
 
-      <label for="sign-up-password-repeat" class="form-label"
-        >Повтор пароля</label
-      >
-      <div class="input-group">
-        <input
-          :type="passwordRepeatHidden ? 'password' : 'text'"
-          class="form-control"
-          id="sign-up-password-repeat"
-          placeholder="Повторите пароль"
-          autocomplete="off"
-          v-model.trim="user.passwordRepeat"
-          @blur="
-            signUpPasswordRepeatValidation(user.password, user.passwordRepeat)
-          "
-          @input="
-            signUpPasswordRepeatValidation(user.password, user.passwordRepeat)
-          "
-        />
-        <button
-          class="btn btn-icon-square btn-password-visibility"
-          type="button"
-          @click="togglePasswordRepeatVisibility"
-        >
-          <span class="material-icons">
-            {{ passwordRepeatHidden ? "visibility_off" : "visibility" }}
-          </span>
-        </button>
-      </div>
-      <div
-        v-if="
-          errors.passwordRepeat.errorText &&
-          !errors.login.errorText &&
-          !errors.password.errorText
+    <label for="sign-up-password-repeat" class="form-label"
+      >Повтор пароля</label
+    >
+    <div class="input-group">
+      <input
+        :type="passwordRepeatHidden ? 'password' : 'text'"
+        class="form-control"
+        id="sign-up-password-repeat"
+        placeholder="Повторите пароль"
+        autocomplete="off"
+        v-model.trim="user.passwordRepeat"
+        @blur="
+          signUpPasswordRepeatValidation(user.password, user.passwordRepeat)
         "
-        class="sign-error"
+        @input="
+          signUpPasswordRepeatValidation(user.password, user.passwordRepeat)
+        "
+      />
+      <button
+        class="btn btn-icon-square btn-password-visibility"
+        type="button"
+        @click="this.passwordRepeatHidden = !this.passwordRepeatHidden"
       >
-        {{ errors.passwordRepeat.errorText }}
-      </div>
+        <span class="material-icons">
+          {{ passwordRepeatHidden ? "visibility_off" : "visibility" }}
+        </span>
+      </button>
+    </div>
+    <div
+      v-if="
+        errors.passwordRepeat.errorText &&
+        !errors.login.errorText &&
+        !errors.password.errorText
+      "
+      class="sign-error"
+    >
+      {{ errors.passwordRepeat.errorText }}
+    </div>
 
-      <div class="sign-comment">
-        У меня есть аккаунт.
-        <a @click.prevent="$emit('change-auth-form')" href="#">Войти</a>
-      </div>
+    <div class="sign-comment">
+      У меня есть аккаунт.
+      <a @click.prevent="$emit('change-auth-form')" href="#">Войти</a>
+    </div>
 
-      <div class="row gx-3 sign-buttons">
-        <div class="col">
-          <button
-            type="button"
-            class="btn btn-primary btn-block"
-            @click="$emit('select-settings-tab', 'trainings')"
-          >
-            Отмена
-          </button>
-        </div>
-        <div class="col">
-          <button
-            type="submit"
-            :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
-          >
-            Зарегистрироваться
-          </button>
-        </div>
+    <div class="row gx-3 sign-buttons">
+      <div class="col">
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          @click="$emit('select-settings-tab', 'trainings')"
+        >
+          Отмена
+        </button>
       </div>
-    </form>
-  </div>
+      <div class="col">
+        <button
+          type="submit"
+          :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
+        >
+          Зарегистрироваться
+        </button>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>
 import axios from "axios";
+
 export default {
   name: "SignUpForm",
   props: ["url"],
@@ -164,14 +163,6 @@ export default {
   },
 
   methods: {
-    togglePasswordVisibility() {
-      this.passwordHidden = !this.passwordHidden;
-    },
-
-    togglePasswordRepeatVisibility() {
-      this.passwordRepeatHidden = !this.passwordRepeatHidden;
-    },
-
     signUpLoginValidation(login) {
       if (!login) {
         this.errors.login = {
