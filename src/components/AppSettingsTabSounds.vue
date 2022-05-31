@@ -65,7 +65,7 @@
         ]"
       >
         <button
-          class="audio-control btn btn-primary btn-icon-square rounded-circle"
+          class="btn btn-primary btn-icon-square rounded-circle audio-control"
           @click="play = !play"
         >
           <span :class="['anicons-icons', play ? 'playing' : '']">H</span>

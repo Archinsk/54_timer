@@ -284,13 +284,13 @@ body {
         padding-left: 0;
 
         .sound-item {
-          color: $info;
+          color: var(--bs-info);
           padding: 0.4375rem 0.75rem;
           transition: color 0.15s ease-in;
         }
 
         .btn-check:checked + .sound-item {
-          color: $light;
+          color: var(--bs-light);
         }
       }
 
@@ -322,8 +322,6 @@ body {
           }
 
           .audio-control {
-            //display: none;
-
             .anicons-icons {
               font-variation-settings: "TIME" 1;
 
