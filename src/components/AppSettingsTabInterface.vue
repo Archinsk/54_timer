@@ -102,10 +102,9 @@ export default {
 
   methods: {
     minimalModeToggle() {
-      if (this.minimalMode) {
-        // this.disabledButtons = false;
-        this.disabledButtons = !this.disabledButtons;
-      } else {
+      if (this.minimalMode && this.disabledButtons) {
+        this.disabledButtons = false;
+      } else if (!this.minimalMode) {
         if (this.config.fullTimerDisplay) {
           this.$emit("full-timer-display-toggle");
         }
