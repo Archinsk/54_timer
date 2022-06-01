@@ -11,7 +11,6 @@
             name="melody-selector-work"
             id="melody-1"
             value="1"
-            checked
           />
           <label class="sound-item" for="melody-1" @click="soundMode = 'work'">
             Jazzsteppa
@@ -82,7 +81,6 @@
             name="melody-selector-rest"
             id="melody-5"
             value="5"
-            checked
           />
           <label class="sound-item" for="melody-5" @click="soundMode = 'rest'">
             Bohren & Club
@@ -156,8 +154,9 @@ export default {
     return {
       soundMode: "",
       play: false,
-      selectedSoundWork: "",
-      selectedSoundRest: "",
+      selectedSoundWork: this.config.workMode,
+      selectedSoundRest: this.config.restMode,
+      soundTrackSelectorPositionClass: "",
     };
   },
 
@@ -167,27 +166,6 @@ export default {
         return "./sounds/" + this.selectedSoundWork + ".mp3";
       } else {
         return "./sounds/" + this.selectedSoundRest + ".mp3";
-      }
-    },
-
-    soundTrackSelectorPositionClass: function () {
-      if (
-        (this.selectedSoundWork === "1" && this.soundMode === "work") ||
-        (this.selectedSoundRest === "5" && this.soundMode === "rest")
-      ) {
-        return "position-1";
-      } else if (
-        (this.selectedSoundWork === "2" && this.soundMode === "work") ||
-        (this.selectedSoundRest === "6" && this.soundMode === "rest")
-      ) {
-        return "position-2";
-      } else if (
-        (this.selectedSoundWork === "3" && this.soundMode === "work") ||
-        (this.selectedSoundRest === "7" && this.soundMode === "rest")
-      ) {
-        return "position-3";
-      } else {
-        return "position-4";
       }
     },
   },
@@ -206,22 +184,29 @@ export default {
 
     selectedSoundWork: function () {
       this.play = false;
+      this.soundTrackSelectorPositionClass =
+        "position-" + this.selectedSoundWork;
       this.$emit("set-work-mode-sound", this.selectedSoundWork);
     },
 
     selectedSoundRest: function () {
       this.play = false;
+      this.soundTrackSelectorPositionClass =
+        "position-" + (this.selectedSoundRest - 4);
       this.$emit("set-rest-mode-sound", this.selectedSoundRest);
     },
 
     soundMode: function () {
       this.play = false;
+      if (this.soundMode === "work") {
+        this.soundTrackSelectorPositionClass =
+          "position-" + this.selectedSoundWork;
+      }
+      if (this.soundMode === "rest") {
+        this.soundTrackSelectorPositionClass =
+          "position-" + (this.selectedSoundRest - 4);
+      }
     },
-  },
-
-  beforeMount() {
-    this.selectedSoundWork = this.config.workMode;
-    this.selectedSoundRest = this.config.restMode;
   },
 };
 </script>
