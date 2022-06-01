@@ -280,51 +280,18 @@ body {
 
       .form-check {
         margin-top: 0.5rem;
-      }
+        margin-bottom: 0;
+        padding-left: 0;
 
-      .sound-item {
-        color: $info;
-        padding: 0.4375rem 0.75rem;
-        transition: color 0.15s ease-in;
-      }
-
-      .btn-check:checked + label {
-        color: $light;
-      }
-
-      #sounds-navbar {
-        position: relative;
-
-        .sounds-navbar-item {
-          color: $info;
-          z-index: 2;
+        .sound-item {
+          color: var(--bs-info);
+          padding: 0.4375rem 0.75rem;
           transition: color 0.15s ease-in;
         }
 
-        .btn-check:checked + label {
-          color: $light;
+        .btn-check:checked + .sound-item {
+          color: var(--bs-light);
         }
-
-        #sounds-navbar-indicator {
-          position: absolute;
-          height: 2.375rem;
-          width: 50%;
-          background-color: $primary;
-          transition: 0.25s ease-out;
-        }
-
-        input[id="sounds-navbar-1"]:checked ~ #sounds-navbar-indicator {
-          transform: translateX(0);
-        }
-
-        input[id="sounds-navbar-2"]:checked ~ #sounds-navbar-indicator {
-          transform: translateX(100%);
-        }
-      }
-
-      .form-check {
-        padding-left: 0;
-        margin-bottom: 0;
       }
 
       #sound-work {
@@ -355,8 +322,6 @@ body {
           }
 
           .audio-control {
-            //display: none;
-
             .anicons-icons {
               font-variation-settings: "TIME" 1;
 
@@ -383,35 +348,32 @@ body {
         border-radius: 1rem;
         z-index: -1;
         transition: 0.25s ease-out;
+
+        .additional-back {
+          position: absolute;
+          background-color: var(--bs-body-bg);
+          height: 12rem;
+          width: calc(100% - 0.5rem);
+          border-radius: 0.75rem;
+          bottom: 0.25rem;
+          left: 0.25rem;
+        }
+
+        .sound-track-selector {
+          position: absolute;
+          background-color: var(--bs-primary);
+          height: 2.375rem;
+          width: calc((100% - 0.25rem) * 5 / 7 - 0.75rem);
+          border-radius: 1.1875rem;
+          top: 2.875rem;
+          left: 0.75rem;
+          transition: all 0.25s ease-out;
+        }
       }
       #sound-work.active ~ #sound-mode-selector {
         display: block;
         transform: translateX(0);
-      }
-      #sound-rest.active ~ #sound-mode-selector {
-        display: block;
-        transform: translateX(calc((100% - 0.25rem) * 5 / 7 - 0.25rem));
-      }
-      .additional-back {
-        position: absolute;
-        background-color: var(--bs-body-bg);
-        height: 12rem;
-        width: calc(100% - 0.5rem);
-        border-radius: 0.75rem;
-        bottom: 0.25rem;
-        left: 0.25rem;
-      }
-      .sound-track-selector {
-        position: absolute;
-        background-color: var(--bs-primary);
-        height: 2.375rem;
-        width: calc((100% - 0.25rem) * 5 / 7 - 0.75rem);
-        border-radius: 1.1875rem;
-        top: 2.875rem;
-        left: 0.75rem;
-        transition: all 0.25s ease-out;
-      }
-      #sound-work.active ~ #sound-mode-selector {
+
         .sound-track-selector {
           &.position-1 {
             transform: translateY(0) translateX(0);
@@ -431,6 +393,9 @@ body {
         }
       }
       #sound-rest.active ~ #sound-mode-selector {
+        display: block;
+        transform: translateX(calc((100% - 0.25rem) * 5 / 7 - 0.25rem));
+
         .sound-track-selector {
           &.position-1 {
             transform: translateY(0)
@@ -458,14 +423,21 @@ body {
     #interface-settings {
       text-align: start;
 
-      label {
-        color: var(--bs-info);
+      .form-switch {
         padding-top: 0.4375rem;
         padding-bottom: 0.4375rem;
-      }
 
-      input:checked ~ label {
-        color: var(--bs-light);
+        .form-check-input {
+          border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-check-label {
+          color: var(--bs-info);
+        }
+
+        input:checked ~ label {
+          color: var(--bs-light);
+        }
       }
     }
   }

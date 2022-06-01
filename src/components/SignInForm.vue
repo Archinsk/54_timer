@@ -1,78 +1,76 @@
 <template>
-  <div>
-    <form @submit.prevent="signIn(user)">
-      <label for="sign-in-login" class="form-label">Логин</label>
-      <input
-        type="text"
-        class="form-control"
-        id="sign-in-login"
-        placeholder="Введите логин"
-        autocomplete="off"
-        v-model.trim="user.login"
-        @blur="signInLoginValidation(user.login, user.password)"
-        @input="signInLoginValidation(user.login, user.password)"
-      />
-      <div v-if="errors.login.errorText" class="sign-error">
-        {{ errors.login.errorText }}
-      </div>
+  <form @submit.prevent="signIn(user)">
+    <label for="sign-in-login" class="form-label">Логин</label>
+    <input
+      type="text"
+      class="form-control"
+      id="sign-in-login"
+      placeholder="Введите логин"
+      autocomplete="off"
+      v-model.trim="user.login"
+      @blur="signInLoginValidation(user.login, user.password)"
+      @input="signInLoginValidation(user.login, user.password)"
+    />
+    <div v-if="errors.login.errorText" class="sign-error">
+      {{ errors.login.errorText }}
+    </div>
 
-      <label for="sign-in-password" class="form-label">Пароль</label>
-      <div class="input-group">
-        <input
-          :type="passwordHidden ? 'password' : 'text'"
-          class="form-control"
-          id="sign-in-password"
-          placeholder="Введите пароль"
-          autocomplete="off"
-          v-model.trim="user.password"
-          @blur="signInPasswordValidation(user.login, user.password)"
-          @input="signInPasswordValidation(user.login, user.password)"
-        />
+    <label for="sign-in-password" class="form-label">Пароль</label>
+    <div class="input-group">
+      <input
+        :type="passwordHidden ? 'password' : 'text'"
+        class="form-control"
+        id="sign-in-password"
+        placeholder="Введите пароль"
+        autocomplete="off"
+        v-model.trim="user.password"
+        @blur="signInPasswordValidation(user.login, user.password)"
+        @input="signInPasswordValidation(user.login, user.password)"
+      />
+      <button
+        class="btn btn-icon-square btn-password-visibility"
+        type="button"
+        @click="this.passwordHidden = !this.passwordHidden"
+      >
+        <span class="material-icons">
+          {{ passwordHidden ? "visibility_off" : "visibility" }}
+        </span>
+      </button>
+    </div>
+    <div
+      v-if="errors.password.errorText && !errors.login.errorText"
+      class="sign-error"
+    >
+      {{ errors.password.errorText }}
+    </div>
+
+    <div class="sign-comment">
+      Eщё нет аккаунта?
+      <a @click.prevent="$emit('change-auth-form')" href="#"
+        >Зарегистрироваться</a
+      >
+    </div>
+
+    <div class="row gx-3 sign-buttons">
+      <div class="col">
         <button
-          class="btn btn-icon-square btn-password-visibility"
           type="button"
-          @click="this.passwordHidden = !this.passwordHidden"
+          class="btn btn-primary btn-block"
+          @click="$emit('select-settings-tab', 'trainings')"
         >
-          <span class="material-icons">
-            {{ passwordHidden ? "visibility_off" : "visibility" }}
-          </span>
+          Отмена
         </button>
       </div>
-      <div
-        v-if="errors.password.errorText && !errors.login.errorText"
-        class="sign-error"
-      >
-        {{ errors.password.errorText }}
-      </div>
-
-      <div class="sign-comment">
-        Eщё нет аккаунта?
-        <a @click.prevent="$emit('change-auth-form')" href="#"
-          >Зарегистрироваться</a
+      <div class="col">
+        <button
+          type="submit"
+          :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
         >
+          Войти
+        </button>
       </div>
-
-      <div class="row gx-3 sign-buttons">
-        <div class="col">
-          <button
-            type="button"
-            class="btn btn-primary btn-block"
-            @click="$emit('select-settings-tab', 'trainings')"
-          >
-            Отмена
-          </button>
-        </div>
-        <div class="col">
-          <button
-            type="submit"
-            :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
-          >
-            Войти
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </template>
 
 <script>

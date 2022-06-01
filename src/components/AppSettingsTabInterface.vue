@@ -12,7 +12,7 @@
             @click="minimalModeToggle"
           />
           <label class="form-check-label" for="minimal-mode"
-            >Минималистичный интерфейс</label
+            >Минималистичный режим</label
           >
         </div>
 
@@ -27,7 +27,7 @@
             @click="$emit('full-timer-display-toggle')"
           />
           <label class="form-check-label" for="full-timer-display"
-            >Общий таймер</label
+            >Таймер общего времени</label
           >
         </div>
         <div class="form-check form-switch">
@@ -40,7 +40,9 @@
             :disabled="disabledButtons"
             @click="$emit('color-display-toggle')"
           />
-          <label class="form-check-label" for="colors-display">Цвет</label>
+          <label class="form-check-label" for="colors-display"
+            >Многоцветный режим</label
+          >
         </div>
 
         <div class="form-check form-switch">
@@ -54,7 +56,7 @@
             @click="$emit('timer-clickability-toggle')"
           />
           <label class="form-check-label" for="timer-click-mode"
-            >Таймер-клик</label
+            >Пуск/пауза кликом по таймеру</label
           >
         </div>
         <div class="form-check form-switch">
@@ -68,7 +70,7 @@
             @click="$emit('controls-display-toggle')"
           />
           <label class="form-check-label" for="controls-display"
-            >Пуск/Пауза</label
+            >Кнопки «Пуск/Пауза»</label
           >
         </div>
       </div>
