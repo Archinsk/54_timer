@@ -1,9 +1,13 @@
 <template>
-  <div class="text-muted">
-    Вы действительно хотите <br />
-    выйти из учетной записи?
+  <div id="sign-out-screen">
+    <div>
+      <div class="text-muted">
+        Вы действительно хотите <br />
+        выйти из учетной записи?
+      </div>
+      <div class="btn btn-primary sign-out-button" @click="signOut">Выйти</div>
+    </div>
   </div>
-  <div class="btn btn-primary" @click="signOut">Выйти</div>
 </template>
 
 <script>
@@ -15,14 +19,8 @@ export default {
 
   methods: {
     signOut() {
-      let qwert = this;
-      console.log("Выход");
       axios.post(this.url + "signout.php").then(() => {
         this.$emit("sign-out");
-        console.log(this);
-        console.log(qwert);
-        // this.initApp();
-        // this.$router.push("/");
       });
     },
   },

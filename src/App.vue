@@ -37,6 +37,12 @@
           @select-training-scheme="selectTrainingScheme($event)"
           @sign-in="signIn"
           @sign-out="signOut"
+          @change-prep-time="config.selectedTrainingScheme.prepTime = $event"
+          @change-work-time="config.selectedTrainingScheme.workTime = $event"
+          @change-rest-time="config.selectedTrainingScheme.restTime = $event"
+          @change-clear-time="config.selectedTrainingScheme.clearTime = $event"
+          @change-rounds="config.selectedTrainingScheme.rounds = $event"
+          @change-cycles="config.selectedTrainingScheme.cycles = $event"
         />
       </transition>
     </div>

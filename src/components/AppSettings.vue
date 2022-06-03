@@ -1,15 +1,19 @@
 <template>
   <div class="settings">
     <transition name="fade-in-right" mode="out-in">
-      <AppSettingsTabAuth
-        v-if="selectedTab === 'auth'"
+      <!--      Работало при v-show-->
+      <AppSettingsTabTrainings
+        v-if="selectedTab === 'trainings'"
         :auth-user="authUser"
-        :sign-mode="signMode"
-        :url="url"
+        :config="config"
         @change-auth-form="changeAuthForm($event)"
-        @select-settings-tab="$emit('select-settings-tab', $event)"
-        @sign-in="$emit('sign-in')"
-        @sign-out="$emit('sign-out')"
+        @select-training-scheme="$emit('select-training-scheme', $event)"
+        @change-prep-time="$emit('change-prep-time', $event)"
+        @change-work-time="$emit('change-work-time', $event)"
+        @change-rest-time="$emit('change-rest-time', $event)"
+        @change-clear-time="$emit('change-clear-time', $event)"
+        @change-rounds="$emit('change-rounds', $event)"
+        @change-cycles="$emit('change-cycles', $event)"
       />
       <!--      Работало при v-show-->
       <AppSettingsTabInterface
@@ -27,13 +31,15 @@
         @set-work-mode-sound="$emit('set-work-mode-sound', $event)"
         @set-rest-mode-sound="$emit('set-rest-mode-sound', $event)"
       />
-      <!--      Работало при v-show-->
-      <AppSettingsTabTrainings
-        v-else-if="selectedTab === 'trainings'"
+      <AppSettingsTabAuth
+        v-else-if="selectedTab === 'auth'"
         :auth-user="authUser"
-        :config="config"
+        :sign-mode="signMode"
+        :url="url"
         @change-auth-form="changeAuthForm($event)"
-        @select-training-scheme="$emit('select-training-scheme', $event)"
+        @select-settings-tab="$emit('select-settings-tab', $event)"
+        @sign-in="$emit('sign-in')"
+        @sign-out="$emit('sign-out')"
       />
     </transition>
   </div>

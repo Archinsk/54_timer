@@ -1,32 +1,36 @@
 <template>
-  <div id="settings-screen">
+  <div id="training-settings">
     <TrainingSchemes
       :schemes="config.schemes"
       :selected-scheme-id="config.selectedTrainingScheme.id"
       @select-training-scheme="$emit('select-training-scheme', $event)"
     />
+    <div class="training-settings-container">
+      <div class="row gx-3">
+        <div v-if="!authUser" class="col text-muted">
+          Зарегистрированным пользователям доступно изменение и сохранение
+          режимов таймера, выбор звуков, память последнего режима <br />
+          <a @click.prevent="$emit('change-auth-form', 'signin')" href="#"
+            >Войти</a
+          >
+          или
+          <a @click.prevent="$emit('change-auth-form', 'signup')" href="#"
+            >Зарегистрироваться</a
+          >
+        </div>
+      </div>
 
-    <div class="row gx-3">
-      <div v-if="!authUser" class="col text-muted">
-        Зарегистрированным пользователям доступно изменение и сохранение режимов
-        таймера, выбор звуков, память последнего режима <br />
-        <a @click.prevent="$emit('change-auth-form', 'signin')" href="#"
-          >Войти</a
-        >
-        или
-        <a @click.prevent="$emit('change-auth-form', 'signup')" href="#"
-          >Зарегистрироваться</a
-        >
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <SchemeSettings
-          v-if="authUser"
-          :edit-mode="editMode"
-          :selected-scheme="config.selectedTrainingScheme"
-        />
-      </div>
+      <SchemeSettings
+        v-if="authUser"
+        :edit-mode="editMode"
+        :selected-scheme="config.selectedTrainingScheme"
+        @change-prep-time="$emit('change-prep-time', $event)"
+        @change-work-time="$emit('change-work-time', $event)"
+        @change-rest-time="$emit('change-rest-time', $event)"
+        @change-clear-time="$emit('change-clear-time', $event)"
+        @change-rounds="$emit('change-rounds', $event)"
+        @change-cycles="$emit('change-cycles', $event)"
+      />
     </div>
   </div>
 </template>

@@ -268,6 +268,17 @@ body {
           margin-top: 0.5rem;
         }
       }
+
+      #sign-out-screen {
+        height: 14.5625rem;
+        display: flex;
+        align-items: center;
+
+        .sign-out-button {
+          margin-top: 0.75rem;
+          width: 50%;
+        }
+      }
     }
 
     #sounds-settings {
@@ -445,29 +456,101 @@ body {
         }
       }
     }
-  }
 
-  #training-mode-settings {
-    .period-setting {
-      &:not(:last-child) {
-        margin-bottom: 1rem;
+    #training-settings {
+      position: relative;
+
+      .scheme-item {
+        color: var(--bs-info);
+        padding: 0.4375rem 0.75rem;
+        transition: color 0.15s ease-in;
       }
 
-      .period-text {
-        text-align: right;
-        .period-title {
-          color: #bc86ef;
+      .btn-check:checked + .scheme-item {
+        color: var(--bs-light);
+      }
+
+      #scheme-selector {
+        position: absolute;
+        background-color: var(--bs-primary);
+        height: 2.375rem;
+        width: 33.33%;
+        z-index: -1;
+        border-radius: 1.1875rem;
+        top: 0;
+        left: 0;
+        transition: all 0.25s ease-out;
+
+        &.position-1 {
+          transform: translateX(0);
+        }
+
+        &.position-2 {
+          transform: translateX(100%);
+        }
+
+        &.position-3 {
+          transform: translateX(200%);
         }
       }
 
-      .period-counter {
-        text-align: left;
-        .period-time {
-          display: inline-block;
-          text-align: center;
-          width: 3rem;
-          margin-left: 0.5rem;
-          margin-right: 0.5rem;
+      .training-settings-container {
+        height: 12.1875rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        #training-mode-settings {
+          width: 100%;
+          align-self: start;
+          padding-top: 0.75rem;
+          padding-bottom: 0.75rem;
+
+          //.period-setting {
+          //  &:not(:first-child) {
+          //    margin-top: 0.25rem;
+          //  }
+          //
+          //  .period-text {
+          //    text-align: right;
+          //    .period-title {
+          //      color: #bc86ef;
+          //    }
+          //  }
+          //
+          //  .period-counter {
+          //    text-align: left;
+          //    .period-time {
+          //      display: inline-block;
+          //      text-align: center;
+          //      width: 3rem;
+          //      margin-left: 0.5rem;
+          //      margin-right: 0.5rem;
+          //    }
+          //  }
+          //}
+
+          .period-title {
+            color: var(--bs-info);
+            padding-top: 0.4375rem;
+            padding-bottom: 0.4375rem;
+            transition: color 0.15s ease-in;
+
+            &:not(:first-child) {
+              margin-top: 0.5rem;
+            }
+          }
+
+          .input-number {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .btn-icon-square {
+              transform: scale(0.5);
+            }
+          }
         }
       }
     }
@@ -487,23 +570,6 @@ body {
         font-variation-settings: "TIME" 100;
         transform: rotate(180deg);
       }
-    }
-  }
-
-  #settings-screen {
-    margin-bottom: 1.5rem;
-
-    #training-schemes-navbar {
-      display: flex;
-      justify-content: space-around;
-    }
-
-    .btn-training-mode {
-      width: 100%;
-    }
-
-    .btn-training-mode:not(:last-child) {
-      margin-bottom: 0.5rem;
     }
   }
 
