@@ -103,6 +103,9 @@ body {
   //height: 100vh;
 
   //Global buttons and icons
+  .btn {
+    box-shadow: none !important;
+  }
   .btn-block {
     width: 100%;
   }
@@ -151,11 +154,28 @@ body {
   #settings-navbar {
     position: relative;
 
+    #btn-settings {
+      z-index: 1;
+      align-self: start;
+
+      .anicons-icons {
+        font-variation-settings: "TIME" 1;
+
+        &.settings-mode {
+          font-variation-settings: "TIME" 100;
+        }
+
+        &.arrow-mode {
+          font-variation-settings: "TIME" 100;
+          transform: rotate(180deg);
+        }
+      }
+    }
+
     .settings-navbar-item {
       color: $info;
       z-index: 2;
       margin-left: 0.75rem;
-
       opacity: 0;
       visibility: hidden;
       transform: scale(0);
@@ -188,10 +208,70 @@ body {
       }
     }
 
-    .btn-check:checked + label {
+    .active {
       color: $light;
     }
 
+    .settings-mode-title {
+      font-size: 1.25rem;
+      align-self: center;
+      margin-left: -2.375rem;
+    }
+
+    .navbar-selector {
+      position: absolute;
+      height: 2.375rem;
+      width: 2.375rem;
+      border-radius: 50%;
+      z-index: -1;
+      left: 3.125rem;
+      transition: 0.25s ease-out;
+
+      &.position-1 {
+        transform: translateX(0);
+      }
+      &.position-2 {
+        transform: translateX(calc(100% + 0.75rem));
+      }
+      &.position-3 {
+        transform: translateX(calc(200% + 1.5rem));
+      }
+      &.position-4 {
+        transform: translateX(calc(300% + 2.25rem));
+      }
+
+      .animated-ball {
+        background-color: var(--bs-primary);
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+        animation: jumping-ball 0.9s both;
+      }
+
+      @keyframes jumping-ball {
+        0% {
+          transform: scale3d(1, 1, 1);
+        }
+        30% {
+          transform: scale3d(1.25, 0.75, 1);
+        }
+        40% {
+          transform: scale3d(0.75, 1.25, 1);
+        }
+        50% {
+          transform: scale3d(1.15, 0.85, 1);
+        }
+        65% {
+          transform: scale3d(0.95, 1.05, 1);
+        }
+        75% {
+          transform: scale3d(1.05, 0.95, 1);
+        }
+        100% {
+          transform: scale3d(1, 1, 1);
+        }
+      }
+    }
     //#settings-navbar-indicator {
     //  position: absolute;
     //  height: 2.375rem;
@@ -272,6 +352,7 @@ body {
       #sign-out-screen {
         height: 14.5625rem;
         display: flex;
+        justify-content: center;
         align-items: center;
 
         .sign-out-button {
@@ -496,79 +577,105 @@ body {
 
       .training-settings-container {
         height: 12.1875rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        width: 100%;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
 
         #training-mode-settings {
-          width: 100%;
-          align-self: start;
-          padding-top: 0.75rem;
-          padding-bottom: 0.75rem;
+          position: relative;
+          color: var(--bs-info);
 
-          //.period-setting {
-          //  &:not(:first-child) {
-          //    margin-top: 0.25rem;
-          //  }
-          //
-          //  .period-text {
-          //    text-align: right;
-          //    .period-title {
-          //      color: #bc86ef;
-          //    }
-          //  }
-          //
-          //  .period-counter {
-          //    text-align: left;
-          //    .period-time {
-          //      display: inline-block;
-          //      text-align: center;
-          //      width: 3rem;
-          //      margin-left: 0.5rem;
-          //      margin-right: 0.5rem;
-          //    }
-          //  }
-          //}
-
-          .period-title {
-            color: var(--bs-info);
-            padding-top: 0.4375rem;
-            padding-bottom: 0.4375rem;
-            transition: color 0.15s ease-in;
+          .training-settings-item {
+            align-items: center;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
 
             &:not(:first-child) {
               margin-top: 0.5rem;
             }
+
+            &.active {
+              color: var(--bs-light);
+
+              .input-number {
+                .btn-icon-square {
+                  opacity: 1;
+                  visibility: visible;
+                  transform: scale(1);
+                }
+              }
+            }
+
+            .period-title {
+              text-align: end;
+              padding-top: 0.4375rem;
+              padding-bottom: 0.4375rem;
+              transition: color 0.15s ease-in;
+            }
+
+            .input-number {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+
+              .btn-icon-square {
+                background-color: var(--bs-info);
+                border-color: var(--bs-info);
+                color: var(--bs-primary);
+                opacity: 0;
+                visibility: hidden;
+                transform: scale(0);
+                transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+
+                span {
+                  font-size: 1rem;
+                }
+              }
+
+              .period-time {
+                min-width: 1.875rem;
+              }
+            }
           }
 
-          .input-number {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          .training-settings-selector {
+            position: absolute;
+            display: none;
+            background-color: var(--bs-primary);
+            height: 2.375rem;
+            width: 50%;
+            border-radius: 1.1875rem;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            transition: all 0.25s ease-out;
 
-            .btn-icon-square {
-              transform: scale(0.5);
+            &.position-1 {
+              display: block;
+              transform: translateY(0) translateX(0);
+            }
+            &.position-2 {
+              display: block;
+              transform: translateY(calc(100% + 0.5rem)) translateX(0);
+            }
+            &.position-3 {
+              display: block;
+              transform: translateY(calc(200% + 1rem)) translateX(0);
+            }
+            &.position-4 {
+              display: block;
+              transform: translateY(0) translateX(100%);
+            }
+            &.position-5 {
+              display: block;
+              transform: translateY(calc(100% + 0.5rem)) translateX(100%);
+            }
+            &.position-6 {
+              display: block;
+              transform: translateY(calc(200% + 1rem)) translateX(100%);
             }
           }
         }
-      }
-    }
-  }
-
-  #btn-settings {
-    align-self: start;
-
-    .anicons-icons {
-      font-variation-settings: "TIME" 1;
-
-      &.settings-mode {
-        font-variation-settings: "TIME" 100;
-      }
-
-      &.arrow-mode {
-        font-variation-settings: "TIME" 100;
-        transform: rotate(180deg);
       }
     }
   }

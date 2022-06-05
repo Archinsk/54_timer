@@ -4,8 +4,10 @@
 
     <div>
       <AppSettingsNavbar
+        :auth-user="authUser"
         :settings-mode="settingsMode"
-        :selectedTab="selectedSettingsTab"
+        :selected-tab="selectedSettingsTab"
+        :selected-sign-form="selectedSignForm"
         @settings-toggle="settingsToggle"
         @select-settings-tab="selectedSettingsTab = $event"
       />
@@ -18,6 +20,14 @@
           :config="config"
           :selectedTab="selectedSettingsTab"
           @select-settings-tab="selectedSettingsTab = $event"
+          @select-sign-form="selectedSignForm = $event"
+          @select-training-scheme="selectTrainingScheme($event)"
+          @change-prep-time="changePrepTime($event)"
+          @change-work-time="changeWorkTime($event)"
+          @change-rest-time="changeRestTime($event)"
+          @change-clear-time="changeClearTime($event)"
+          @change-rounds="changeRounds($event)"
+          @change-cycles="changeCycles($event)"
           @full-timer-display-toggle="
             config.interface.fullTimerDisplay =
               !config.interface.fullTimerDisplay
@@ -34,15 +44,8 @@
           "
           @set-work-mode-sound="config.sounds.workMode = $event"
           @set-rest-mode-sound="config.sounds.restMode = $event"
-          @select-training-scheme="selectTrainingScheme($event)"
           @sign-in="signIn"
           @sign-out="signOut"
-          @change-prep-time="config.selectedTrainingScheme.prepTime = $event"
-          @change-work-time="config.selectedTrainingScheme.workTime = $event"
-          @change-rest-time="config.selectedTrainingScheme.restTime = $event"
-          @change-clear-time="config.selectedTrainingScheme.clearTime = $event"
-          @change-rounds="config.selectedTrainingScheme.rounds = $event"
-          @change-cycles="config.selectedTrainingScheme.cycles = $event"
         />
       </transition>
     </div>
@@ -169,8 +172,7 @@ export default {
       isLoading: true,
       settingsMode: false,
       authUser: false,
-      selectedSetting: "training",
-      signMode: "signin",
+      selectedSignForm: "signin",
       schemesEditMode: false,
       selectedSettingsTab: "trainings",
     };
@@ -263,6 +265,36 @@ export default {
       this.actual = Object.assign({}, scheme);
     },
 
+    changePrepTime(time) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].prepTime = time;
+      this.config.selectedTrainingScheme.prepTime = time;
+    },
+
+    changeWorkTime(time) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].workTime = time;
+      this.config.selectedTrainingScheme.workTime = time;
+    },
+
+    changeRestTime(time) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].restTime = time;
+      this.config.selectedTrainingScheme.restTime = time;
+    },
+
+    changeClearTime(time) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].clearTime = time;
+      this.config.selectedTrainingScheme.clearTime = time;
+    },
+
+    changeRounds(value) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].rounds = value;
+      this.config.selectedTrainingScheme.rounds = value;
+    },
+
+    changeCycles(value) {
+      this.config.schemes[this.selectedTrainingScheme.id - 1].cycles = value;
+      this.config.selectedTrainingScheme.cycles = value;
+    },
+
     resetTimer() {
       this.play = false;
       clearInterval(this.timerId);
@@ -282,14 +314,9 @@ export default {
       }
     },
 
-    openProfile(signMode) {
-      this.selectedSetting = "profile";
-      this.signMode = signMode;
-    },
-
     signIn() {
       this.authUser = true;
-      this.settingsMode = false;
+      // this.selectedSettingsTab = "trainings";
     },
 
     signOut() {

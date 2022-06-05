@@ -69,6 +69,7 @@ export default {
   methods: {
     changeAuthForm(signMode) {
       this.$emit("select-settings-tab", "auth");
+      this.$emit("select-sign-form", signMode);
       this.signMode = signMode;
     },
   },

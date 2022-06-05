@@ -9,7 +9,7 @@
     >
       <span class="material-icons">remove</span>
     </button>
-    <span class="period-time">{{ defaultNumber }}</span>
+    <div class="period-time">{{ defaultNumber }}</div>
     <button
       :class="[
         'btn btn-primary btn-icon-square rounded-circle',

@@ -6,22 +6,19 @@
       @select-training-scheme="$emit('select-training-scheme', $event)"
     />
     <div class="training-settings-container">
-      <div class="row gx-3">
-        <div v-if="!authUser" class="col text-muted">
-          Зарегистрированным пользователям доступно изменение и сохранение
-          режимов таймера, выбор звуков, память последнего режима <br />
-          <a @click.prevent="$emit('change-auth-form', 'signin')" href="#"
-            >Войти</a
-          >
-          или
-          <a @click.prevent="$emit('change-auth-form', 'signup')" href="#"
-            >Зарегистрироваться</a
-          >
-        </div>
+      <div v-if="!authUser" class="text-muted">
+        Зарегистрированным пользователям доступно изменение и сохранение режимов
+        таймера, выбор звуков, память последнего режима <br />
+        <a @click.prevent="$emit('change-auth-form', 'signin')" href="#"
+          >Войти</a
+        >
+        или
+        <a @click.prevent="$emit('change-auth-form', 'signup')" href="#"
+          >Зарегистрироваться</a
+        >
       </div>
-
       <SchemeSettings
-        v-if="authUser"
+        v-else
         :edit-mode="editMode"
         :selected-scheme="config.selectedTrainingScheme"
         @change-prep-time="$emit('change-prep-time', $event)"
