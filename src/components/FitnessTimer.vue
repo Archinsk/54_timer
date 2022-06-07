@@ -247,6 +247,23 @@ export default {
         this.$emit("play-toggle");
       }
     },
+
+    musicPlay() {
+      let workMusic = document.getElementById("workMusic");
+      let restMusic = document.getElementById("restMusic");
+      if (this.play) {
+        if (this.mode === "work") {
+          restMusic.pause();
+          workMusic.play();
+        } else {
+          workMusic.pause();
+          restMusic.play();
+        }
+      } else {
+        restMusic.pause();
+        workMusic.pause();
+      }
+    },
   },
 
   watch: {
@@ -264,28 +281,10 @@ export default {
       this.secondsSecondDigitTrigger = !this.secondsSecondDigitTrigger;
     },
     play: function () {
-      let music = document.getElementById("music");
-      if (this.play) {
-        music.play();
-      } else {
-        music.pause();
-      }
+      this.musicPlay();
     },
     mode: function () {
-      let workMusic = document.getElementById("workMusic");
-      let restMusic = document.getElementById("restMusic");
-      if (this.play) {
-        if (this.mode === "work") {
-          restMusic.pause();
-          workMusic.play();
-        } else {
-          workMusic.pause();
-          restMusic.play();
-        }
-      } else {
-        restMusic.pause();
-        workMusic.pause();
-      }
+      this.musicPlay();
     },
   },
 };

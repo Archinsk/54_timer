@@ -140,9 +140,11 @@ export default {
     selectedTab: function () {
       if (this.authUser && this.settingsMode) {
         const ball = document.querySelector(".animated-ball");
-        ball.classList.remove("animated-ball");
-        void ball.offsetWidth;
-        ball.classList.add("animated-ball");
+        if (ball) {
+          ball.classList.remove("animated-ball");
+          void ball.offsetWidth;
+          ball.classList.add("animated-ball");
+        }
       }
     },
 

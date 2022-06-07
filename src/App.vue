@@ -153,8 +153,8 @@ export default {
         },
       },
       actual: {
-        id: 3,
-        name: "Нормальный",
+        id: 2,
+        name: "Норма",
         cycles: 1,
         rounds: 8,
         prepTime: 5,
@@ -266,32 +266,38 @@ export default {
     },
 
     changePrepTime(time) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].prepTime = time;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].prepTime =
+        time;
       this.config.selectedTrainingScheme.prepTime = time;
     },
 
     changeWorkTime(time) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].workTime = time;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].workTime =
+        time;
       this.config.selectedTrainingScheme.workTime = time;
     },
 
     changeRestTime(time) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].restTime = time;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].restTime =
+        time;
       this.config.selectedTrainingScheme.restTime = time;
     },
 
     changeClearTime(time) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].clearTime = time;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].clearTime =
+        time;
       this.config.selectedTrainingScheme.clearTime = time;
     },
 
     changeRounds(value) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].rounds = value;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].rounds =
+        value;
       this.config.selectedTrainingScheme.rounds = value;
     },
 
     changeCycles(value) {
-      this.config.schemes[this.selectedTrainingScheme.id - 1].cycles = value;
+      this.config.schemes[this.config.selectedTrainingScheme.id - 1].cycles =
+        value;
       this.config.selectedTrainingScheme.cycles = value;
     },
 
@@ -316,12 +322,13 @@ export default {
 
     signIn() {
       this.authUser = true;
-      // this.selectedSettingsTab = "trainings";
+      this.selectedSettingsTab = "trainings";
     },
 
     signOut() {
       this.authUser = false;
       this.settingsMode = false;
+      this.selectedSettingsTab = "trainings";
     },
   },
 

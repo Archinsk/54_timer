@@ -1,18 +1,13 @@
 <template>
   <div id="timer-full">
-    <StatusBar
-      :mode="mode"
-      :play="play"
-      :settings-mode="settingsMode"
-      @play-toggle="$emit('play-toggle')"
-    />
+    <StatusBar :mode="mode" />
 
     <FitnessTimer
       :config="config"
       :actual="actual"
       :mode="mode"
       :play="play"
-      :pastTime="pastTime"
+      :past-time="pastTime"
       @play-toggle="$emit('play-toggle')"
     />
 

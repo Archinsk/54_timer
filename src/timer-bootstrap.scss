@@ -690,16 +690,6 @@ body {
       justify-content: space-around;
       width: 17rem;
       margin-bottom: 1.5rem;
-
-      #btn-play {
-        .anicons-icons {
-          font-variation-settings: "TIME" 1;
-
-          &.playing {
-            font-variation-settings: "TIME" 100;
-          }
-        }
-      }
     }
 
     #timers-with-progress-bars {
