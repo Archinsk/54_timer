@@ -21,6 +21,14 @@
         :stroke-dasharray="strokeLength + 'rem'"
       ></circle>
       <circle
+        v-if="modeTrigger"
+        id="progress-bar-internal"
+        :stroke-dasharray="strokeLength + 'rem'"
+        :stroke-dashoffset="strokeOffset + 'rem'"
+        :class="modeColor"
+      ></circle>
+      <circle
+        v-else
         id="progress-bar-internal"
         :stroke-dasharray="strokeLength + 'rem'"
         :stroke-dashoffset="strokeOffset + 'rem'"
@@ -114,6 +122,8 @@ export default {
 
       progressBarRadius: "7.25",
       fullProgressBarRadius: "8.25",
+
+      modeTrigger: true,
     };
   },
 
@@ -181,12 +191,35 @@ export default {
 
     // Круговая шкала таймера
     progress: function () {
-      return (
-        ((this.config.selectedTrainingScheme[this.mode + "Time"] -
-          this.actual[this.mode + "Time"]) /
-          this.config.selectedTrainingScheme[this.mode + "Time"]) *
-        100
-      );
+      if (
+        this.config.selectedTrainingScheme[this.mode + "Time"] ===
+        this.actual[this.mode + "Time"]
+      ) {
+        console.log("Computed");
+        let progressBar = document.getElementById("progress-bar-internal");
+        if (progressBar) {
+          console.log(progressBar.getAttribute("stroke-dashoffset"));
+        }
+        return (
+          ((this.config.selectedTrainingScheme[this.mode + "Time"] -
+            this.actual[this.mode + "Time"]) /
+            this.config.selectedTrainingScheme[this.mode + "Time"]) *
+          100
+        );
+      } else {
+        let progressBar = document.getElementById("progress-bar-internal");
+        if (progressBar) {
+          console.log(progressBar.getAttribute("stroke-dashoffset"));
+        }
+
+        return (
+          ((this.config.selectedTrainingScheme[this.mode + "Time"] -
+            this.actual[this.mode + "Time"] +
+            1) /
+            this.config.selectedTrainingScheme[this.mode + "Time"]) *
+          100
+        );
+      }
     },
     fullProgress: function () {
       return (this.pastTime / this.totalTime) * 100;
@@ -285,6 +318,7 @@ export default {
     },
     mode: function () {
       this.musicPlay();
+      this.modeTrigger = !this.modeTrigger;
     },
   },
 };

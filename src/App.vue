@@ -149,7 +149,7 @@ export default {
         },
         sounds: {
           workMode: 2,
-          restMode: 8,
+          restMode: 7,
         },
       },
       actual: {
@@ -190,15 +190,14 @@ export default {
   methods: {
     countdown() {
       if (this.mode === "prep") {
+        // Таймер подготовки в штатном режиме
+        this.actual.prepTime--;
+        this.pastTime++;
         if (!this.actual.prepTime) {
           // Таймер подготовки дошел до нуля
           this.actual.rounds--;
           this.actual.cycles--;
           this.mode = "work";
-        } else {
-          // Таймер подготовки в штатном режиме
-          this.actual.prepTime--;
-          this.pastTime++;
         }
       } else if (this.mode === "work") {
         // Таймер работы в штатном режиме

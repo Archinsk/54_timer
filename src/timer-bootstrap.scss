@@ -708,6 +708,7 @@ body {
           cx: 8.5rem;
           cy: 8.5rem;
           stroke-width: 0.5rem;
+          transition: stroke-dashoffset 1s linear;
         }
 
         #progress-track-external {
