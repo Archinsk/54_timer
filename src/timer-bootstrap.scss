@@ -102,7 +102,7 @@ body {
   //width: 100vw;
   //height: 100vh;
 
-  //Global buttons and icons
+  //Глобальные кнопки
   .btn {
     box-shadow: none !important;
   }
@@ -164,41 +164,37 @@ body {
         &.settings-mode {
           font-variation-settings: "TIME" 100;
         }
-
-        &.arrow-mode {
-          font-variation-settings: "TIME" 100;
-          transform: rotate(180deg);
-        }
       }
     }
 
     .settings-navbar-item {
-      color: $info;
+      color: var(--bs-info);
       z-index: 2;
       margin-left: 0.75rem;
       opacity: 0;
       visibility: hidden;
       transform: scale(0);
-      transition: color 0.3s, opacity 0.3s, visibility 0.3s, transform 0.3s;
+      transition: all 0.3s;
 
       &.open {
         opacity: 1;
         visibility: visible;
         transform: scale(1);
+
+        &.active {
+          color: var(--bs-light);
+        }
       }
 
       &:nth-of-type(1) {
         transition-delay: 0s;
       }
-
       &:nth-of-type(2) {
         transition-delay: 0.2s;
       }
-
       &:nth-of-type(3) {
         transition-delay: 0.4s;
       }
-
       &:nth-of-type(4) {
         transition-delay: 0.6s;
       }
@@ -206,10 +202,6 @@ body {
       &:not(.open) {
         transition-delay: 0s !important;
       }
-    }
-
-    .active {
-      color: $light;
     }
 
     .settings-mode-title {
@@ -272,29 +264,6 @@ body {
         }
       }
     }
-    //#settings-navbar-indicator {
-    //  position: absolute;
-    //  height: 2.375rem;
-    //  width: 25%;
-    //  background-color: $primary;
-    //  transition: 0.25s ease-out;
-    //}
-    //
-    //input[id="settings-navbar-1"]:checked ~ #settings-navbar-indicator {
-    //  transform: translateX(0);
-    //}
-    //
-    //input[id="settings-navbar-2"]:checked ~ #settings-navbar-indicator {
-    //  transform: translateX(100%);
-    //}
-    //
-    //input[id="settings-navbar-3"]:checked ~ #settings-navbar-indicator {
-    //  transform: translateX(200%);
-    //}
-    //
-    //input[id="settings-navbar-4"]:checked ~ #settings-navbar-indicator {
-    //  transform: translateX(300%);
-    //}
   }
 
   .settings {

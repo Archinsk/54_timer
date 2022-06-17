@@ -20,20 +20,38 @@
         id="progress-track-internal"
         :stroke-dasharray="strokeLength + 'rem'"
       ></circle>
-      <circle
+      <!--      <circle-->
+      <!--        v-if="modeTrigger"-->
+      <!--        id="progress-bar-internal"-->
+      <!--        :stroke-dasharray="strokeLength + 'rem'"-->
+      <!--        :stroke-dashoffset="strokeOffset + 'rem'"-->
+      <!--        :class="modeColor"-->
+      <!--      ></circle>-->
+      <!--      <circle-->
+      <!--        v-else-->
+      <!--        id="progress-bar-internal"-->
+      <!--        :stroke-dasharray="strokeLength + 'rem'"-->
+      <!--        :stroke-dashoffset="strokeOffset + 'rem'"-->
+      <!--        :class="modeColor"-->
+      <!--      ></circle>-->
+      <FitnessTimerBarInternal
         v-if="modeTrigger"
         id="progress-bar-internal"
-        :stroke-dasharray="strokeLength + 'rem'"
-        :stroke-dashoffset="strokeOffset + 'rem'"
-        :class="modeColor"
-      ></circle>
-      <circle
+        :initial-timer-state="initialTimerState"
+        :stroke-length="strokeLength"
+        :stroke-offset="strokeOffset"
+        :mode-color="modeColor"
+        :progress-of-internal="progressOfInternal"
+      />
+      <FitnessTimerBarInternal
         v-else
         id="progress-bar-internal"
-        :stroke-dasharray="strokeLength + 'rem'"
-        :stroke-dashoffset="strokeOffset + 'rem'"
-        :class="modeColor"
-      ></circle>
+        :initial-timer-state="initialTimerState"
+        :stroke-length="strokeLength"
+        :stroke-offset="strokeOffset"
+        :mode-color="modeColor"
+        :progress-of-internal="progressOfInternal"
+      />
     </svg>
 
     <div id="timers">
@@ -110,9 +128,11 @@
 </template>
 
 <script>
+import FitnessTimerBarInternal from "./FitnessTimerBarInternal";
 export default {
   name: "FitnessTimer",
-  props: ["config", "actual", "mode", "play", "pastTime"],
+  components: { FitnessTimerBarInternal },
+  props: ["initialTimerState", "config", "actual", "mode", "play", "pastTime"],
   data() {
     return {
       minutesFirstDigitTrigger: false,
@@ -195,11 +215,6 @@ export default {
         this.config.selectedTrainingScheme[this.mode + "Time"] ===
         this.actual[this.mode + "Time"]
       ) {
-        console.log("Computed");
-        let progressBar = document.getElementById("progress-bar-internal");
-        if (progressBar) {
-          console.log(progressBar.getAttribute("stroke-dashoffset"));
-        }
         return (
           ((this.config.selectedTrainingScheme[this.mode + "Time"] -
             this.actual[this.mode + "Time"]) /
@@ -207,11 +222,6 @@ export default {
           100
         );
       } else {
-        let progressBar = document.getElementById("progress-bar-internal");
-        if (progressBar) {
-          console.log(progressBar.getAttribute("stroke-dashoffset"));
-        }
-
         return (
           ((this.config.selectedTrainingScheme[this.mode + "Time"] -
             this.actual[this.mode + "Time"] +
@@ -221,6 +231,22 @@ export default {
         );
       }
     },
+
+    progressOfInternal: function () {
+      return (
+        (2 *
+          Math.PI *
+          this.progressBarRadius *
+          (100 -
+            ((this.config.selectedTrainingScheme[this.mode + "Time"] -
+              this.actual[this.mode + "Time"] +
+              1) /
+              this.config.selectedTrainingScheme[this.mode + "Time"]) *
+              100)) /
+        100
+      );
+    },
+
     fullProgress: function () {
       return (this.pastTime / this.totalTime) * 100;
     },
@@ -320,7 +346,31 @@ export default {
       this.musicPlay();
       this.modeTrigger = !this.modeTrigger;
     },
+    initialTimerState: function () {
+      if (!this.initialTimerState) {
+        let bar = document.getElementById("progress-bar-internal");
+        let val = this.progressOfInternal;
+        console.log("до изменения");
+        console.log(bar.getAttribute("stroke-dashoffset"));
+        bar.setAttribute("stroke-dashoffset", val + "rem");
+        console.log("после изменения");
+        console.log(bar.getAttribute("stroke-dashoffset"));
+      }
+    },
   },
+
+  // mounted() {
+  //   let bar = document.getElementById("progress-bar-internal");
+  //   let val =
+  //     ((this.config.selectedTrainingScheme[this.mode + "Time"] -
+  //       this.actual[this.mode + "Time"] +
+  //       1) /
+  //       this.config.selectedTrainingScheme[this.mode + "Time"]) *
+  //     100;
+  //   console.log("до изменения");
+  //   console.log(bar.getAttribute("strokeDashoffset"));
+  //   bar.setAttribute("strokeDashoffset", val);
+  // },
 };
 </script>
 

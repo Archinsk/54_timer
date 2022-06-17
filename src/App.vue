@@ -1,55 +1,51 @@
 <template>
   <div class="container">
     <AppLoader v-if="isLoading" />
-
-    <div>
-      <AppSettingsNavbar
+    <AppSettingsNavbar
+      :auth-user="authUser"
+      :settings-mode="settingsMode"
+      :selected-tab="selectedSettingsTab"
+      :selected-sign-form="selectedSignForm"
+      @settings-toggle="settingsToggle"
+      @select-settings-tab="selectedSettingsTab = $event"
+    />
+    <transition name="fade-in-up">
+      <AppSettings
+        v-if="settingsMode"
+        :url="url"
         :auth-user="authUser"
-        :settings-mode="settingsMode"
-        :selected-tab="selectedSettingsTab"
-        :selected-sign-form="selectedSignForm"
-        @settings-toggle="settingsToggle"
+        :config="config"
+        :selectedTab="selectedSettingsTab"
         @select-settings-tab="selectedSettingsTab = $event"
+        @select-sign-form="selectedSignForm = $event"
+        @select-training-scheme="selectTrainingScheme($event)"
+        @change-prep-time="changePrepTime($event)"
+        @change-work-time="changeWorkTime($event)"
+        @change-rest-time="changeRestTime($event)"
+        @change-clear-time="changeClearTime($event)"
+        @change-rounds="changeRounds($event)"
+        @change-cycles="changeCycles($event)"
+        @full-timer-display-toggle="
+          config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
+        "
+        @color-display-toggle="
+          config.interface.colorsDisplay = !config.interface.colorsDisplay
+        "
+        @timer-clickability-toggle="
+          config.interface.timerClickability =
+            !config.interface.timerClickability
+        "
+        @controls-display-toggle="
+          config.interface.controlsDisplay = !config.interface.controlsDisplay
+        "
+        @set-work-mode-sound="config.sounds.workMode = $event"
+        @set-rest-mode-sound="config.sounds.restMode = $event"
+        @sign-in="signIn"
+        @sign-out="signOut"
       />
-
-      <transition name="fade-in-up">
-        <AppSettings
-          v-if="settingsMode"
-          :url="url"
-          :auth-user="authUser"
-          :config="config"
-          :selectedTab="selectedSettingsTab"
-          @select-settings-tab="selectedSettingsTab = $event"
-          @select-sign-form="selectedSignForm = $event"
-          @select-training-scheme="selectTrainingScheme($event)"
-          @change-prep-time="changePrepTime($event)"
-          @change-work-time="changeWorkTime($event)"
-          @change-rest-time="changeRestTime($event)"
-          @change-clear-time="changeClearTime($event)"
-          @change-rounds="changeRounds($event)"
-          @change-cycles="changeCycles($event)"
-          @full-timer-display-toggle="
-            config.interface.fullTimerDisplay =
-              !config.interface.fullTimerDisplay
-          "
-          @color-display-toggle="
-            config.interface.colorsDisplay = !config.interface.colorsDisplay
-          "
-          @timer-clickability-toggle="
-            config.interface.timerClickability =
-              !config.interface.timerClickability
-          "
-          @controls-display-toggle="
-            config.interface.controlsDisplay = !config.interface.controlsDisplay
-          "
-          @set-work-mode-sound="config.sounds.workMode = $event"
-          @set-rest-mode-sound="config.sounds.restMode = $event"
-          @sign-in="signIn"
-          @sign-out="signOut"
-        />
-      </transition>
-    </div>
+    </transition>
     <AppTimer
+      :initial-timer-state="initialTimerState"
       :mode="mode"
       :play="play"
       :settings-mode="settingsMode"
@@ -169,6 +165,7 @@ export default {
 
       timerId: null,
 
+      initialTimerState: true,
       isLoading: true,
       settingsMode: false,
       authUser: false,
@@ -306,6 +303,7 @@ export default {
       this.mode = "prep";
       this.actual = Object.assign({}, this.config.selectedTrainingScheme);
       this.pastTime = 0;
+      this.initialTimerState = true;
     },
 
     loading() {
@@ -334,6 +332,9 @@ export default {
   watch: {
     play: function () {
       if (this.play) {
+        if (this.initialTimerState) {
+          this.initialTimerState = false;
+        }
         this.timerId = setInterval(this.countdown, 1000);
       } else {
         clearInterval(this.timerId);

@@ -3,6 +3,7 @@
     <StatusBar :mode="mode" />
 
     <FitnessTimer
+      :initial-timer-state="initialTimerState"
       :config="config"
       :actual="actual"
       :mode="mode"
@@ -28,6 +29,7 @@ export default {
   name: "AppTimer",
   components: { RepeatsBar, FitnessTimer, StatusBar },
   props: [
+    "initialTimerState",
     "play",
     "mode",
     "settingsMode",
