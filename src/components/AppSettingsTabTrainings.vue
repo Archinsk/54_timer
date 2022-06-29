@@ -19,7 +19,6 @@
       </div>
       <SchemeSettings
         v-else
-        :edit-mode="editMode"
         :selected-scheme="config.selectedTrainingScheme"
         @change-prep-time="$emit('change-prep-time', $event)"
         @change-work-time="$emit('change-work-time', $event)"
@@ -43,10 +42,5 @@ export default {
     TrainingSchemes,
   },
   props: ["authUser", "config"],
-  data() {
-    return {
-      editMode: false,
-    };
-  },
 };
 </script>

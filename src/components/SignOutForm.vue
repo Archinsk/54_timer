@@ -1,11 +1,11 @@
 <template>
   <div id="sign-out-screen">
-    <div>
-      <div class="text-muted">
-        Вы действительно хотите <br />
-        выйти из учетной записи?
-      </div>
-      <div class="btn btn-primary sign-out-button" @click="signOut">Выйти</div>
+    <div class="text-info">
+      Вы действительно хотите <br />
+      выйти из учетной записи?
+    </div>
+    <div class="btn btn-primary rounded-pill sign-out-button" @click="signOut">
+      Выйти
     </div>
   </div>
 </template>

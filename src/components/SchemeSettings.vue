@@ -122,7 +122,7 @@ import InputNumberRoundButtons from "./universal/InputNumberRoundButtons";
 export default {
   name: "SchemeSettings",
   components: { InputNumberRoundButtons },
-  props: ["editMode", "selectedScheme"],
+  props: ["selectedScheme"],
 
   data() {
     return {
@@ -149,7 +149,5 @@ export default {
       }
     },
   },
-
-  methods: {},
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div id="interface-settings">
     <div class="row justify-content-center">
-      <div class="col-9">
+      <div class="col-9 col-sm-6">
         <div class="form-check form-switch">
           <input
             class="form-check-input"

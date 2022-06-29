@@ -1,7 +1,6 @@
 <template>
   <div class="settings">
     <transition name="fade-in-right" mode="out-in">
-      <!--      Работало при v-show-->
       <AppSettingsTabTrainings
         v-if="selectedTab === 'trainings'"
         :auth-user="authUser"
@@ -15,7 +14,6 @@
         @change-rounds="$emit('change-rounds', $event)"
         @change-cycles="$emit('change-cycles', $event)"
       />
-      <!--      Работало при v-show-->
       <AppSettingsTabInterface
         v-else-if="selectedTab === 'interface'"
         :config="config.interface"
@@ -24,7 +22,6 @@
         @timer-clickability-toggle="$emit('timer-clickability-toggle')"
         @controls-display-toggle="$emit('controls-display-toggle')"
       />
-      <!--      Работало при v-show-->
       <AppSettingsTabSounds
         v-else-if="selectedTab === 'sounds'"
         :config="config.sounds"
