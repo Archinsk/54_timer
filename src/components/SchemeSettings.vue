@@ -78,11 +78,29 @@
       <div
         :class="[
           'row gx-2 training-settings-item',
+          { active: selectedItem === 'repeats' },
+        ]"
+        @click="selectedItem = 'repeats'"
+      >
+        <div class="col"><div class="period-title">Повторы</div></div>
+        <div class="col">
+          <InputNumberRoundButtons
+            :default-number="+selectedScheme.repeats"
+            :min="1"
+            :max="90"
+            :step="1"
+            @change-value="$emit('change-repeats', $event)"
+          />
+        </div>
+      </div>
+      <div
+        :class="[
+          'row gx-2 training-settings-item',
           { active: selectedItem === 'rounds' },
         ]"
         @click="selectedItem = 'rounds'"
       >
-        <div class="col"><div class="period-title">Повторы</div></div>
+        <div class="col"><div class="period-title">Раунды</div></div>
         <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.rounds"
@@ -90,24 +108,6 @@
             :max="90"
             :step="1"
             @change-value="$emit('change-rounds', $event)"
-          />
-        </div>
-      </div>
-      <div
-        :class="[
-          'row gx-2 training-settings-item',
-          { active: selectedItem === 'cycles' },
-        ]"
-        @click="selectedItem = 'cycles'"
-      >
-        <div class="col"><div class="period-title">Раунды</div></div>
-        <div class="col">
-          <InputNumberRoundButtons
-            :default-number="+selectedScheme.cycles"
-            :min="1"
-            :max="90"
-            :step="1"
-            @change-value="$emit('change-cycles', $event)"
           />
         </div>
       </div>
@@ -140,9 +140,9 @@ export default {
         return "position-3";
       } else if (this.selectedItem === "clear") {
         return "position-4";
-      } else if (this.selectedItem === "rounds") {
+      } else if (this.selectedItem === "repeats") {
         return "position-5";
-      } else if (this.selectedItem === "cycles") {
+      } else if (this.selectedItem === "rounds") {
         return "position-6";
       } else {
         return "";

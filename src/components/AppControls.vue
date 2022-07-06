@@ -2,7 +2,7 @@
   <div id="controls" class="row gx-3">
     <div class="col">
       <button
-        class="btn btn-outline-light btn-control"
+        class="btn btn-outline-info rounded-pill btn-block btn-control"
         @click="$emit('play-toggle')"
       >
         {{ play ? "ПАУЗА" : "СТАРТ" }}
@@ -10,7 +10,7 @@
     </div>
     <div class="col">
       <button
-        class="btn btn-outline-light btn-control"
+        class="btn btn-outline-info rounded-pill btn-block btn-control"
         @click="$emit('reset-timer')"
       >
         {{ mode === "finish" ? "ПОВТОР" : "СБРОС" }}
@@ -25,5 +25,3 @@ export default {
   props: ["play", "mode"],
 };
 </script>
-
-<style scoped></style>

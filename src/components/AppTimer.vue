@@ -12,22 +12,22 @@
       @play-toggle="$emit('play-toggle')"
     />
 
-    <RepeatsBar
+    <AppTimerRepeatsBar
       :current-repeat="currentRepeat"
-      :total-repeats="config.selectedTrainingScheme.rounds"
+      :total-repeats="config.selectedTrainingScheme.repeats"
       :current-round="currentRound"
-      :total-rounds="config.selectedTrainingScheme.cycles"
+      :total-rounds="config.selectedTrainingScheme.rounds"
     />
   </div>
 </template>
 
 <script>
-import StatusBar from "./StatusBar";
+import StatusBar from "./AppTimerStatusBar";
 import FitnessTimer from "./FitnessTimer";
-import RepeatsBar from "./RepeatsBar";
+import AppTimerRepeatsBar from "./AppTimerRepeatsBar";
 export default {
   name: "AppTimer",
-  components: { RepeatsBar, FitnessTimer, StatusBar },
+  components: { AppTimerRepeatsBar, FitnessTimer, StatusBar },
   props: [
     "initialTimerState",
     "play",
@@ -36,8 +36,15 @@ export default {
     "config",
     "actual",
     "pastTime",
-    "currentRepeat",
-    "currentRound",
   ],
+
+  computed: {
+    currentRepeat: function () {
+      return this.config.selectedTrainingScheme.repeats - this.actual.repeats;
+    },
+    currentRound: function () {
+      return this.config.selectedTrainingScheme.rounds - this.actual.rounds;
+    },
+  },
 };
 </script>

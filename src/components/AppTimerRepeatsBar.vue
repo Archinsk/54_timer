@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "RepeatsBar",
+  name: "AppTimerRepeatsBar",
   props: ["currentRepeat", "totalRepeats", "currentRound", "totalRounds"],
 };
 </script>

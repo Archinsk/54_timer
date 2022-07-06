@@ -154,10 +154,10 @@ export default {
         this.config.selectedTrainingScheme.prepTime +
         ((this.config.selectedTrainingScheme.workTime +
           this.config.selectedTrainingScheme.restTime) *
-          this.config.selectedTrainingScheme.rounds -
+          this.config.selectedTrainingScheme.repeats -
           this.config.selectedTrainingScheme.restTime +
           this.config.selectedTrainingScheme.clearTime) *
-          this.config.selectedTrainingScheme.cycles -
+          this.config.selectedTrainingScheme.rounds -
         this.config.selectedTrainingScheme.clearTime
       );
     },
@@ -350,11 +350,7 @@ export default {
       if (!this.initialTimerState) {
         let bar = document.getElementById("progress-bar-internal");
         let val = this.progressOfInternal;
-        console.log("до изменения");
-        console.log(bar.getAttribute("stroke-dashoffset"));
         bar.setAttribute("stroke-dashoffset", val + "rem");
-        console.log("после изменения");
-        console.log(bar.getAttribute("stroke-dashoffset"));
       }
     },
   },

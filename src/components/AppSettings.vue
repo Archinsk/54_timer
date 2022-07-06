@@ -11,8 +11,8 @@
         @change-work-time="$emit('change-work-time', $event)"
         @change-rest-time="$emit('change-rest-time', $event)"
         @change-clear-time="$emit('change-clear-time', $event)"
+        @change-repeats="$emit('change-repeats', $event)"
         @change-rounds="$emit('change-rounds', $event)"
-        @change-cycles="$emit('change-cycles', $event)"
       />
       <AppSettingsTabInterface
         v-else-if="selectedTab === 'interface'"

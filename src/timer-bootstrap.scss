@@ -6,6 +6,7 @@ $primary: blueviolet;
 $light: white;
 $info: #bc86ef;
 $secondary: #561b8d;
+$min-contrast-ratio:   3.0;
 $color-contrast-dark: blueviolet;
 $body-bg: #561b8d;
 $text-muted: #bc86ef;
@@ -764,13 +765,13 @@ body {
     }
 
     #repeats-bar {
-      display: inline-flex;
+      display: flex;
       justify-content: space-around;
       width: 17rem;
       margin-top: 1.5rem;
 
       .repeats-title {
-        color: $info;
+        color: var(--bs-info);
       }
 
       .repeats-value {
@@ -780,12 +781,10 @@ body {
   }
 
   #controls {
-    //position: absolute;
-    //bottom: 0.75rem;
-    //width: calc(100% - 1.5rem);
-
     .btn-control {
-      width: 100%;
+      &:hover, &:active {
+        color: var(--bs-secondary);
+      }
     }
   }
 }
