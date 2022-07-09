@@ -1,71 +1,82 @@
 <template>
-  <div class="container">
-    <AppLoader v-if="isLoading" />
-    <AppSettingsNavbar
-      :auth-user="authUser"
-      :settings-mode="settingsMode"
-      :selected-tab="selectedSettingsTab"
-      :selected-sign-form="selectedSignForm"
-      @settings-toggle="settingsToggle"
-      @select-settings-tab="selectedSettingsTab = $event"
-    />
-    <transition name="fade-in-up">
-      <AppSettings
-        v-if="settingsMode"
-        :url="url"
+  <LoaderCustom v-if="isLoading" :loader-text="loaderText" full-screen />
+  <div v-if="!isLoading" class="container">
+    <div id="settings-panel">
+      <AppSettingsNavbar
         :auth-user="authUser"
-        :config="config"
-        :selectedTab="selectedSettingsTab"
+        :settings-mode="settingsMode"
+        :selected-tab="selectedSettingsTab"
+        :selected-sign-form="selectedSignForm"
+        @settings-toggle="settingsToggle"
         @select-settings-tab="selectedSettingsTab = $event"
-        @select-sign-form="selectedSignForm = $event"
-        @select-training-scheme="selectTrainingScheme($event)"
-        @change-prep-time="changeTrainingSettings('prepTime', $event)"
-        @change-work-time="changeTrainingSettings('workTime', $event)"
-        @change-rest-time="changeTrainingSettings('restTime', $event)"
-        @change-clear-time="changeTrainingSettings('clearTime', $event)"
-        @change-repeats="changeTrainingSettings('repeats', $event)"
-        @change-rounds="changeTrainingSettings('rounds', $event)"
-        @full-timer-display-toggle="
-          config.interface.fullTimerDisplay = !config.interface.fullTimerDisplay
-        "
-        @color-display-toggle="
-          config.interface.colorsDisplay = !config.interface.colorsDisplay
-        "
-        @timer-clickability-toggle="
-          config.interface.timerClickability =
-            !config.interface.timerClickability
-        "
-        @controls-display-toggle="
-          config.interface.controlsDisplay = !config.interface.controlsDisplay
-        "
-        @set-work-mode-sound="config.sounds.workMode = $event"
-        @set-rest-mode-sound="config.sounds.restMode = $event"
-        @sign-in="signIn"
-        @sign-out="signOut"
       />
-    </transition>
+      <transition name="fade-in-up">
+        <AppSettings
+          v-if="settingsMode"
+          :url="url"
+          :auth-user="authUser"
+          :config="config"
+          :selectedTab="selectedSettingsTab"
+          @select-settings-tab="selectedSettingsTab = $event"
+          @select-sign-form="selectedSignForm = $event"
+          @select-training-scheme="selectTrainingScheme($event)"
+          @change-prep-time="changeTrainingSettings('prepTime', $event)"
+          @change-work-time="changeTrainingSettings('workTime', $event)"
+          @change-rest-time="changeTrainingSettings('restTime', $event)"
+          @change-clear-time="changeTrainingSettings('clearTime', $event)"
+          @change-repeats="changeTrainingSettings('repeats', $event)"
+          @change-rounds="changeTrainingSettings('rounds', $event)"
+          @full-timer-display-toggle="
+            config.interface.fullTimerDisplay =
+              !config.interface.fullTimerDisplay
+          "
+          @color-display-toggle="
+            config.interface.colorsDisplay = !config.interface.colorsDisplay
+          "
+          @timer-clickability-toggle="
+            config.interface.timerClickability =
+              !config.interface.timerClickability
+          "
+          @controls-display-toggle="
+            config.interface.controlsDisplay = !config.interface.controlsDisplay
+          "
+          @set-work-mode-sound="config.sounds.workMode = $event"
+          @set-rest-mode-sound="config.sounds.restMode = $event"
+          @sign-in="signIn"
+          @sign-out="signOut"
+        />
+      </transition>
+    </div>
+    <div
+      v-if="settingsMode"
+      id="settings-backdrop"
+      @click="settingsMode = false"
+    ></div>
     <AppTimer
       :initial-timer-state="initialTimerState"
       :mode="mode"
+      :mode-refresher="modeRefresher"
       :play="play"
       :settings-mode="settingsMode"
       :config="config"
       :actual="actual"
-      :past-time="actual.pastTime"
+      :past-time="pastTime"
       @play-toggle="play = !play"
     />
     <AppControls
-      v-if="config.interface.controlsDisplay"
+      v-if="config.interface.controlsDisplay && !settingsMode"
       :play="play"
       :mode="mode"
+      :initial-timer-state="initialTimerState"
       @play-toggle="play = !play"
       @reset-timer="resetTimer"
     />
   </div>
+  <div id="timer-background" :class="{ collapsed: settingsMode }"></div>
 </template>
 
 <script>
-import AppLoader from "./components/AppLoader";
+import LoaderCustom from "./components/universal/LoaderCustom";
 import AppSettings from "./components/AppSettings";
 import AppControls from "./components/AppControls";
 import AppTimer from "./components/AppTimer";
@@ -75,11 +86,11 @@ export default {
   name: "App",
 
   components: {
+    LoaderCustom,
     AppSettingsNavbar,
     AppTimer,
     AppControls,
     AppSettings,
-    AppLoader,
   },
 
   data() {
@@ -125,11 +136,11 @@ export default {
           id: 2,
           name: "Норма",
           prepTime: 5,
-          workTime: 20,
-          restTime: 10,
-          clearTime: 0,
-          repeats: 8,
-          rounds: 1,
+          workTime: 5,
+          restTime: 5,
+          clearTime: 5,
+          repeats: 3,
+          rounds: 3,
         },
         interface: {
           fullTimerDisplay: true,
@@ -145,20 +156,22 @@ export default {
       actual: {
         id: 2,
         name: "Норма",
-        pastTime: 0,
         prepTime: 5,
-        workTime: 20,
-        restTime: 10,
-        clearTime: 0,
-        repeats: 8,
-        rounds: 1,
+        workTime: 5,
+        restTime: 5,
+        clearTime: 5,
+        repeats: 3,
+        rounds: 3,
       },
+      pastTime: 0,
       schemesEditMode: false,
       mode: "prep",
+      modeRefresher: false,
       play: false,
       settingsMode: false,
       selectedSettingsTab: "trainings",
       selectedSignForm: "signin",
+      loaderText: "Загрузка приложения",
       timerId: null,
     };
   },
@@ -168,69 +181,76 @@ export default {
       if (this.mode === "prep") {
         // Таймер подготовки в штатном режиме
         this.actual.prepTime--;
-        this.actual.pastTime++;
+        this.pastTime++;
         if (!this.actual.prepTime) {
           // Таймер подготовки дошел до нуля
           this.actual.repeats--;
           this.actual.rounds--;
           this.mode = "work";
+          this.actual.prepTime = this.config.selectedTrainingScheme.prepTime;
+          this.modeRefresher = !this.modeRefresher;
         }
       } else if (this.mode === "work") {
         // Таймер работы в штатном режиме
         this.actual.workTime--;
-        this.actual.pastTime++;
+        this.pastTime++;
         if (!this.actual.workTime) {
           // Таймер работы дошел до нуля
           if (!this.actual.repeats) {
-            // Закончились раунды
+            // Закончились повторы
             if (!this.actual.rounds) {
-              // Закончились циклы
+              // Закончились раунды
               this.mode = "finish";
               this.play = false;
             } else {
-              // Циклы продолжаются
+              // Раунды продолжаются
               if (this.config.selectedTrainingScheme.clearTime) {
-                // Установлен перерыв между циклами
+                // Установлен перерыв между раундами
                 this.mode = "clear";
+                this.modeRefresher = !this.modeRefresher;
               } else {
-                // Без перерыва между циклами
+                // Без перерыва между раундами
                 this.actual.repeats =
                   this.config.selectedTrainingScheme.repeats - 1;
                 this.actual.rounds--;
+                this.modeRefresher = !this.modeRefresher;
               }
               this.actual.workTime =
                 this.config.selectedTrainingScheme.workTime;
             }
           } else {
-            // Раунды продолжаются
+            // Повторы продолжаются
             if (this.config.selectedTrainingScheme.restTime) {
               this.mode = "rest";
             } else {
               this.actual.repeats--;
             }
             this.actual.workTime = this.config.selectedTrainingScheme.workTime;
+            this.modeRefresher = !this.modeRefresher;
           }
         }
       } else if (this.mode === "rest") {
         // Таймер отдыха в штатном режиме
         this.actual.restTime--;
-        this.actual.pastTime++;
+        this.pastTime++;
         if (!this.actual.restTime) {
           // Таймер отдыха дошел до нуля
           this.actual.repeats--;
           this.mode = "work";
           this.actual.restTime = this.config.selectedTrainingScheme.restTime;
+          this.modeRefresher = !this.modeRefresher;
         }
       } else if (this.mode === "clear") {
         // Таймер перерыва в штатном режиме
         this.actual.clearTime--;
-        this.actual.pastTime++;
+        this.pastTime++;
         if (!this.actual.clearTime) {
           // Таймер перерыва дошел до нуля
           this.actual.repeats = this.config.selectedTrainingScheme.repeats - 1;
           this.actual.rounds--;
           this.mode = "work";
           this.actual.clearTime = this.config.selectedTrainingScheme.clearTime;
+          this.modeRefresher = !this.modeRefresher;
         }
       }
     },
@@ -250,9 +270,16 @@ export default {
     resetTimer() {
       this.play = false;
       clearInterval(this.timerId);
-      this.mode = "prep";
       this.actual = Object.assign({}, this.config.selectedTrainingScheme);
-      this.actual.pastTime = 0;
+      this.pastTime = 0;
+      if (!this.config.selectedTrainingScheme.prepTime) {
+        this.mode = "work";
+        this.actual.repeats = this.config.selectedTrainingScheme.repeats - 1;
+        this.actual.rounds = this.config.selectedTrainingScheme.rounds - 1;
+      } else {
+        this.mode = "prep";
+      }
+      this.modeRefresher = !this.modeRefresher;
       this.initialTimerState = true;
     },
 
@@ -290,10 +317,26 @@ export default {
         clearInterval(this.timerId);
       }
     },
+
+    settingsMode: function () {
+      if (this.authUser && !this.settingsMode) {
+        this.loaderText = "Сохранение настроек";
+        this.isLoading = true;
+        setTimeout(this.loading, 3000);
+      }
+    },
+  },
+
+  created() {
+    if (!this.config.selectedTrainingScheme.prepTime) {
+      this.mode = "work";
+      this.actual.repeats = this.config.selectedTrainingScheme.repeats - 1;
+      this.actual.rounds = this.config.selectedTrainingScheme.rounds - 1;
+    }
   },
 
   mounted() {
-    setTimeout(this.loading, 2000);
+    setTimeout(this.loading, 3000);
   },
 };
 </script>

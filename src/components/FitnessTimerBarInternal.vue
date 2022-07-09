@@ -19,17 +19,13 @@ export default {
   ],
 
   mounted() {
+    // Для второго и последующих кругов текущей шкалы первое значение шкалы устанавливается через JS, иначе будет скачок с 0 на 2
     if (!this.initialTimerState) {
       let bar = document.getElementById("progress-bar-internal");
       let val = this.progressOfInternal;
-      console.log("до изменения");
-      console.log(bar.getAttribute("stroke-dashoffset"));
+      console.log(this.progressOfInternal);
       bar.setAttribute("stroke-dashoffset", val + "rem");
-      console.log("после изменения");
-      console.log(bar.getAttribute("stroke-dashoffset"));
     }
   },
 };
 </script>
-
-<style scoped></style>

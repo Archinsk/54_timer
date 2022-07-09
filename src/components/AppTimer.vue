@@ -1,12 +1,13 @@
 <template>
-  <div id="timer-full">
-    <StatusBar :mode="mode" />
+  <div id="timer-full" :class="{ collapsed: settingsMode }">
+    <StatusBar v-if="!settingsMode" :mode="mode" />
 
     <FitnessTimer
       :initial-timer-state="initialTimerState"
       :config="config"
       :actual="actual"
       :mode="mode"
+      :mode-refresher="modeRefresher"
       :play="play"
       :past-time="pastTime"
       @play-toggle="$emit('play-toggle')"
@@ -32,6 +33,7 @@ export default {
     "initialTimerState",
     "play",
     "mode",
+    "modeRefresher",
     "settingsMode",
     "config",
     "actual",

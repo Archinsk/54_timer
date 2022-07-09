@@ -5,7 +5,7 @@
         class="btn btn-outline-info rounded-pill btn-block btn-control"
         @click="$emit('play-toggle')"
       >
-        {{ play ? "ПАУЗА" : "СТАРТ" }}
+        {{ startButtonText }}
       </button>
     </div>
     <div class="col">
@@ -13,7 +13,7 @@
         class="btn btn-outline-info rounded-pill btn-block btn-control"
         @click="$emit('reset-timer')"
       >
-        {{ mode === "finish" ? "ПОВТОР" : "СБРОС" }}
+        {{ mode === "finish" ? "Повтор" : "Сброс" }}
       </button>
     </div>
   </div>
@@ -22,6 +22,23 @@
 <script>
 export default {
   name: "AppControls",
-  props: ["play", "mode"],
+  props: ["play", "mode", "initialTimerState"],
+  computed: {
+    startButtonText: function () {
+      if (this.initialTimerState) {
+        return "Старт";
+      } else {
+        if (this.play) {
+          return "Пауза";
+        } else {
+          if (this.mode === "finish") {
+            return "Повтор";
+          } else {
+            return "Продолжить";
+          }
+        }
+      }
+    },
+  },
 };
 </script>

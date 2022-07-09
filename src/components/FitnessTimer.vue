@@ -20,22 +20,9 @@
         id="progress-track-internal"
         :stroke-dasharray="strokeLength + 'rem'"
       ></circle>
-      <!--      <circle-->
-      <!--        v-if="modeTrigger"-->
-      <!--        id="progress-bar-internal"-->
-      <!--        :stroke-dasharray="strokeLength + 'rem'"-->
-      <!--        :stroke-dashoffset="strokeOffset + 'rem'"-->
-      <!--        :class="modeColor"-->
-      <!--      ></circle>-->
-      <!--      <circle-->
-      <!--        v-else-->
-      <!--        id="progress-bar-internal"-->
-      <!--        :stroke-dasharray="strokeLength + 'rem'"-->
-      <!--        :stroke-dashoffset="strokeOffset + 'rem'"-->
-      <!--        :class="modeColor"-->
-      <!--      ></circle>-->
+
       <FitnessTimerBarInternal
-        v-if="modeTrigger"
+        v-if="modeRefresher"
         id="progress-bar-internal"
         :initial-timer-state="initialTimerState"
         :stroke-length="strokeLength"
@@ -54,13 +41,13 @@
       />
     </svg>
 
-    <div id="timers">
-      <div v-if="config.interface.fullTimerDisplay" id="total-timer">
+    <div id="counters">
+      <div v-if="config.interface.fullTimerDisplay" id="total-counter">
         {{ futureMinutes }} :
         {{ futureSeconds }}
       </div>
 
-      <div id="current-timer">
+      <div id="current-counter">
         <div class="current-timer-digit-wrapper">
           <Transition name="fade-down">
             <div v-if="minutesFirstDigitTrigger" class="current-timer-digit">
@@ -106,7 +93,7 @@
         </div>
       </div>
 
-      <div v-if="config.interface.fullTimerDisplay" id="total-time-info">
+      <div v-if="config.interface.fullTimerDisplay" id="total-counter-info">
         {{ totalTimeMinutes }} :
         {{ totalTimeSeconds }}
       </div>
@@ -132,7 +119,15 @@ import FitnessTimerBarInternal from "./FitnessTimerBarInternal";
 export default {
   name: "FitnessTimer",
   components: { FitnessTimerBarInternal },
-  props: ["initialTimerState", "config", "actual", "mode", "play", "pastTime"],
+  props: [
+    "initialTimerState",
+    "config",
+    "actual",
+    "mode",
+    "modeRefresher",
+    "play",
+    "pastTime",
+  ],
   data() {
     return {
       minutesFirstDigitTrigger: false,
@@ -142,8 +137,6 @@ export default {
 
       progressBarRadius: "7.25",
       fullProgressBarRadius: "8.25",
-
-      modeTrigger: true,
     };
   },
 
@@ -210,17 +203,16 @@ export default {
     },
 
     // Круговая шкала таймера
+    // Вспомогательные значения прогресса в процентах, необходимы для вычисления смещения штриха в круговых шкалах прогресса
     progress: function () {
+      if (this.mode === "finish") {
+        return 100;
+      }
       if (
         this.config.selectedTrainingScheme[this.mode + "Time"] ===
         this.actual[this.mode + "Time"]
       ) {
-        return (
-          ((this.config.selectedTrainingScheme[this.mode + "Time"] -
-            this.actual[this.mode + "Time"]) /
-            this.config.selectedTrainingScheme[this.mode + "Time"]) *
-          100
-        );
+        return 0;
       } else {
         return (
           ((this.config.selectedTrainingScheme[this.mode + "Time"] -
@@ -231,25 +223,17 @@ export default {
         );
       }
     },
-
-    progressOfInternal: function () {
-      return (
-        (2 *
-          Math.PI *
-          this.progressBarRadius *
-          (100 -
-            ((this.config.selectedTrainingScheme[this.mode + "Time"] -
-              this.actual[this.mode + "Time"] +
-              1) /
-              this.config.selectedTrainingScheme[this.mode + "Time"]) *
-              100)) /
-        100
-      );
-    },
-
     fullProgress: function () {
-      return (this.pastTime / this.totalTime) * 100;
+      if (this.futureTime === this.totalTime) {
+        return 0;
+      } else if (this.pastTime === this.totalTime) {
+        return 100;
+      } else {
+        return ((this.pastTime + 1) / this.totalTime) * 100;
+      }
     },
+
+    // Длины и смещение штрхов в круговых шкалах таймера
     strokeLength: function () {
       return 2 * Math.PI * this.progressBarRadius;
     },
@@ -267,23 +251,25 @@ export default {
         100
       );
     },
+    // Первый шаг круговых шкал для активации JS при старте и смене режимов
+    progressOfInternal: function () {
+      return (
+        2 *
+        Math.PI *
+        this.progressBarRadius *
+        (1 - 1 / this.config.selectedTrainingScheme[this.mode + "Time"])
+      );
+    },
+    progressOfExternal: function () {
+      return (
+        2 * Math.PI * this.fullProgressBarRadius * (1 - 1 / this.totalTime)
+      );
+    },
 
     // Цвет шкалы
     modeColor() {
       if (this.config.interface.colorsDisplay) {
-        if (this.mode === "prep") {
-          return "prep-mode";
-        } else if (this.mode === "work") {
-          return "work-mode";
-        } else if (this.mode === "rest") {
-          return "rest-mode";
-        } else if (this.mode === "clear") {
-          return "clear-mode";
-        } else if (this.mode === "finish") {
-          return "finish-mode";
-        } else {
-          return false;
-        }
+        return this.mode + "-mode";
       } else {
         return false;
       }
@@ -344,29 +330,19 @@ export default {
     },
     mode: function () {
       this.musicPlay();
-      this.modeTrigger = !this.modeTrigger;
     },
     initialTimerState: function () {
       if (!this.initialTimerState) {
         let bar = document.getElementById("progress-bar-internal");
         let val = this.progressOfInternal;
+        console.log(this.progressOfInternal);
         bar.setAttribute("stroke-dashoffset", val + "rem");
+        let barExt = document.getElementById("progress-bar-external");
+        let valExt = this.progressOfExternal;
+        barExt.setAttribute("stroke-dashoffset", valExt + "rem");
       }
     },
   },
-
-  // mounted() {
-  //   let bar = document.getElementById("progress-bar-internal");
-  //   let val =
-  //     ((this.config.selectedTrainingScheme[this.mode + "Time"] -
-  //       this.actual[this.mode + "Time"] +
-  //       1) /
-  //       this.config.selectedTrainingScheme[this.mode + "Time"]) *
-  //     100;
-  //   console.log("до изменения");
-  //   console.log(bar.getAttribute("strokeDashoffset"));
-  //   bar.setAttribute("strokeDashoffset", val);
-  // },
 };
 </script>
 
