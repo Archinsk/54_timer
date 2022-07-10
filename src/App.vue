@@ -81,6 +81,7 @@ import AppSettings from "./components/AppSettings";
 import AppControls from "./components/AppControls";
 import AppTimer from "./components/AppTimer";
 import AppSettingsNavbar from "./components/AppSettingsNavbar";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -294,7 +295,18 @@ export default {
       }
     },
 
+    checkAuth() {
+      axios
+        .post(this.url + "checkauth.php", JSON.stringify({ id: 0 }))
+        .then((response) => {
+          if (response.data.user.id) {
+            this.signIn();
+          }
+        });
+    },
+
     signIn() {
+      this.getSettings();
       this.authUser = true;
       this.selectedSettingsTab = "trainings";
     },
@@ -303,6 +315,27 @@ export default {
       this.authUser = false;
       this.settingsMode = false;
       this.selectedSettingsTab = "trainings";
+    },
+
+    setSettings() {
+      axios
+        .post(this.url + "settingsupdate.php", JSON.stringify(this.config))
+        .then((response) => {
+          console.log(response);
+        });
+    },
+
+    getSettings() {
+      axios
+        .post(this.url + "settingsread.php", JSON.stringify(this.config))
+        .then((response) => {
+          console.log(response);
+          this.config = response.data.config;
+          this.actual = Object.assign(
+            {},
+            response.data.config.selectedTrainingScheme
+          );
+        });
     },
   },
 
@@ -320,6 +353,7 @@ export default {
 
     settingsMode: function () {
       if (this.authUser && !this.settingsMode) {
+        this.setSettings();
         this.loaderText = "Сохранение настроек";
         this.isLoading = true;
         setTimeout(this.loading, 3000);
@@ -337,6 +371,7 @@ export default {
 
   mounted() {
     setTimeout(this.loading, 3000);
+    this.checkAuth();
   },
 };
 </script>
