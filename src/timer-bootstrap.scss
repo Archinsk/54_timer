@@ -68,6 +68,7 @@ $font-weight-bold: 700;
 // 6. Add additional custom code here
 
 //Шрифты
+$base-font-size: 1rem;
 @font-face {
   font-family: "Oswald";
   src: url(./assets/fonts/Oswald-VariableFont_wght.ttf);
@@ -86,14 +87,12 @@ $font-weight-bold: 700;
 }
 body {
   font-family: "Roboto";
-  font-variation-settings: "wdth" 50;
 
   #timer-full {
     font-family: "Oswald";
 
     .repeats-title {
       font-family: "Roboto";
-      font-variation-settings: "wdth" 50;
     }
   }
 }
@@ -118,19 +117,27 @@ body {
 
     .material-icons {
       font-family: "Material Icons";
-      font-size: 24px;
+      font-size: 1.5 * $base-font-size;
       display: inline-block;
       line-height: 1;
     }
 
     .anicons-icons {
       font-family: "Anicons";
-      font-size: 24px;
+      font-size: 1.5 * $base-font-size;
       display: inline-block;
-      line-height: 0.75;
-      padding-top: 0.0625rem;
-      padding-bottom: 0.3125rem;
       transition: font-variation-settings 0.4s ease;
+      line-height: 1;
+      padding-top: 0;
+      padding-bottom: 0;
+
+      //Шрифт отображается криво на мобильных устройствах
+      //Отображение на мобильном гаджете и в мобильной версии панели разработки браузера отличаются
+      @media (min-width: 768px) {
+        line-height: 0.75;
+        padding-top: 0.0625rem;
+        padding-bottom: 0.3125rem;
+      }
     }
   }
 
@@ -209,7 +216,7 @@ body {
       }
 
       .settings-mode-title {
-        font-size: 1.25rem;
+        font-size: 1.25 * $base-font-size;
         align-self: center;
         margin-left: -2.375rem;
         z-index: -1;
@@ -592,7 +599,7 @@ body {
                   transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
 
                   span {
-                    font-size: 1rem;
+                    font-size: $base-font-size;
                   }
                 }
 
@@ -757,13 +764,13 @@ body {
         //Total timers
         #total-counter,
         #total-counter-info {
-          font-size: 1.8rem;
+          font-size: 1.8 * $base-font-size;
           color: $info;
         }
 
         //Current timer
         #current-counter {
-          font-size: 4rem;
+          font-size: 4 * $base-font-size;
           font-weight: 700;
           height: 6rem;
 
@@ -796,7 +803,7 @@ body {
       }
 
       .repeats-value {
-        font-size: 1.25rem;
+        font-size: 1.25 * $base-font-size;
       }
     }
 

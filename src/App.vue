@@ -53,6 +53,7 @@
       @click="settingsMode = false"
     ></div>
     <AppTimer
+      v-if="isTimerShow"
       :initial-timer-state="initialTimerState"
       :mode="mode"
       :mode-refresher="modeRefresher"
@@ -64,7 +65,7 @@
       @play-toggle="play = !play"
     />
     <AppControls
-      v-if="config.interface.controlsDisplay && !settingsMode"
+      v-if="config.interface.controlsDisplay && !settingsMode && isTimerShow"
       :play="play"
       :mode="mode"
       :initial-timer-state="initialTimerState"
@@ -72,7 +73,13 @@
       @reset-timer="resetTimer"
     />
   </div>
-  <div id="timer-background" :class="{ collapsed: settingsMode }"></div>
+  <div
+    v-if="isTimerShow"
+    id="timer-background"
+    :class="{ collapsed: settingsMode }"
+  ></div>
+  <button class="btn btn-info" @click="getTextAttrs">Данные</button>
+  <p id="atr-info"></p>
 </template>
 
 <script>
@@ -175,6 +182,20 @@ export default {
       loaderText: "Загрузка приложения",
       timerId: null,
     };
+  },
+
+  computed: {
+    isTimerShow: function () {
+      if (
+        this.settingsMode &&
+        !this.authUser &&
+        this.selectedSettingsTab === "auth"
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 
   methods: {
@@ -336,6 +357,27 @@ export default {
             response.data.config.selectedTrainingScheme
           );
         });
+    },
+
+    getTextAttrs() {
+      // let robotoText = document.getElementById("controls");
+      // let oswaldText = document.getElementById("btn-settings");
+      // let materialText = document.getElementById("btn-settings");
+      let aniconsText = document.querySelector("#btn-settings span");
+      let targetText = document.getElementById("atr-info");
+      console.log(getComputedStyle(aniconsText).fontSize);
+      targetText.append("font-size:" + getComputedStyle(aniconsText).fontSize);
+      targetText.append(
+        "; line-height:" + getComputedStyle(aniconsText).lineHeight
+      );
+      targetText.append(
+        "; padding-top:" + getComputedStyle(aniconsText).paddingTop
+      );
+      targetText.append(
+        "; padding-bottom:" + getComputedStyle(aniconsText).paddingBottom
+      );
+      targetText.append("; height:" + getComputedStyle(aniconsText).height);
+      targetText.append("; width:" + getComputedStyle(aniconsText).width);
     },
   },
 
