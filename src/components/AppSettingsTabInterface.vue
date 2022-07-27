@@ -2,20 +2,20 @@
   <div id="interface-settings">
     <div class="row justify-content-center">
       <div class="col-9 col-sm-6">
-        <div class="form-check form-switch">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            role="switch"
-            id="minimal-mode"
-            :checked="minimalMode"
-            @click="minimalModeToggle"
-          />
-          <label class="form-check-label" for="minimal-mode"
-            >Минималистичный режим</label
-          >
-        </div>
-
+        <!--        Минималистичный режим вырезан из-за недостатка места на экране мобильных устройств-->
+        <!--        <div class="form-check form-switch">-->
+        <!--          <input-->
+        <!--            class="form-check-input"-->
+        <!--            type="checkbox"-->
+        <!--            role="switch"-->
+        <!--            id="minimal-mode"-->
+        <!--            :checked="minimalMode"-->
+        <!--            @click="minimalModeToggle"-->
+        <!--          />-->
+        <!--          <label class="form-check-label" for="minimal-mode"-->
+        <!--            >Минималистичный режим</label-->
+        <!--          >-->
+        <!--        </div>-->
         <div class="form-check form-switch">
           <input
             class="form-check-input"
@@ -44,7 +44,6 @@
             >Многоцветный режим</label
           >
         </div>
-
         <div class="form-check form-switch">
           <input
             class="form-check-input"
@@ -85,41 +84,44 @@ export default {
 
   data() {
     return {
-      disabledButtons: false,
+      // Минималистичный режим вырезан из-за недостатка места на экране мобильных устройств
+      // disabledButtons: false,
     };
   },
 
   computed: {
-    minimalMode() {
-      return (
-        !this.config.fullTimerDisplay &&
-        !this.config.colorsDisplay &&
-        this.config.timerClickability &&
-        !this.config.controlsDisplay
-      );
-    },
+    // Минималистичный режим вырезан из-за недостатка места на экране мобильных устройств
+    // minimalMode() {
+    //   return (
+    //     !this.config.fullTimerDisplay &&
+    //     !this.config.colorsDisplay &&
+    //     this.config.timerClickability &&
+    //     !this.config.controlsDisplay
+    //   );
+    // },
   },
 
   methods: {
-    minimalModeToggle() {
-      if (this.minimalMode && this.disabledButtons) {
-        this.disabledButtons = false;
-      } else if (!this.minimalMode) {
-        if (this.config.fullTimerDisplay) {
-          this.$emit("full-timer-display-toggle");
-        }
-        if (this.config.colorsDisplay) {
-          this.$emit("color-display-toggle");
-        }
-        if (!this.config.timerClickability) {
-          this.$emit("timer-clickability-toggle");
-        }
-        if (this.config.controlsDisplay) {
-          this.$emit("controls-display-toggle");
-        }
-        this.disabledButtons = true;
-      }
-    },
+    // Минималистичный режим вырезан из-за недостатка места на экране мобильных устройств
+    // minimalModeToggle() {
+    //   if (this.minimalMode && this.disabledButtons) {
+    //     this.disabledButtons = false;
+    //   } else if (!this.minimalMode) {
+    //     if (this.config.fullTimerDisplay) {
+    //       this.$emit("full-timer-display-toggle");
+    //     }
+    //     if (this.config.colorsDisplay) {
+    //       this.$emit("color-display-toggle");
+    //     }
+    //     if (!this.config.timerClickability) {
+    //       this.$emit("timer-clickability-toggle");
+    //     }
+    //     if (this.config.controlsDisplay) {
+    //       this.$emit("controls-display-toggle");
+    //     }
+    //     this.disabledButtons = true;
+    //   }
+    // },
   },
 };
 </script>

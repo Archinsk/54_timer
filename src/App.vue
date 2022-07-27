@@ -78,8 +78,6 @@
     id="timer-background"
     :class="{ collapsed: settingsMode }"
   ></div>
-  <button class="btn btn-info" @click="getTextAttrs">Данные</button>
-  <p id="atr-info"></p>
 </template>
 
 <script>
@@ -329,7 +327,8 @@ export default {
     signIn() {
       this.getSettings();
       this.authUser = true;
-      this.selectedSettingsTab = "trainings";
+      // this.selectedSettingsTab = "trainings";
+      this.selectedSettingsTab = "sounds";
     },
 
     signOut() {
@@ -357,27 +356,6 @@ export default {
             response.data.config.selectedTrainingScheme
           );
         });
-    },
-
-    getTextAttrs() {
-      // let robotoText = document.getElementById("controls");
-      // let oswaldText = document.getElementById("btn-settings");
-      // let materialText = document.getElementById("btn-settings");
-      let aniconsText = document.querySelector("#btn-settings span");
-      let targetText = document.getElementById("atr-info");
-      console.log(getComputedStyle(aniconsText).fontSize);
-      targetText.append("font-size:" + getComputedStyle(aniconsText).fontSize);
-      targetText.append(
-        "; line-height:" + getComputedStyle(aniconsText).lineHeight
-      );
-      targetText.append(
-        "; padding-top:" + getComputedStyle(aniconsText).paddingTop
-      );
-      targetText.append(
-        "; padding-bottom:" + getComputedStyle(aniconsText).paddingBottom
-      );
-      targetText.append("; height:" + getComputedStyle(aniconsText).height);
-      targetText.append("; width:" + getComputedStyle(aniconsText).width);
     },
   },
 
@@ -413,7 +391,25 @@ export default {
 
   mounted() {
     setTimeout(this.loading, 3000);
-    this.checkAuth();
+    // this.checkAuth();
+
+    // Трюк 100vh на мобильных устройствах + масштабирование
+    // let vh = window.innerHeight * 0.01;
+    let vh = document.documentElement.clientHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    document.documentElement.style.setProperty(
+      "--scale",
+      `${(100 * vh - 298) / 342}`
+    );
+    window.addEventListener("resize", () => {
+      // let vh = window.innerHeight * 0.01;
+      let vh = document.documentElement.clientHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      document.documentElement.style.setProperty(
+        "--scale",
+        `${(100 * vh - 298) / 342}`
+      );
+    });
   },
 };
 </script>

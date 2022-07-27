@@ -1,6 +1,6 @@
 <template>
   <div id="auth-settings" class="row">
-    <div class="col-10 col-sm-7">
+    <div class="col col-sm-7 auth-settings-container">
       <template v-if="!authUser">
         <transition name="fade-in-right" mode="out-in">
           <SignInForm

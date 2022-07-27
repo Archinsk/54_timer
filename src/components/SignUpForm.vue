@@ -103,7 +103,7 @@
           type="submit"
           :class="['btn btn-primary btn-block', { disabled: !isValidForm }]"
         >
-          Зарегистрироваться
+          Регистрация
         </button>
       </div>
     </div>
