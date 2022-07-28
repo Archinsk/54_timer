@@ -43,8 +43,9 @@
           @set-work-mode-sound="config.sounds.workMode = $event"
           @set-rest-mode-sound="config.sounds.restMode = $event"
           @sign-in="signIn"
-          @sign-out="signOut"
+          @sign-out="testAction"
         />
+        <!--        @sign-out="signOut"-->
       </transition>
     </div>
     <div
@@ -328,7 +329,7 @@ export default {
       this.getSettings();
       this.authUser = true;
       // this.selectedSettingsTab = "trainings";
-      this.selectedSettingsTab = "sounds";
+      this.selectedSettingsTab = "auth";
     },
 
     signOut() {
@@ -356,6 +357,22 @@ export default {
             response.data.config.selectedTrainingScheme
           );
         });
+    },
+
+    testAction() {
+      alert(`innerHeight = ${window.innerHeight}`);
+      alert(
+        `document.documentElement.clientHeight = ${document.documentElement.clientHeight}`
+      );
+      alert(`Высота body = ${getComputedStyle(document.body).height}`);
+      let cont = document.querySelector(".container");
+      let sback = document.getElementById("settings-backdrop");
+      let ftimer = document.getElementById("timer-full");
+      let btimer = document.getElementById("timer-background");
+      alert(`Высота контейнера = ${getComputedStyle(cont).height}`);
+      alert(`Высота backdrop настроек = ${getComputedStyle(sback).height}`);
+      alert(`Высота таймера = ${getComputedStyle(ftimer).height}`);
+      alert(`Высота фона таймера = ${getComputedStyle(btimer).height}`);
     },
   },
 
