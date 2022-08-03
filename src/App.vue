@@ -27,25 +27,33 @@
           @change-repeats="changeTrainingSettings('repeats', $event)"
           @change-rounds="changeTrainingSettings('rounds', $event)"
           @full-timer-display-toggle="
-            config.interface.fullTimerDisplay =
-              !config.interface.fullTimerDisplay
+            (config.interface.fullTimerDisplay =
+              !config.interface.fullTimerDisplay),
+              (settingsWasChanged = true)
           "
           @color-display-toggle="
-            config.interface.colorsDisplay = !config.interface.colorsDisplay
+            (config.interface.colorsDisplay = !config.interface.colorsDisplay),
+              (settingsWasChanged = true)
           "
           @timer-clickability-toggle="
-            config.interface.timerClickability =
-              !config.interface.timerClickability
+            (config.interface.timerClickability =
+              !config.interface.timerClickability),
+              (settingsWasChanged = true)
           "
           @controls-display-toggle="
-            config.interface.controlsDisplay = !config.interface.controlsDisplay
+            (config.interface.controlsDisplay =
+              !config.interface.controlsDisplay),
+              (settingsWasChanged = true)
           "
-          @set-work-mode-sound="config.sounds.workMode = $event"
-          @set-rest-mode-sound="config.sounds.restMode = $event"
+          @set-work-mode-sound="
+            (config.sounds.workMode = $event), (settingsWasChanged = true)
+          "
+          @set-rest-mode-sound="
+            (config.sounds.restMode = $event), (settingsWasChanged = true)
+          "
           @sign-in="signIn"
-          @sign-out="testAction"
+          @sign-out="signOut"
         />
-        <!--        @sign-out="signOut"-->
       </transition>
     </div>
     <div
@@ -178,6 +186,7 @@ export default {
       settingsMode: false,
       selectedSettingsTab: "trainings",
       selectedSignForm: "signin",
+      settingsWasChanged: false,
       loaderText: "Загрузка приложения",
       timerId: null,
     };
@@ -279,12 +288,15 @@ export default {
     selectTrainingScheme(scheme) {
       this.config.selectedTrainingScheme = Object.assign({}, scheme);
       this.actual = Object.assign({}, scheme);
+      this.settingsWasChanged = true;
+      this.resetTimer();
     },
 
     changeTrainingSettings(mode, value) {
       this.config.schemes[this.config.selectedTrainingScheme.id - 1][mode] =
         value;
       this.config.selectedTrainingScheme[mode] = value;
+      this.settingsWasChanged = true;
       this.resetTimer();
     },
 
@@ -328,14 +340,14 @@ export default {
     signIn() {
       this.getSettings();
       this.authUser = true;
-      // this.selectedSettingsTab = "trainings";
-      this.selectedSettingsTab = "auth";
+      this.selectedSettingsTab = "trainings";
     },
 
     signOut() {
       this.authUser = false;
       this.settingsMode = false;
       this.selectedSettingsTab = "trainings";
+      this.setSettings();
     },
 
     setSettings() {
@@ -343,6 +355,7 @@ export default {
         .post(this.url + "settingsupdate.php", JSON.stringify(this.config))
         .then((response) => {
           console.log(response);
+          this.settingsWasChanged = false;
         });
     },
 
@@ -357,22 +370,6 @@ export default {
             response.data.config.selectedTrainingScheme
           );
         });
-    },
-
-    testAction() {
-      alert(`innerHeight = ${window.innerHeight}`);
-      alert(
-        `document.documentElement.clientHeight = ${document.documentElement.clientHeight}`
-      );
-      alert(`Высота body = ${getComputedStyle(document.body).height}`);
-      let cont = document.querySelector(".container");
-      let sback = document.getElementById("settings-backdrop");
-      let ftimer = document.getElementById("timer-full");
-      let btimer = document.getElementById("timer-background");
-      alert(`Высота контейнера = ${getComputedStyle(cont).height}`);
-      alert(`Высота backdrop настроек = ${getComputedStyle(sback).height}`);
-      alert(`Высота таймера = ${getComputedStyle(ftimer).height}`);
-      alert(`Высота фона таймера = ${getComputedStyle(btimer).height}`);
     },
   },
 
@@ -389,7 +386,7 @@ export default {
     },
 
     settingsMode: function () {
-      if (this.authUser && !this.settingsMode) {
+      if (this.authUser && !this.settingsMode && this.settingsWasChanged) {
         this.setSettings();
         this.loaderText = "Сохранение настроек";
         this.isLoading = true;
@@ -408,7 +405,7 @@ export default {
 
   mounted() {
     setTimeout(this.loading, 3000);
-    // this.checkAuth();
+    this.checkAuth();
 
     // Трюк 100vh на мобильных устройствах + масштабирование
     // let vh = window.innerHeight * 0.01;
