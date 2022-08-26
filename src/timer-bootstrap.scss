@@ -15,10 +15,6 @@ $body-color: white;
 $body-text-align: center;
 $link-color: white;
 $link-decoration: none;
-//$font-size-base: 1.5rem;
-$font-weight-light: 200;
-$font-weight-normal: 450;
-$font-weight-bold: 700;
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../node_modules/bootstrap/scss/variables";
@@ -70,12 +66,20 @@ $font-weight-bold: 700;
 //Шрифты
 $base-font-size: 1rem;
 @font-face {
-  font-family: "Oswald";
-  src: url(./assets/fonts/Oswald-VariableFont_wght.ttf);
+  font-family: "Oswald-Regular";
+  src: url(./assets/fonts/Oswald-Regular.ttf);
 }
 @font-face {
-  font-family: "Roboto";
-  src: url(./assets/fonts/RobotoFlex.ttf);
+  font-family: "Oswald-Bold";
+  src: url(./assets/fonts/Oswald-Bold.ttf);
+}
+@font-face {
+  font-family: "RobotoCondensed-Regular";
+  src: url(./assets/fonts/RobotoCondensed-Regular.ttf);
+}
+@font-face {
+  font-family: "RobotoCondensed-Bold";
+  src: url(./assets/fonts/RobotoCondensed-Bold.ttf);
 }
 @font-face {
   font-family: "Material Icons";
@@ -86,13 +90,16 @@ $base-font-size: 1rem;
   src: url(./assets/fonts/AniconsGX.ttf);
 }
 body {
-  font-family: "Roboto";
+  font-family: "RobotoCondensed-Regular";
 
   #timer-full {
-    font-family: "Oswald";
+    font-family: "Oswald-Regular";
 
+    #current-counter {
+      font-family: Oswald-Bold;
+    }
     .repeats-title {
-      font-family: "Roboto";
+      font-family: "RobotoCondensed-Regular";
     }
   }
 }
@@ -697,8 +704,10 @@ body {
   }
 
   #timer-full {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     transition: all 0.3s;
     margin-top: 0;
@@ -791,7 +800,6 @@ body {
         //Current timer
         #current-counter {
           font-size: 4 * $base-font-size;
-          font-weight: 700;
           height: 6rem;
 
           .current-timer-digit-wrapper {
@@ -828,8 +836,6 @@ body {
     }
 
     &.collapsed {
-      align-self: center;
-
       @media (max-width: 767.98px) {
         margin-top: 1.5rem;
         transform: scale(var(--scale));
