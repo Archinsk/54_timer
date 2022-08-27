@@ -2,18 +2,24 @@
 @import "../node_modules/bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
+
 $primary: blueviolet;
-$light: white;
-$info: #bc86ef;
 $secondary: #561b8d;
+$success: #794cff;
+$info: #bc86ef;
+$danger: #d24cff;
+$light: white;
+//$primary: blue;
+//$secondary: black;
+//$success: green;
+//$info: yellowgreen;
+//$danger: red;
+//$light: yellow;
+
 $min-contrast-ratio: 3;
 $color-contrast-dark: blueviolet;
-$body-bg: #561b8d;
-$text-muted: #bc86ef;
-$body-color: white;
 
 $body-text-align: center;
-$link-color: white;
 $link-decoration: none;
 
 // 3. Include remainder of required Bootstrap stylesheets
@@ -104,6 +110,86 @@ body {
   }
 }
 
+//Переопределение Bootsrtrap'а
+body {
+  color: var(--bs-light);
+  background-color: var(--bs-secondary);
+  .border-light {
+    border-color: var(--bs-light) !important;
+  }
+  a {
+    color: var(--bs-info);
+    &:hover {
+      color: var(--bs-light);
+    }
+  }
+  .btn {
+    color: var(--bs-light);
+    &:hover {
+      color: var(--bs-light);
+    }
+
+    &.btn-primary {
+      background-color: var(--bs-primary);
+      border-color: var(--bs-primary);
+      &:focus {
+        background-color: var(--bs-primary);
+      }
+    }
+    &.btn-primary.disabled,
+    &.btn-primary:disabled {
+      //background-color: var(--bs-info);
+      color: var(--bs-light);
+    }
+
+    &.btn-outline-light {
+      border-color: var(--bs-light);
+      &.active,
+      &:active {
+        color: var(--bs-primary);
+        background-color: var(--bs-light);
+        border-color: var(--bs-light);
+        cursor: default;
+        & :hover {
+          color: var(--bs-primary);
+        }
+      }
+      &.disabled,
+      &:disabled {
+        color: var(--bs-light);
+      }
+    }
+
+    .btn-outline-info {
+      border-color: var(--bs-info);
+      &.active,
+      &:active,
+      &:hover {
+        color: var(--bs-primary);
+        background-color: var(--bs-info);
+        border-color: var(--bs-info);
+        cursor: default;
+      }
+    }
+  }
+  input.form-control {
+    background-color: transparent;
+    color: var(--bs-light);
+    border-color: var(--bs-info);
+    &:focus {
+      background-color: transparent;
+      border-color: var(--bs-info);
+      box-shadow: none;
+      &::placeholder {
+        color: var(--bs-light);
+      }
+    }
+    &::placeholder {
+      color: var(--bs-info);
+    }
+  }
+}
+
 //Основные стили приложения
 body {
   width: 100vw;
@@ -180,6 +266,7 @@ body {
       position: relative;
 
       #btn-settings {
+        color: var(--bs-light);
         align-self: start;
 
         .anicons-icons {
@@ -318,14 +405,6 @@ body {
               }
             }
 
-            .form-control {
-              border-color: var(--bs-info);
-
-              &::placeholder {
-                color: var(--bs-info);
-              }
-            }
-
             .input-group {
               .form-control {
                 border-right-color: transparent;
@@ -358,6 +437,7 @@ body {
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: var(--bs-info);
 
             .sign-out-button {
               margin-top: 0.75rem;
@@ -448,7 +528,7 @@ body {
 
           .additional-back {
             position: absolute;
-            background-color: var(--bs-body-bg);
+            background-color: var(--bs-secondary);
             height: 9.125rem;
             width: calc(100% - 0.5rem);
             border-radius: 0.75rem;
@@ -592,6 +672,10 @@ body {
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
 
+          .auth-info {
+            color: var(--bs-info);
+          }
+
           #training-mode-settings {
             position: relative;
             color: var(--bs-info);
@@ -718,6 +802,9 @@ body {
       justify-content: space-around;
       width: 17rem;
       margin-bottom: 1rem;
+      .btn.disabled {
+        opacity: 1;
+      }
     }
 
     #timers-with-progress-bars {
@@ -742,7 +829,7 @@ body {
         }
 
         #progress-track-external {
-          stroke: $info;
+          stroke: var(--bs-info);
           r: 8.25rem;
         }
         #progress-bar-external {
@@ -750,7 +837,7 @@ body {
           r: 8.25rem;
         }
         #progress-track-internal {
-          stroke: $info;
+          stroke: var(--bs-info);
           r: 7.25rem;
         }
         #progress-bar-internal {
@@ -758,23 +845,23 @@ body {
           r: 7.25rem;
 
           &.prep-mode {
-            stroke: greenyellow;
+            stroke: var(--bs-success);
           }
 
           &.work-mode {
-            stroke: crimson;
+            stroke: var(--bs-danger);
           }
 
           &.rest-mode {
-            stroke: green;
+            stroke: var(--bs-success);
           }
 
           &.clear-mode {
-            stroke: lightskyblue;
+            stroke: var(--bs-success);
           }
 
           &.finish-mode {
-            stroke: blue;
+            stroke: var(--bs-light);
           }
         }
       }
@@ -794,7 +881,7 @@ body {
         #total-counter,
         #total-counter-info {
           font-size: 1.8 * $base-font-size;
-          color: $info;
+          color: var(--bs-info);
         }
 
         //Current timer
@@ -853,7 +940,7 @@ body {
     .btn-control {
       &:hover,
       &:active {
-        color: var(--bs-secondary);
+        color: var(--bs-primary);
       }
     }
   }
@@ -939,18 +1026,6 @@ body {
 .fade-up-leave-to {
   opacity: 0;
   transform: translateY(4rem);
-}
-
-.test {
-  display: inline-block;
-  span {
-    display: inline-block;
-    width: 2.07rem;
-    height: 6rem;
-    background-color: orangered;
-    font-size: 4rem;
-    font-weight: 700;
-  }
 }
 
 .fade-down-enter-active,

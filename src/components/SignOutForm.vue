@@ -1,6 +1,6 @@
 <template>
   <div id="sign-out-screen">
-    <div class="text-info">
+    <div class="out-info">
       Вы действительно хотите <br />
       выйти из учетной записи?
     </div>

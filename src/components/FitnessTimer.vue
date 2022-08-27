@@ -104,12 +104,14 @@
       volume="0.5"
       :src="'./sounds/' + config.sounds.workMode + '.mp3'"
       type="audio/mpeg"
+      loop
     ></audio>
     <audio
       id="restMusic"
       volume="0.5"
       :src="'./sounds/' + config.sounds.restMode + '.mp3'"
       type="audio/mpeg"
+      loop
     ></audio>
   </div>
 </template>

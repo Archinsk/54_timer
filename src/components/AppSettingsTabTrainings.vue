@@ -6,7 +6,7 @@
       @select-training-scheme="$emit('select-training-scheme', $event)"
     />
     <div class="training-settings-container">
-      <div v-if="!authUser" class="text-muted">
+      <div v-if="!authUser" class="auth-info">
         Зарегистрированным пользователям доступно изменение и сохранение режимов
         таймера, выбор звуков, память последнего режима <br />
         <a @click.prevent="$emit('change-auth-form', 'signin')" href="#"
