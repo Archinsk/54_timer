@@ -13,7 +13,7 @@
             value="1"
           />
           <label class="sound-item" for="sound-1" @click="soundMode = 'work'">
-            Jazzsteppa
+            Позитив
           </label>
         </div>
         <div class="form-check">
@@ -26,7 +26,7 @@
             value="2"
           />
           <label class="sound-item" for="sound-2" @click="soundMode = 'work'">
-            Prodigy
+            Мотивация
           </label>
         </div>
         <div class="form-check">
@@ -39,23 +39,10 @@
             value="3"
           />
           <label class="sound-item" for="sound-3" @click="soundMode = 'work'">
-            Laibach
+            Энергия
           </label>
         </div>
         <!--        Четвертая мелодия вырезана из-за недостатка места на экране мобильных устройств-->
-        <!--        <div class="form-check">-->
-        <!--          <input-->
-        <!--            v-model="selectedSoundWork"-->
-        <!--            class="btn-check"-->
-        <!--            type="radio"-->
-        <!--            name="sound-selector-work"-->
-        <!--            id="sound-4"-->
-        <!--            value="4"-->
-        <!--          />-->
-        <!--          <label class="sound-item" for="sound-4" @click="soundMode = 'work'">-->
-        <!--            Ministry-->
-        <!--          </label>-->
-        <!--        </div>-->
       </div>
       <div
         id="sound-play"
@@ -84,7 +71,7 @@
             value="5"
           />
           <label class="sound-item" for="sound-5" @click="soundMode = 'rest'">
-            Bohren & Club
+            Спокойствие
           </label>
         </div>
         <div class="form-check">
@@ -97,7 +84,7 @@
             value="6"
           />
           <label class="sound-item" for="sound-6" @click="soundMode = 'rest'">
-            Burzum
+            Романтика
           </label>
         </div>
         <div class="form-check">
@@ -110,23 +97,10 @@
             value="7"
           />
           <label class="sound-item" for="sound-7" @click="soundMode = 'rest'">
-            Carbon Based
+            Космос
           </label>
         </div>
-        <!--        Четвертая мелодия вырезана из-за недостатка места на экране мобильных устройств-->
-        <!--        <div class="form-check">-->
-        <!--          <input-->
-        <!--            v-model="selectedSoundRest"-->
-        <!--            class="btn-check"-->
-        <!--            type="radio"-->
-        <!--            name="sound-selector-rest"-->
-        <!--            id="sound-8"-->
-        <!--            value="8"-->
-        <!--          />-->
-        <!--          <label class="sound-item" for="sound-8" @click="soundMode = 'rest'">-->
-        <!--            Max Richter-->
-        <!--          </label>-->
-        <!--        </div>-->
+        <!--        Восьмая мелодия вырезана из-за недостатка места на экране мобильных устройств-->
       </div>
       <div id="sound-mode-selector">
         <div class="additional-back"></div>
