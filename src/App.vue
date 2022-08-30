@@ -35,16 +35,8 @@
             (config.interface.colorsDisplay = !config.interface.colorsDisplay),
               (settingsWasChanged = true)
           "
-          @timer-clickability-toggle="
-            (config.interface.timerClickability =
-              !config.interface.timerClickability),
-              (settingsWasChanged = true)
-          "
-          @controls-display-toggle="
-            (config.interface.controlsDisplay =
-              !config.interface.controlsDisplay),
-              (settingsWasChanged = true)
-          "
+          @timer-clickability-toggle="timerClickabilityToggle"
+          @controls-display-toggle="controlsDisplayToggle"
           @set-work-mode-sound="
             (config.sounds.workMode = $event), (settingsWasChanged = true)
           "
@@ -340,7 +332,7 @@ export default {
     signIn() {
       this.getSettings();
       this.authUser = true;
-      this.selectedSettingsTab = "trainings";
+      this.selectedSettingsTab = "interface";
     },
 
     signOut() {
@@ -364,12 +356,38 @@ export default {
         .post(this.url + "settingsread.php", JSON.stringify(this.config))
         .then((response) => {
           console.log(response);
-          this.config = response.data.config;
+          this.config = JSON.parse(JSON.stringify(response.data.config));
           this.actual = Object.assign(
             {},
             response.data.config.selectedTrainingScheme
           );
         });
+    },
+
+    timerClickabilityToggle() {
+      if (
+        this.config.interface.timerClickability &&
+        !this.config.interface.controlsDisplay
+      ) {
+        this.config.interface.controlsDisplay =
+          !this.config.interface.controlsDisplay;
+      }
+      this.config.interface.timerClickability =
+        !this.config.interface.timerClickability;
+    },
+
+    controlsDisplayToggle() {
+      console.log(this.config);
+      if (
+        !this.config.interface.timerClickability &&
+        this.config.interface.controlsDisplay
+      ) {
+        this.config.interface.timerClickability =
+          !this.config.interface.timerClickability;
+      }
+      this.config.interface.controlsDisplay =
+        !this.config.interface.controlsDisplay;
+      console.log(this.config);
     },
   },
 

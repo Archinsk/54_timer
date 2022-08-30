@@ -23,7 +23,6 @@
             role="switch"
             id="full-timer-display"
             :checked="config.fullTimerDisplay"
-            :disabled="disabledButtons"
             @click="$emit('full-timer-display-toggle')"
           />
           <label class="form-check-label" for="full-timer-display"
@@ -37,7 +36,6 @@
             role="switch"
             id="colors-display"
             :checked="config.colorsDisplay"
-            :disabled="disabledButtons"
             @click="$emit('color-display-toggle')"
           />
           <label class="form-check-label" for="colors-display"
@@ -51,7 +49,6 @@
             role="switch"
             id="timer-click-mode"
             :checked="config.timerClickability"
-            :disabled="disabledButtons"
             @click="$emit('timer-clickability-toggle')"
           />
           <label class="form-check-label" for="timer-click-mode"
@@ -65,7 +62,6 @@
             role="switch"
             id="controls-display"
             :checked="config.controlsDisplay"
-            :disabled="disabledButtons"
             @click="$emit('controls-display-toggle')"
           />
           <label class="form-check-label" for="controls-display"
