@@ -111,17 +111,17 @@ export default {
           {
             id: 1,
             name: "Легко",
-            prepTime: 5,
+            prepTime: 10,
             workTime: 20,
             restTime: 10,
-            clearTime: 30,
-            repeats: 5,
+            clearTime: 0,
+            repeats: 4,
             rounds: 1,
           },
           {
             id: 2,
             name: "Норма",
-            prepTime: 5,
+            prepTime: 10,
             workTime: 20,
             restTime: 10,
             clearTime: 0,
@@ -131,23 +131,23 @@ export default {
           {
             id: 3,
             name: "Тяжело",
-            prepTime: 676,
-            workTime: 15,
-            restTime: 0,
-            clearTime: 30,
-            repeats: 10,
-            rounds: 2,
+            prepTime: 10,
+            workTime: 20,
+            restTime: 10,
+            clearTime: 60,
+            repeats: 8,
+            rounds: 3,
           },
         ],
         selectedTrainingScheme: {
           id: 2,
           name: "Норма",
-          prepTime: 5,
-          workTime: 5,
-          restTime: 5,
-          clearTime: 5,
-          repeats: 3,
-          rounds: 3,
+          prepTime: 10,
+          workTime: 20,
+          restTime: 10,
+          clearTime: 0,
+          repeats: 8,
+          rounds: 1,
         },
         interface: {
           fullTimerDisplay: true,
@@ -156,19 +156,19 @@ export default {
           controlsDisplay: true,
         },
         sounds: {
-          workMode: 2,
-          restMode: 7,
+          workMode: 1,
+          restMode: 5,
         },
       },
       actual: {
         id: 2,
         name: "Норма",
-        prepTime: 5,
-        workTime: 5,
-        restTime: 5,
-        clearTime: 5,
-        repeats: 3,
-        rounds: 3,
+        prepTime: 10,
+        workTime: 20,
+        restTime: 10,
+        clearTime: 0,
+        repeats: 8,
+        rounds: 1,
       },
       pastTime: 0,
       schemesEditMode: false,
@@ -179,7 +179,7 @@ export default {
       selectedSettingsTab: "trainings",
       selectedSignForm: "signin",
       settingsWasChanged: false,
-      loaderText: "Загрузка приложения",
+      loaderText: "Загрузка данных приложения",
       timerId: null,
     };
   },
@@ -323,7 +323,7 @@ export default {
       axios
         .post(this.url + "checkauth.php", JSON.stringify({ id: 0 }))
         .then((response) => {
-          if (response.data.user.id) {
+          if (response.data.user && response.data.user.id) {
             this.signIn();
           }
         });
@@ -332,14 +332,12 @@ export default {
     signIn() {
       this.getSettings();
       this.authUser = true;
-      this.selectedSettingsTab = "interface";
+      this.selectedSettingsTab = "trainings";
     },
 
     signOut() {
-      this.authUser = false;
-      this.settingsMode = false;
-      this.selectedSettingsTab = "trainings";
       this.setSettings();
+      window.location.reload();
     },
 
     setSettings() {

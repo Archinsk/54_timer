@@ -33,5 +33,11 @@ export default {
       selectedScheme: this.selectedSchemeId,
     };
   },
+
+  watch: {
+    selectedSchemeId: function () {
+      this.selectedScheme = this.selectedSchemeId;
+    },
+  },
 };
 </script>

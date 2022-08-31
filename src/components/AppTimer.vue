@@ -1,6 +1,6 @@
 <template>
   <div id="timer-full" :class="{ collapsed: settingsMode }">
-    <StatusBar v-if="!settingsMode" :mode="mode" />
+    <AppTimerStatusBar v-if="!settingsMode" :mode="mode" :play="play" />
 
     <FitnessTimer
       :initial-timer-state="initialTimerState"
@@ -23,12 +23,12 @@
 </template>
 
 <script>
-import StatusBar from "./AppTimerStatusBar";
+import AppTimerStatusBar from "./AppTimerStatusBar";
 import FitnessTimer from "./FitnessTimer";
 import AppTimerRepeatsBar from "./AppTimerRepeatsBar";
 export default {
   name: "AppTimer",
-  components: { AppTimerRepeatsBar, FitnessTimer, StatusBar },
+  components: { AppTimerRepeatsBar, FitnessTimer, AppTimerStatusBar },
   props: [
     "initialTimerState",
     "play",

@@ -3,7 +3,7 @@
     <div
       :class="[
         'btn btn-outline-light btn-icon-square rounded-circle',
-        mode === 'work' ? 'disabled' : 'active',
+        initialState || mode === 'work' ? 'disabled' : 'active pulse',
       ]"
     >
       <span class="material-icons"> self_improvement </span>
@@ -11,7 +11,7 @@
     <div
       :class="[
         'btn btn-outline-light btn-icon-square rounded-circle',
-        mode === 'work' ? 'active' : 'disabled',
+        !initialState && mode === 'work' ? 'active pulse' : 'disabled',
       ]"
     >
       <span class="material-icons"> directions_bike </span>
@@ -22,6 +22,23 @@
 <script>
 export default {
   name: "StatusBar",
-  props: ["mode"],
+  props: ["mode", "play"],
+  data() {
+    return {
+      initialState: true,
+    };
+  },
+  watch: {
+    play: function () {
+      if (this.initialState) {
+        this.initialState = false;
+      }
+    },
+    mode: function () {
+      if (this.mode === "finish") {
+        this.initialState = true;
+      }
+    },
+  },
 };
 </script>
