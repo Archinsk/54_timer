@@ -1,56 +1,35 @@
 <?php //Авторизация пользователя
 
-//Сначала разрешим принимать и отправлять запросы на сервер А
-header('Access-Control-Allow-Origin: *');
-//Установим типы запросов, которые следует разрешить (все неуказанные будут отклоняться)
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-//Разрешим передавать Cookie и Authorization заголовки для указанновго в Origin домена
-header('Access-Control-Allow-Credentials: true');
-//Установим заголовки, которые можно будет обрабатывать
-header('Access-Control-Allow-Headers: Authorization, Origin, X-Requested-With, Accept, X-PINGOTHER, Content-Type');
-
 //Подключение RedBeanPHP и БД
 require 'db.php';
 
-//Запуск сессии
-session_start();
+//Проверка авторизации пользователя
+if ($_SESSION['auth_user_id']) {
+  //Чтение конфигурации из БД
+  $configDB = R::findOne('configs', 'userid = ?', [ $_SESSION['auth_user_id'] ] );
 
-//Парсинг входящего JSON'а
-$request = json_decode(file_get_contents('php://input'), true);
-
-// echo '--------------------------';
-// var_dump($request);
-// var_dump($_SESSION);
-// echo '--------------------------';
-
-if ( isset($request) ) {
-  //Проверка авторизации пользователя
-  if ($_SESSION['auth_user_id']) {
-	//Чтение конфигурации из БД
-	$configDB = R::findOne('configs', 'userid = ?', [ $_SESSION['auth_user_id'] ] );
-	
-	// Формирование ответа
-	$configAuth = array(
-	  'schemes' => json_decode( $configDB->schemes, true),
-	  'selectedTrainingScheme' => json_decode( $configDB->selectedscheme, true),
-	  'interface' => json_decode( $configDB->configinterface, true),
-	  'sounds' => json_decode( $configDB->sounds, true),
-	);
-	$response = array(
-	  'config' => $configAuth
-    );
-  } else {
-	$error = array(
-	  'id' => '10',
-	  'type' => 'auth',
-	  'errorText' => 'Пользователь не авторизован'
-	);
-	$response = array(
-	  'error' => $error
-	);
-  };
+  // Формирование ответа
+  $configAuth = array(
+	'schemes' => json_decode( $configDB->schemes, true),
+	'selectedTrainingScheme' => json_decode( $configDB->selectedscheme, true),
+	'interface' => json_decode( $configDB->configinterface, true),
+	'sounds' => json_decode( $configDB->sounds, true),
+  );
+  $response = array(
+	'config' => $configAuth
+  );
+} else {
+  $error = array(
+	'id' => '10',
+	'type' => 'auth',
+	'errorText' => 'Текущий пользователь не авторизован!'
+  );
+  $response = array(
+	'error' => $error
+  );
+};
   
-  // Отправка JSON-ответа
-  echo json_encode($response, JSON_UNESCAPED_UNICODE);
-}
+// Отправка JSON-ответа
+echo json_encode($response, JSON_UNESCAPED_UNICODE);
+
 ?>

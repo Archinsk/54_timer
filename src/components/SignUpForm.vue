@@ -270,7 +270,7 @@ export default {
 
     authUser() {
       this.errorsReset();
-      this.$emit("sign-in");
+      this.$emit("sign-up");
     },
 
     errorsReset() {

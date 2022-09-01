@@ -14,7 +14,7 @@
           <SignUpForm
             v-else
             :url="url"
-            @sign-in="$emit('sign-in')"
+            @sign-up="$emit('sign-up')"
             @change-auth-form="$emit('change-auth-form', 'signin')"
             @select-settings-tab="$emit('select-settings-tab', $event)"
           />

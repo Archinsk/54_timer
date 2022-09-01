@@ -36,6 +36,7 @@
         @change-auth-form="changeAuthForm($event)"
         @select-settings-tab="$emit('select-settings-tab', $event)"
         @sign-in="$emit('sign-in')"
+        @sign-up="$emit('sign-up')"
         @sign-out="$emit('sign-out')"
       />
     </transition>

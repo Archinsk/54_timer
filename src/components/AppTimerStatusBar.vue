@@ -30,7 +30,7 @@ export default {
   },
   watch: {
     play: function () {
-      if (this.initialState) {
+      if (this.initialState && this.play) {
         this.initialState = false;
       }
     },

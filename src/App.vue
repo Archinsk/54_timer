@@ -44,6 +44,7 @@
             (config.sounds.restMode = $event), (settingsWasChanged = true)
           "
           @sign-in="signIn"
+          @sign-up="signUp"
           @sign-out="signOut"
         />
       </transition>
@@ -320,17 +321,21 @@ export default {
     },
 
     checkAuth() {
-      axios
-        .post(this.url + "checkauth.php", JSON.stringify({ id: 0 }))
-        .then((response) => {
-          if (response.data.user && response.data.user.id) {
-            this.signIn();
-          }
-        });
+      axios.post(this.url + "checkauth.php").then((response) => {
+        if (response.data.user && response.data.user.id) {
+          this.signIn();
+        }
+      });
     },
 
     signIn() {
       this.getSettings();
+      this.authUser = true;
+      this.selectedSettingsTab = "trainings";
+    },
+
+    signUp() {
+      this.setSettings();
       this.authUser = true;
       this.selectedSettingsTab = "trainings";
     },
@@ -345,21 +350,28 @@ export default {
         .post(this.url + "settingsupdate.php", JSON.stringify(this.config))
         .then((response) => {
           console.log(response);
-          this.settingsWasChanged = false;
+          if (response.data.config) {
+            this.config = JSON.parse(JSON.stringify(response.data.config));
+            this.actual = Object.assign(
+              {},
+              response.data.config.selectedTrainingScheme
+            );
+            this.settingsWasChanged = false;
+          }
         });
     },
 
     getSettings() {
-      axios
-        .post(this.url + "settingsread.php", JSON.stringify(this.config))
-        .then((response) => {
-          console.log(response);
+      axios.post(this.url + "settingsread.php").then((response) => {
+        console.log(response);
+        if (response.data.config) {
           this.config = JSON.parse(JSON.stringify(response.data.config));
           this.actual = Object.assign(
             {},
             response.data.config.selectedTrainingScheme
           );
-        });
+        }
+      });
     },
 
     timerClickabilityToggle() {
