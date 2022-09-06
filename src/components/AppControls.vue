@@ -1,19 +1,21 @@
 <template>
-  <div id="controls" class="row gx-3">
-    <div class="col">
+  <div id="controls" class="row justify-content-center gx-2">
+    <div class="col-1"></div>
+    <div class="col-6">
       <button
-        class="btn btn-outline-info rounded-pill btn-block btn-control"
-        @click="$emit('play-toggle')"
+        class="btn btn-outline-light rounded-pill btn-block btn-control"
+        @click="mainButtonAction"
       >
         {{ startButtonText }}
       </button>
     </div>
-    <div class="col">
+    <div class="col-1">
       <button
-        class="btn btn-outline-info rounded-pill btn-block btn-control"
+        v-if="!initialTimerState && !play && mode !== 'finish'"
+        class="btn btn-outline-light btn-icon-square rounded-circle btn-control"
         @click="$emit('reset-timer')"
       >
-        {{ mode === "finish" ? "Повтор" : "Сброс" }}
+        <span class="material-icons"> refresh </span>
       </button>
     </div>
   </div>
@@ -32,11 +34,20 @@ export default {
           return "Пауза";
         } else {
           if (this.mode === "finish") {
-            return "Повтор";
+            return "Повторить";
           } else {
             return "Продолжить";
           }
         }
+      }
+    },
+  },
+  methods: {
+    mainButtonAction() {
+      if (this.mode === "finish") {
+        this.$emit("reset-timer");
+      } else {
+        this.$emit("play-toggle");
       }
     },
   },

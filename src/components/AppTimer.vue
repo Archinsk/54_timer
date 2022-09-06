@@ -1,6 +1,11 @@
 <template>
   <div id="timer-full" :class="{ collapsed: settingsMode }">
-    <AppTimerStatusBar v-if="!settingsMode" :mode="mode" :play="play" />
+    <AppTimerStatusBar
+      v-if="!settingsMode"
+      :mode="mode"
+      :play="play"
+      :initial-timer-state="initialTimerState"
+    />
 
     <FitnessTimer
       :initial-timer-state="initialTimerState"

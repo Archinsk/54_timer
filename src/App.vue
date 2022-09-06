@@ -111,7 +111,7 @@ export default {
         schemes: [
           {
             id: 1,
-            name: "Легко",
+            name: "Лайт",
             prepTime: 10,
             workTime: 20,
             restTime: 10,
@@ -121,7 +121,7 @@ export default {
           },
           {
             id: 2,
-            name: "Норма",
+            name: "Классика",
             prepTime: 10,
             workTime: 20,
             restTime: 10,
@@ -131,7 +131,7 @@ export default {
           },
           {
             id: 3,
-            name: "Тяжело",
+            name: "Интенсив",
             prepTime: 10,
             workTime: 20,
             restTime: 10,
@@ -142,7 +142,7 @@ export default {
         ],
         selectedTrainingScheme: {
           id: 2,
-          name: "Норма",
+          name: "Классика",
           prepTime: 10,
           workTime: 20,
           restTime: 10,
@@ -163,7 +163,7 @@ export default {
       },
       actual: {
         id: 2,
-        name: "Норма",
+        name: "Классика",
         prepTime: 10,
         workTime: 20,
         restTime: 10,

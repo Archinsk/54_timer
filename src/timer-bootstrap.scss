@@ -106,7 +106,15 @@ body {
       font-family: Oswald-Bold;
     }
     .repeats-title {
-      font-family: "RobotoCondensed-Regular";
+      //font-family: "RobotoCondensed-Regular";
+      text-transform: uppercase;
+    }
+  }
+
+  #controls {
+    .btn.rounded-pill {
+      font-family: Oswald-Regular;
+      text-transform: uppercase;
     }
   }
 }
@@ -158,18 +166,6 @@ body {
       &.disabled,
       &:disabled {
         color: var(--bs-light);
-      }
-    }
-
-    .btn-outline-info {
-      border-color: var(--bs-info);
-      &.active,
-      &:active,
-      &:hover {
-        color: var(--bs-primary);
-        background-color: var(--bs-info);
-        border-color: var(--bs-info);
-        cursor: default;
       }
     }
   }
@@ -956,6 +952,17 @@ body {
       &:hover,
       &:active {
         color: var(--bs-primary);
+      }
+      //Трюк, необходимый для устранения hover-эффекта, остающегося после клика на мобильных устройствах
+      @media (hover: none) {
+        &:hover {
+          background-color: var(--bs-primary);
+          color: var(--bs-light);
+        }
+        &:active {
+          background-color: var(--bs-light);
+          color: var(--bs-primary);
+        }
       }
     }
   }
