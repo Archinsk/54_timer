@@ -1,6 +1,6 @@
 <template>
   <LoaderCustom v-if="isLoading" :loader-text="loaderText" full-screen />
-  <div v-if="!isLoading" class="container">
+  <div v-if="!isLoading" id="container" class="container">
     <div id="settings-panel">
       <AppSettingsNavbar
         :auth-user="authUser"
@@ -54,26 +54,29 @@
       id="settings-backdrop"
       @click="settingsMode = false"
     ></div>
-    <AppTimer
-      v-if="isTimerShow"
-      :initial-timer-state="initialTimerState"
-      :mode="mode"
-      :mode-refresher="modeRefresher"
-      :play="play"
-      :settings-mode="settingsMode"
-      :config="config"
-      :actual="actual"
-      :past-time="pastTime"
-      @play-toggle="play = !play"
-    />
-    <AppControls
-      v-if="config.interface.controlsDisplay && !settingsMode && isTimerShow"
-      :play="play"
-      :mode="mode"
-      :initial-timer-state="initialTimerState"
-      @play-toggle="play = !play"
-      @reset-timer="resetTimer"
-    />
+    <div id="timer-with-controls" :class="{ collapsed: settingsMode }">
+      <AppTimer
+        v-if="isTimerShow"
+        :initial-timer-state="initialTimerState"
+        :mode="mode"
+        :mode-refresher="modeRefresher"
+        :play="play"
+        :settings-mode="settingsMode"
+        :config="config"
+        :actual="actual"
+        :past-time="pastTime"
+        @play-toggle="play = !play"
+      />
+      <AppControls
+        v-if="config.interface.controlsDisplay && isTimerShow"
+        :play="play"
+        :mode="mode"
+        :settings-mode="settingsMode"
+        :initial-timer-state="initialTimerState"
+        @play-toggle="play = !play"
+        @reset-timer="resetTimer"
+      />
+    </div>
   </div>
   <div
     v-if="isTimerShow"
@@ -399,6 +402,58 @@ export default {
         !this.config.interface.controlsDisplay;
       console.log(this.config);
     },
+
+    resizeApp() {
+      // Трюк 100vh на мобильных устройствах (вычисление размеров окна за вычетом панелей мобильного браузера) + масштабирование
+      // Осторожно, сложные формулы. Можно поломать мозг... или формулы
+      let vh = document.documentElement.clientHeight * 0.01;
+      let vw = document.documentElement.clientWidth * 0.01;
+      console.log(document.documentElement.clientHeight);
+      console.log(document.documentElement.clientWidth);
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      // Если экран ниже по пропорциям, чем приложение
+      if (vw / vh > 360 / 504) {
+        document.documentElement.style.setProperty(
+          "--full-scale",
+          `${(100 * vh) / 504}`
+        );
+        document.documentElement.style.setProperty("--elem-scale", 1);
+        // Если экран уже по пропорциям, чем приложение
+      } else {
+        document.documentElement.style.setProperty(
+          "--full-scale",
+          `${(100 * vh) / 504}`
+        );
+        if (100 * vh > 504) {
+          document.documentElement.style.setProperty(
+            "--elem-scale",
+            `${(100 * vw) / 360}`
+          );
+        } else {
+          let hmin = ((100 * vw) / 360) * 540;
+          let hcurrent = 100 * vh - hmin;
+          let hfull = 504 - hmin;
+          let hk = (hfull - hcurrent) / hfull;
+          document.documentElement.style.setProperty(
+            "--elem-scale",
+            `${(100 * vw) / 360 + (1 - (100 * vw) / 360) * hk}`
+          );
+        }
+      }
+
+      // document.documentElement.style.setProperty(
+      //   "--scale",
+      //   `${(100 * vh - 298) / 342}`
+      // );
+      if (100 * vw <= 360) {
+        document.documentElement.style.setProperty(
+          "--scale",
+          `${(100 * vh - 290) / 434}`
+        );
+      } else {
+        document.documentElement.style.setProperty("--scale", "1");
+      }
+    },
   },
 
   watch: {
@@ -434,24 +489,8 @@ export default {
   mounted() {
     setTimeout(this.loading, 3000);
     this.checkAuth();
-
-    // Трюк 100vh на мобильных устройствах + масштабирование
-    // let vh = window.innerHeight * 0.01;
-    let vh = document.documentElement.clientHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-    document.documentElement.style.setProperty(
-      "--scale",
-      `${(100 * vh - 298) / 342}`
-    );
-    window.addEventListener("resize", () => {
-      // let vh = window.innerHeight * 0.01;
-      let vh = document.documentElement.clientHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-      document.documentElement.style.setProperty(
-        "--scale",
-        `${(100 * vh - 298) / 342}`
-      );
-    });
+    this.resizeApp();
+    window.addEventListener("resize", this.resizeApp);
   },
 };
 </script>

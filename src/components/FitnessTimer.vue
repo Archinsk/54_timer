@@ -347,22 +347,3 @@ export default {
   },
 };
 </script>
-
-<!--stroke - заливка контура-->
-
-<!--пример применения градиента к контуру:-->
-<!--<defs>-->
-<!--  <linearGradient id="myGradient">-->
-<!--    <stop offset="0%"   stop-color="green" />-->
-<!--    <stop offset="100%" stop-color="white" />-->
-<!--  </linearGradient>-->
-<!--</defs>-->
-
-<!--<circle cx="15" cy="5" r="4" fill="none"-->
-<!--        stroke="url(#myGradient)" />-->
-
-<!--stroke-dasharray="4 1 2 3" -длина штрихов в формате "штрих пробел штрих пробел"-->
-<!--stroke-dashoffset="1" - начало первого штриха на "1" раньше-->
-<!--stroke-linecap="round" - закругленное окончание линии-->
-<!--stroke-opacity="50%" - прозрачность контура-->
-<!--stroke-width="3" - ширина контура-->

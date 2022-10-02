@@ -1,5 +1,8 @@
 <template>
-  <div id="controls" class="row justify-content-center gx-2">
+  <div
+    id="controls"
+    :class="['row justify-content-center gx-2', { collapsed: settingsMode }]"
+  >
     <div class="col-1"></div>
     <div class="col-6">
       <button
@@ -24,7 +27,7 @@
 <script>
 export default {
   name: "AppControls",
-  props: ["play", "mode", "initialTimerState"],
+  props: ["play", "mode", "initialTimerState", "settingsMode"],
   computed: {
     startButtonText: function () {
       if (this.initialTimerState) {
