@@ -1,7 +1,7 @@
 <template>
   <div id="interface-settings">
     <div class="row justify-content-center">
-      <div class="col-9 col-sm-6">
+      <div class="col-9">
         <!--        Минималистичный режим вырезан из-за недостатка места на экране мобильных устройств-->
         <!--        <div class="form-check form-switch">-->
         <!--          <input-->

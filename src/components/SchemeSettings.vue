@@ -9,7 +9,7 @@
         @click="selectedItem = 'prep'"
       >
         <div class="col"><div class="period-title">Старт</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.prepTime"
             :min="0"
@@ -27,7 +27,7 @@
         @click="selectedItem = 'work'"
       >
         <div class="col"><div class="period-title">Работа</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.workTime"
             :min="5"
@@ -45,7 +45,7 @@
         @click="selectedItem = 'rest'"
       >
         <div class="col"><div class="period-title">Отдых</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.restTime"
             :min="0"
@@ -65,7 +65,7 @@
         @click="selectedItem = 'clear'"
       >
         <div class="col"><div class="period-title">Перерыв</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.clearTime"
             :min="0"
@@ -83,7 +83,7 @@
         @click="selectedItem = 'repeats'"
       >
         <div class="col"><div class="period-title">Повторы</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.repeats"
             :min="1"
@@ -101,7 +101,7 @@
         @click="selectedItem = 'rounds'"
       >
         <div class="col"><div class="period-title">Раунды</div></div>
-        <div class="col col-sm-5">
+        <div class="col">
           <InputNumberRoundButtons
             :default-number="+selectedScheme.rounds"
             :min="1"

@@ -399,6 +399,16 @@ export default {
         !this.config.interface.controlsDisplay;
       console.log(this.config);
     },
+
+    resizeApp() {
+      // Трюк 100vh на мобильных устройствах + масштабирование
+      let vh = document.documentElement.clientHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+      document.documentElement.style.setProperty(
+        "--scale",
+        `${(100 * vh - 298) / 342}`
+      );
+    },
   },
 
   watch: {
@@ -434,24 +444,8 @@ export default {
   mounted() {
     setTimeout(this.loading, 3000);
     this.checkAuth();
-
-    // Трюк 100vh на мобильных устройствах + масштабирование
-    // let vh = window.innerHeight * 0.01;
-    let vh = document.documentElement.clientHeight * 0.01;
-    document.documentElement.style.setProperty("--vh", `${vh}px`);
-    document.documentElement.style.setProperty(
-      "--scale",
-      `${(100 * vh - 298) / 342}`
-    );
-    window.addEventListener("resize", () => {
-      // let vh = window.innerHeight * 0.01;
-      let vh = document.documentElement.clientHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-      document.documentElement.style.setProperty(
-        "--scale",
-        `${(100 * vh - 298) / 342}`
-      );
-    });
+    this.resizeApp();
+    window.addEventListener("resize", this.resizeApp);
   },
 };
 </script>
