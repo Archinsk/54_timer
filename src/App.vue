@@ -56,6 +56,7 @@
     ></div>
     <AppTimer
       v-if="isTimerShow"
+      :auth-user="authUser"
       :initial-timer-state="initialTimerState"
       :mode="mode"
       :mode-refresher="modeRefresher"
@@ -67,10 +68,15 @@
       @play-toggle="play = !play"
     />
     <AppControls
-      v-if="config.interface.controlsDisplay && !settingsMode && isTimerShow"
       :play="play"
       :mode="mode"
+      :settings-mode="settingsMode"
       :initial-timer-state="initialTimerState"
+      :style="
+        config.interface.controlsDisplay && isTimerShow
+          ? 'visibility: visible'
+          : 'visibility: hidden'
+      "
       @play-toggle="play = !play"
       @reset-timer="resetTimer"
     />
@@ -406,7 +412,7 @@ export default {
       document.documentElement.style.setProperty("--vh", `${vh}px`);
       document.documentElement.style.setProperty(
         "--scale",
-        `${(100 * vh - 298) / 342}`
+        `${(100 * vh - 266) / 458}`
       );
     },
   },

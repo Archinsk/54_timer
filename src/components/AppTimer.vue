@@ -1,29 +1,33 @@
 <template>
-  <div id="timer-full" :class="{ collapsed: settingsMode }">
-    <AppTimerStatusBar
-      v-if="!settingsMode"
-      :mode="mode"
-      :play="play"
-      :initial-timer-state="initialTimerState"
-    />
+  <div id="timer-full-scalable-container" :class="{ collapsed: settingsMode }">
+    <div id="timer-full">
+      <AppTimerStatusBar
+        :mode="mode"
+        :play="play"
+        :settings-mode="settingsMode"
+        :initial-timer-state="initialTimerState"
+      />
 
-    <FitnessTimer
-      :initial-timer-state="initialTimerState"
-      :config="config"
-      :actual="actual"
-      :mode="mode"
-      :mode-refresher="modeRefresher"
-      :play="play"
-      :past-time="pastTime"
-      @play-toggle="$emit('play-toggle')"
-    />
+      <FitnessTimer
+        :auth-user="authUser"
+        :initial-timer-state="initialTimerState"
+        :config="config"
+        :actual="actual"
+        :mode="mode"
+        :mode-refresher="modeRefresher"
+        :play="play"
+        :settings-mode="settingsMode"
+        :past-time="pastTime"
+        @play-toggle="$emit('play-toggle')"
+      />
 
-    <AppTimerRepeatsBar
-      :current-repeat="currentRepeat"
-      :total-repeats="config.selectedTrainingScheme.repeats"
-      :current-round="currentRound"
-      :total-rounds="config.selectedTrainingScheme.rounds"
-    />
+      <AppTimerRepeatsBar
+        :current-repeat="currentRepeat"
+        :total-repeats="config.selectedTrainingScheme.repeats"
+        :current-round="currentRound"
+        :total-rounds="config.selectedTrainingScheme.rounds"
+      />
+    </div>
   </div>
 </template>
 
@@ -35,6 +39,7 @@ export default {
   name: "AppTimer",
   components: { AppTimerRepeatsBar, FitnessTimer, AppTimerStatusBar },
   props: [
+    "authUser",
     "initialTimerState",
     "play",
     "mode",

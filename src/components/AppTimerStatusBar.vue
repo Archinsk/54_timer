@@ -3,7 +3,10 @@
     <div
       :class="[
         'btn btn-outline-light btn-icon-square rounded-circle',
-        initialTimerState || mode === 'work' || mode === 'finish'
+        initialTimerState ||
+        mode === 'work' ||
+        mode === 'finish' ||
+        settingsMode
           ? 'disabled'
           : 'active pulse',
       ]"
@@ -13,7 +16,9 @@
     <div
       :class="[
         'btn btn-outline-light btn-icon-square rounded-circle',
-        !initialTimerState && mode === 'work' ? 'active pulse' : 'disabled',
+        !initialTimerState && mode === 'work' && !settingsMode
+          ? 'active pulse'
+          : 'disabled',
       ]"
     >
       <span class="material-icons"> directions_bike </span>
@@ -24,6 +29,6 @@
 <script>
 export default {
   name: "StatusBar",
-  props: ["mode", "play", "initialTimerState"],
+  props: ["mode", "play", "settingsMode", "initialTimerState"],
 };
 </script>

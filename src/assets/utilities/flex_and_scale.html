@@ -1,10 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transform-scale in flex</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      .container {
+        display: inline-flex;
+        flex-direction: column;
+      }
+      .shrink {
+        height: 150px;
+      }
+      .child {
+        background-color: grey;
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+        opacity: 0.5;
+      }
+      .scaled {
+        transform: scale(0.5);
+        transform-origin: 0 0;
+      }
+      .reduced {
+        width: calc(100px * 0.5);
+        height: calc(100px * 0.5);
+      }
+      .grandchild {
+        background-color: #794cff;
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+        opacity: 0.5;
+        transform: scale(0.5);
+        transform-origin: 0 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container normal">
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+    </div>
+    <div class="container shrink">
+      <div class="child"></div>
+      <div class="child"></div>
+      <div class="child"></div>
+    </div>
+    <div class="container shrink">
+      <div class="child"></div>
+      <div class="child scaled"></div>
+      <div class="child"></div>
+    </div>
+    <div class="container">
+      <div class="child"></div>
+      <div class="child scaled"></div>
+      <div class="child"></div>
+    </div>
+    <div class="container">
+      <div class="child"></div>
+      <div class="child reduced">
+        <div class="grandchild"></div>
+      </div>
+      <div class="child"></div>
+    </div>
+    <div class="container shrink">
+      <div class="child"></div>
+      <div class="child reduced">
+        <div class="grandchild"></div>
+      </div>
+      <div class="child"></div>
+    </div>
+    <div class="container shrink" style="height: 50px">
+      <div class="child reduced">
+        <div class="grandchild"></div>
+      </div>
+      <div class="child reduced">
+        <div class="grandchild"></div>
+      </div>
+      <div class="child reduced">
+        <div class="grandchild"></div>
+      </div>
+    </div>
+    <ol>
+      <li>
+        Если Flex-контейнеру не задан размер вдоль потока, то контейнер занимает
+        столько места, сколько занимает сумма его элементов (100 + 100 + 100 =
+        300)
+      </li>
+      <li>
+        Если Flex-контейнеру задан размер вдоль flex-потока меньший, чем сумма
+        размеров дочерних элементов, то дочерние элементы сжимаются только вдоль
+        оси потока
+      </li>
+      <li>
+        Если сжатому дочернеум flex-элементу добавлен transform-scale, то он
+        будет сначала сжат по оси flex-потока, а затем отмасштабирован
+      </li>
+      <li>
+        Если масштабируемому элементу заданы размеры и применено
+        масштабарование, то элемент занимает место согласно прописанным
+        размерам, однако выглядит отмасштабированным
+      </li>
+      <li>
+        Чтобы применить transform-scale к flex-элементу внутри flex-контейнера,
+        которому не задан размер вдоль линии flex-потока нужно обернуть этот
+        элемент в обертку и задать обертке размеры измененные на коэффициент
+        трансформации
+      </li>
+      <li>
+        При установке Flex-контейнеру рамера, меньшего чем сумма размеров
+        дочерних элементов, то сжатие происходит за счет детей, не содержащих
+        масштабированного элемента???
+      </li>
+      <li>
+        Дальнейшее уменьшение flex-контейнера не изменяет размер элементов с
+        масштабированными детьми
+      </li>
+    </ol>
+  </body>
 </html>

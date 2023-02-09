@@ -784,184 +784,268 @@ body {
     opacity: 0;
   }
 
-  #timer-full {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s;
+  #timer-full-scalable-container {
+    align-self: center;
+    height: 24.75rem;
+    width: 17rem;
+    margin-bottom: 0.5rem;
     margin-top: 0;
-    transform-origin: 50% 0%;
 
-    #status-bar {
-      display: inline-flex;
-      justify-content: space-around;
-      width: 17rem;
-      margin-bottom: 1rem;
+    #timer-full {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s;
+      margin-top: 0;
 
-      .btn.disabled {
-        opacity: 1;
-      }
-
-      .btn.active {
-        animation: pulse 1s infinite;
-      }
-
-      @keyframes pulse {
-        0% {
-          box-shadow: 0 0 0 0px var(--bs-light);
-        }
-        100% {
-          box-shadow: 0 0 0 1rem var(--bs-primary);
-        }
-      }
-    }
-
-    #timers-with-progress-bars {
-      display: inline-block;
-      position: relative;
-      height: 17rem;
-      //width: 17rem;
-      border-radius: 50%;
-      overflow: hidden;
-
-      //Progress-bars
-      #progress {
-        //width: 17rem;
-        height: 17rem;
-
-        circle {
-          fill: transparent;
-          cx: 8.5rem;
-          cy: 8.5rem;
-          stroke-width: 0.5rem;
-          transition: stroke-dashoffset 1s linear;
-        }
-
-        #progress-track-external {
-          stroke: var(--bs-info);
-          r: 8.25rem;
-        }
-        #progress-bar-external {
-          stroke: $light;
-          r: 8.25rem;
-        }
-        #progress-track-internal {
-          stroke: var(--bs-info);
-          r: 7.25rem;
-        }
-        #progress-bar-internal {
-          stroke: $light;
-          r: 7.25rem;
-
-          &.prep-mode {
-            stroke: var(--bs-success);
-          }
-
-          &.work-mode {
-            stroke: var(--bs-danger);
-          }
-
-          &.rest-mode {
-            stroke: var(--bs-success);
-          }
-
-          &.clear-mode {
-            stroke: var(--bs-success);
-          }
-
-          &.finish-mode {
-            stroke: var(--bs-light);
-          }
-        }
-      }
-
-      //Timers
-      #counters {
-        position: absolute;
-        top: 0;
-        height: 17rem;
+      #status-bar {
+        display: inline-flex;
+        justify-content: space-around;
         width: 17rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        margin-bottom: 1rem;
 
-        //Total timers
-        #total-counter,
-        #total-counter-info {
-          font-size: 1.8 * $base-font-size;
+        .btn.disabled {
+          opacity: 1;
+        }
+
+        .btn.active {
+          animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+          0% {
+            box-shadow: 0 0 0 0px var(--bs-light);
+          }
+          100% {
+            box-shadow: 0 0 0 1rem var(--bs-primary);
+          }
+        }
+      }
+
+      #timers-with-progress-bars {
+        display: inline-block;
+        position: relative;
+        height: 17rem;
+        //width: 17rem;
+        border-radius: 50%;
+        overflow: hidden;
+
+        //Clickability setting display
+        #clickable-setting {
+          height: 4rem;
+          width: 4rem;
+          border-radius: 50%;
+          background-color: var(--bs-light);
+          position: absolute;
+          top: calc(50% - 2rem);
+          left: calc(50% - 2rem);
+          animation: pulse-huge 1s infinite;
+          opacity: 0.5;
+        }
+
+        @keyframes pulse-huge {
+          0% {
+            box-shadow: 0 0 0 0px var(--bs-light);
+          }
+          100% {
+            box-shadow: 0 0 0 4rem var(--bs-primary);
+            background-color: var(--bs-primary);
+          }
+        }
+
+        //Progress-bars
+        #progress {
+          //width: 17rem;
+          height: 17rem;
+
+          circle {
+            fill: transparent;
+            cx: 8.5rem;
+            cy: 8.5rem;
+            stroke-width: 0.5rem;
+            transition: stroke-dashoffset 1s linear;
+          }
+
+          #progress-track-external {
+            stroke: var(--bs-info);
+            r: 8.25rem;
+          }
+          #progress-bar-external {
+            stroke: $light;
+            r: 8.25rem;
+          }
+          #progress-track-internal {
+            stroke: var(--bs-info);
+            r: 7.25rem;
+          }
+          #progress-bar-internal,
+          #progress-bar-internal-setting {
+            stroke: $light;
+            r: 7.25rem;
+
+            &.prep-mode {
+              stroke: var(--bs-success);
+            }
+
+            &.work-mode {
+              stroke: var(--bs-danger);
+            }
+
+            &.rest-mode {
+              stroke: var(--bs-success);
+            }
+
+            &.clear-mode {
+              stroke: var(--bs-success);
+            }
+
+            &.finish-mode {
+              stroke: var(--bs-light);
+            }
+          }
+        }
+
+        //Timers
+        #counters {
+          position: absolute;
+          top: 0;
+          height: 17rem;
+          width: 17rem;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          //Total timers
+          #total-counter,
+          #total-counter-info {
+            font-size: 1.8 * $base-font-size;
+            color: var(--bs-info);
+          }
+
+          //Current timer
+          #current-counter {
+            font-size: 4 * $base-font-size;
+            height: 6rem;
+
+            .current-timer-digit-wrapper {
+              display: inline-block;
+              position: relative;
+              width: 2.07rem;
+              height: 6rem;
+
+              .current-timer-digit {
+                position: absolute;
+              }
+
+              .main-digit-divider {
+                left: 0.64rem;
+              }
+            }
+          }
+        }
+      }
+
+      #repeats-bar {
+        display: flex;
+        justify-content: space-around;
+        width: 17rem;
+        margin-top: 1rem;
+
+        .repeats-title {
           color: var(--bs-info);
         }
 
-        //Current timer
-        #current-counter {
-          font-size: 4 * $base-font-size;
-          height: 6rem;
+        .repeats-value {
+          font-size: 1.25 * $base-font-size;
+        }
+      }
+    }
 
-          .current-timer-digit-wrapper {
-            display: inline-block;
-            position: relative;
-            width: 2.07rem;
-            height: 6rem;
+    &.collapsed {
+      height: calc(24.75rem * 238 / 458);
+      width: calc(17rem * 238 / 458);
+      margin-bottom: 0;
 
-            .current-timer-digit {
-              position: absolute;
-            }
+      @media (min-height: 504px) {
+        height: calc(24.75rem * var(--scale));
+        width: calc(17rem * var(--scale));
+      }
 
-            .main-digit-divider {
-              left: 0.64rem;
-            }
+      @media (min-height: 724px) {
+        height: 24.75rem;
+        width: 17rem;
+      }
+
+      #timer-full {
+        transform: scale(calc(238 / 458));
+        transform-origin: 50% 0;
+
+        @media (min-height: 504px) {
+          transform: scale(var(--scale));
+        }
+
+        @media (min-height: 724px) {
+          transform: none;
+        }
+      }
+    }
+  }
+
+  #controls-scalable-container {
+    align-self: center;
+    height: 2.375rem;
+    width: 100%;
+    margin-bottom: 0;
+
+    #controls {
+      .btn-control {
+        &:hover,
+        &:active {
+          color: var(--bs-primary);
+        }
+        //Трюк, необходимый для устранения hover-эффекта, остающегося после клика на мобильных устройствах
+        @media (hover: none) {
+          &:hover {
+            background-color: var(--bs-primary);
+            color: var(--bs-light);
+          }
+          &:active {
+            background-color: var(--bs-light);
+            color: var(--bs-primary);
           }
         }
       }
     }
 
-    #repeats-bar {
-      display: flex;
-      justify-content: space-around;
-      width: 17rem;
-      margin-top: 1rem;
+    &.collapsed {
+      height: calc(2.375rem * 238 / 458);
+      width: calc(100% * 238 / 458);
+      margin-bottom: calc(0.5rem * 238 / 458);
 
-      .repeats-title {
-        color: var(--bs-info);
+      @media (min-height: 504px) {
+        height: calc(2.375rem * var(--scale));
+        width: calc(100% * var(--scale));
+        margin-bottom: calc(0.5rem * var(--scale));
       }
 
-      .repeats-value {
-        font-size: 1.25 * $base-font-size;
+      @media (min-height: 724px) {
+        height: 2.375rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
       }
-    }
 
-    //&.collapsed {
-    //  @media (max-width: 767.98px) {
-    //    margin-top: 1.5rem;
-    //    transform: scale(var(--scale));
-    //  }
-    //
-    //  @media (min-width: 768px) {
-    //    flex: 1;
-    //    margin-top: 0.5rem;
-    //    justify-content: center;
-    //  }
-    //}
-  }
+      #controls {
+        transform: scale(calc(238 / 458));
+        transform-origin: 50% 0;
 
-  #controls {
-    .btn-control {
-      &:hover,
-      &:active {
-        color: var(--bs-primary);
-      }
-      //Трюк, необходимый для устранения hover-эффекта, остающегося после клика на мобильных устройствах
-      @media (hover: none) {
-        &:hover {
-          background-color: var(--bs-primary);
-          color: var(--bs-light);
+        @media (min-height: 504px) {
+          transform: scale(var(--scale));
         }
-        &:active {
-          background-color: var(--bs-light);
-          color: var(--bs-primary);
+
+        @media (min-height: 724px) {
+          transform: none;
         }
       }
     }

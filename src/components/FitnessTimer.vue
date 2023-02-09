@@ -1,5 +1,10 @@
 <template>
   <div id="timers-with-progress-bars" @click="timerClick">
+    <div
+      v-if="settingsMode && config.interface.timerClickability"
+      id="clickable-setting"
+    ></div>
+
     <svg
       id="progress"
       viewBox="0 0 272 272"
@@ -36,6 +41,15 @@
         :initial-timer-state="initialTimerState"
         :stroke-length="strokeLength"
         :stroke-offset="strokeOffset"
+        :mode-color="modeColor"
+        :progress-of-internal="progressOfInternal"
+      />
+      <FitnessTimerBarInternal
+        v-if="authUser && settingsMode && !pastTime"
+        id="progress-bar-internal-setting"
+        :initial-timer-state="initialTimerState"
+        :stroke-length="strokeLength"
+        :stroke-offset="strokeLength / 2"
         :mode-color="modeColor"
         :progress-of-internal="progressOfInternal"
       />
@@ -122,6 +136,7 @@ export default {
   name: "FitnessTimer",
   components: { FitnessTimerBarInternal },
   props: [
+    "authUser",
     "initialTimerState",
     "config",
     "actual",
@@ -129,6 +144,7 @@ export default {
     "modeRefresher",
     "play",
     "pastTime",
+    "settingsMode",
   ],
   data() {
     return {
@@ -235,7 +251,7 @@ export default {
       }
     },
 
-    // Длины и смещение штрхов в круговых шкалах таймера
+    // Длины и смещение штрихов в круговых шкалах таймера
     strokeLength: function () {
       return 2 * Math.PI * this.progressBarRadius;
     },
@@ -301,14 +317,20 @@ export default {
       if (this.play) {
         if (this.mode === "work") {
           restMusic.pause();
+          restMusic.currentTime = 0;
           workMusic.play();
         } else {
           workMusic.pause();
+          workMusic.currentTime = 0;
           restMusic.play();
         }
       } else {
         restMusic.pause();
         workMusic.pause();
+        if (this.mode === "finish") {
+          restMusic.currentTime = 0;
+          workMusic.currentTime = 0;
+        }
       }
     },
   },
